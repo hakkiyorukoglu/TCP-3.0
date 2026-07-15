@@ -1,5 +1,8 @@
 using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using TrainService.Core.Abstractions;
+using TrainService.Cad.Abstractions;
 
 namespace TrainService.App.Services;
 
@@ -7,11 +10,13 @@ public class TrainManager : ITrainManager, IDisposable
 {
     private readonly IMqttHub _mqttHub;
     private readonly ILogBus _logBus;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-    public TrainManager(IMqttHub mqttHub, ILogBus logBus)
+    public TrainManager(IMqttHub mqttHub, ILogBus logBus, IServiceScopeFactory scopeFactory)
     {
         _mqttHub = mqttHub;
         _logBus = logBus;
+        _scopeFactory = scopeFactory;
     }
 
     public void Initialize()
@@ -24,6 +29,19 @@ public class TrainManager : ITrainManager, IDisposable
         });
 
         _logBus.Info("TrainManager", "Başlatıldı ve dinliyor.");
+
+        Task.Run(async () => {
+            try {
+                using var scope = _scopeFactory.CreateScope();
+                var cadParser = scope.ServiceProvider.GetRequiredService<ICadParser>();
+                var result = await cadParser.ParseAsync("sample_map.json");
+                
+                _logBus.Success("CadParser", $"CAD dosyası başarıyla yüklendi: {result.Nodes.Count} Node, {result.Segments.Count} Segment bulundu.");
+            }
+            catch (Exception ex) {
+                _logBus.Error("CadParser", $"Harita yüklenemedi: {ex.Message}");
+            }
+        });
     }
 
     private void OnMqttMessageReceived(string topic, string payload)

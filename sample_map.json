@@ -1,0 +1,13 @@
+{
+  "Nodes": [
+    { "Id": "d8eb7c56-f633-4f23-9566-f131da4c0a51", "X": 0, "Y": 0, "Z": 0 },
+    { "Id": "1a6a570d-f215-4672-9ea9-a8684ba2f30b", "X": 100, "Y": 0, "Z": 0 },
+    { "Id": "6df0be0a-9dcb-4df7-bccd-697a5ce0f1db", "X": 200, "Y": 100, "Z": 0 },
+    { "Id": "14f3a9e4-b74c-4e3e-908d-80f0896263ab", "X": 300, "Y": 100, "Z": 0 }
+  ],
+  "Segments": [
+    { "Id": "f78817da-cd3c-42aa-b86f-ea9aab08cfaf", "StartNodeId": "d8eb7c56-f633-4f23-9566-f131da4c0a51", "EndNodeId": "1a6a570d-f215-4672-9ea9-a8684ba2f30b", "LengthMm": 100 },
+    { "Id": "c42442d8-55a2-4a0a-be19-f5dd502dd028", "StartNodeId": "1a6a570d-f215-4672-9ea9-a8684ba2f30b", "EndNodeId": "6df0be0a-9dcb-4df7-bccd-697a5ce0f1db", "LengthMm": 141.42 },
+    { "Id": "503f191b-9f9f-4318-be64-8cb3725b8a53", "StartNodeId": "6df0be0a-9dcb-4df7-bccd-697a5ce0f1db", "EndNodeId": "14f3a9e4-b74c-4e3e-908d-80f0896263ab", "LengthMm": 100 }
+  ]
+}
