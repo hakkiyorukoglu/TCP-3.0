@@ -12,18 +12,21 @@ public class TrainManager : ITrainManager, IDisposable
     private readonly ILogBus _logBus;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IDeviceRegistry _deviceRegistry;
+    private readonly IPingService _pingService;
 
-    public TrainManager(IMqttHub mqttHub, ILogBus logBus, IServiceScopeFactory scopeFactory, IDeviceRegistry deviceRegistry)
+    public TrainManager(IMqttHub mqttHub, ILogBus logBus, IServiceScopeFactory scopeFactory, IDeviceRegistry deviceRegistry, IPingService pingService)
     {
         _mqttHub = mqttHub;
         _logBus = logBus;
         _scopeFactory = scopeFactory;
         _deviceRegistry = deviceRegistry;
+        _pingService = pingService;
     }
 
     public void Initialize()
     {
         _deviceRegistry.StartListening();
+        _pingService.StartPinging();
         _mqttHub.OnMessageReceived += OnMqttMessageReceived;
         
         _mqttHub.ConnectAsync().ContinueWith(t => 
