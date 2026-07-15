@@ -40,6 +40,29 @@ public class SettingsService : ISettingsService
         return new MqttConfig();
     }
 
+    public DatabaseConfig GetDatabaseConfig()
+    {
+        try
+        {
+            if (!File.Exists(_settingsFilePath))
+                return new DatabaseConfig();
+
+            var json = File.ReadAllText(_settingsFilePath);
+            var doc = JsonNode.Parse(json);
+            
+            if (doc != null && doc["DatabaseConfig"] != null)
+            {
+                return doc["DatabaseConfig"].Deserialize<DatabaseConfig>() ?? new DatabaseConfig();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logBus.Error("SettingsService", $"DB Ayarları okunamadı: {ex.Message}");
+        }
+
+        return new DatabaseConfig();
+    }
+
     public void SaveMqttConfig(MqttConfig config)
     {
         try

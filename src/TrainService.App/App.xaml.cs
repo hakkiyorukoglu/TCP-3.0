@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Windows;
@@ -22,6 +23,23 @@ public partial class App : Application
             // Application Services
             services.AddSingleton<TrainService.Core.Abstractions.ILogBus, LogBus>();
             services.AddSingleton<TrainService.Core.Abstractions.ISettingsService, SettingsService>();
+
+            var dbPath = "trainservice.db";
+            if (System.IO.File.Exists("appsettings.json"))
+            {
+                try
+                {
+                    var json = System.IO.File.ReadAllText("appsettings.json");
+                    var node = System.Text.Json.Nodes.JsonNode.Parse(json);
+                    if (node != null && node["DatabaseConfig"] != null && node["DatabaseConfig"]["DbPath"] != null)
+                    {
+                        dbPath = node["DatabaseConfig"]["DbPath"].ToString();
+                    }
+                }
+                catch { }
+            }
+            services.AddDbContext<TrainService.Data.TrainDbContext>(options =>
+                options.UseSqlite($"Data Source={dbPath}"));
             services.AddSingleton<TrainService.Core.Abstractions.IMqttHub, TrainService.Messaging.Hubs.MqttHub>();
             services.AddSingleton<TrainService.Core.Abstractions.ITrainManager, TrainService.App.Services.TrainManager>();
 
@@ -49,6 +67,16 @@ public partial class App : Application
     {
         await _host.StartAsync();
         
+        using (var scope = _host.Services.CreateScope())
+        {
+            try {
+                var dbContext = scope.ServiceProvider.GetRequiredService<TrainService.Data.TrainDbContext>();
+                dbContext.Database.EnsureCreated();
+            } catch (System.Exception ex) {
+                System.IO.File.WriteAllText("dberror.txt", ex.ToString());
+            }
+        }
+
         var trainManager = _host.Services.GetRequiredService<TrainService.Core.Abstractions.ITrainManager>();
         trainManager.Initialize();
 
