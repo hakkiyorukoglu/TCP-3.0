@@ -45,6 +45,7 @@ public partial class App : Application
             
             services.AddSingleton<TrainService.Core.Abstractions.IMqttHub, TrainService.Messaging.Hubs.MqttHub>();
             services.AddSingleton<TrainService.Core.Abstractions.IEmbeddedBrokerService, TrainService.Messaging.Hubs.EmbeddedBrokerService>();
+            services.AddSingleton<TrainService.Core.Abstractions.IDeviceRegistry, TrainService.Messaging.Registry.DeviceRegistry>();
             services.AddSingleton<TrainService.Core.Abstractions.ITrainManager, TrainService.App.Services.TrainManager>();
             services.AddTransient<TrainService.Cad.Abstractions.ICadParser, TrainService.Cad.Parsers.JsonCadParser>();
 
