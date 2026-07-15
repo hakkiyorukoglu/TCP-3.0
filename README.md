@@ -47,8 +47,9 @@ dotnet run --project src/TrainService.App/TrainService.App.csproj
 
 ## 📝 Sürüm Geçmişi (Changelog)
 
+- **v3.0.15**: CAD Editörü altyapısı (CadViewportControl) oluşturuldu. Endüstriyel render performansı elde etmek adına `Shape` veya primitif render yerine, doğrudan DirectX/GPU iletişimine dayalı `StreamGeometry` ve Batch-Render (VBO benzeri) mimarisi sisteme entegre edildi. Z-Index sorunları giderilerek 60 FPS donanım seviyesinde çalışan gerçek UI sayaçları ve X/Y milimetrik koordinat panelleri eklendi. Ana mimari kuralları korunarak 10.000 çizgi testinde pürüzsüz akıcılık (Retained Mode) doğrulandı.
 - **v3.0.14**: Ağ üzerindeki cihazların canlı durumlarını (DeviceHealth) takip etmek üzere PingService ve DeviceRegistry MQTT LWT sistemi birleştirildi. ElectronicsView canvasındaki cihazlara canlı durum (LED) göstergeleri eklendi. `CommunityToolkit.Mvvm` bağımlılığı Messaging katmanından ayrılarak saf C# event'lerine (`Action`) geçirildi; bu sayede temiz mimari (Clean Architecture) bağımlılık kuralları (Core -> Messaging -> App) tamamen sağlandı. PingService için `PingServiceTests` xUnit testleri projeye dâhil edildi.
-- **v3.0.13**: Node-based network topology canvas (ElectronicsView) eklendi. Switch'ler ve cihazlar DataGrid yerine tuval üzerinde render edilmeye başlandı. Cihaz pozisyonları otomatik olarak hesaplandı.
+- **v3.0.13**: Node-based network topology canvas (ElectronicsView) eklendi. Switch'ler ve cihazlar DataGrid üzerinde render edilmek yerine tuval üzerinde gösterilmeye başlandı. Cihaz pozisyonları otomatik hesaplandı.
 - **v3.0.12 - Öncesi**: EF Core (SQLite) altyapısı, MQTT Embedded broker kurulumu, Dispatch (ACK/Timeout tabanlı) komut kuyruğu mekanizmaları ve birim testleri başarıyla tamamlandı.
 
 ---
