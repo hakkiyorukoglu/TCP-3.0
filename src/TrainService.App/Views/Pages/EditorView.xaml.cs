@@ -1,3 +1,4 @@
+using System.Windows;
 using System.Windows.Controls;
 using TrainService.App.ViewModels;
 
@@ -12,5 +13,18 @@ public partial class EditorView : Page
         ViewModel = viewModel;
         DataContext = this;
         InitializeComponent();
+
+        ViewModel.OnMapLoaded += (nodes, segments) =>
+        {
+            Application.Current.Dispatcher.Invoke(() => 
+            {
+                Viewer.RenderMap(nodes, segments);
+            });
+        };
+
+        this.Loaded += async (s, e) => 
+        {
+            await ViewModel.LoadSampleMapAsync();
+        };
     }
 }

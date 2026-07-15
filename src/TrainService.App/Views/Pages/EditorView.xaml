@@ -2,8 +2,9 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:controls="clr-namespace:TrainService.App.Controls"
       Title="Editor">
     <Grid>
-        <TextBlock Text="CAD Editor Page" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+        <controls:CadViewer x:Name="Viewer"/>
     </Grid>
 </Page>
