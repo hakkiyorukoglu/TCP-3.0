@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
+using CommunityToolkit.Mvvm.Messaging;
 using TrainService.Core.Entities;
 using TrainService.Core.Enums;
+using TrainService.Core.Events;
+using TrainService.Core.Abstractions;
 using TrainService.Data;
 
 namespace TrainService.App.ViewModels;
@@ -14,6 +17,8 @@ namespace TrainService.App.ViewModels;
 public partial class ElectronicsViewModel : ObservableObject
 {
     private readonly TrainDbContext _dbContext;
+    private readonly IPingService _pingService;
+    private readonly IDeviceRegistry _deviceRegistry;
 
     [ObservableProperty]
     private ObservableCollection<NetworkSwitch> _switches = new();
@@ -44,9 +49,14 @@ public partial class ElectronicsViewModel : ObservableObject
     [ObservableProperty] private int _newEntityTypeIndex = 0; // 0=Switch, 1=Device(PC), 2=Device(Station), 3=Device(Train)
     [ObservableProperty] private int _newSwitchPortCount = 5;
 
-    public ElectronicsViewModel(TrainDbContext dbContext)
+    public ElectronicsViewModel(TrainDbContext dbContext, IPingService pingService, IDeviceRegistry deviceRegistry)
     {
         _dbContext = dbContext;
+        _pingService = pingService;
+        _deviceRegistry = deviceRegistry;
+        
+        _pingService.OnPingStatusChanged += HandlePingStatus;
+        _deviceRegistry.OnDeviceStatusChanged += HandleMqttStatus;
     }
 
     public async Task LoadDataAsync()
@@ -57,6 +67,10 @@ public partial class ElectronicsViewModel : ObservableObject
         Switches = new ObservableCollection<NetworkSwitch>(switchesList);
         Devices = new ObservableCollection<Device>(devicesList);
         
+        // Cihaz IP'lerini ping servisine gönder
+        _pingService.SetIpList(Devices.Select(d => d.Ip));
+        _pingService.StartPinging();
+
         GenerateCanvasLayout();
     }
     
@@ -171,5 +185,38 @@ public partial class ElectronicsViewModel : ObservableObject
         Devices.Remove(dev);
         await _dbContext.SaveChangesAsync();
         GenerateCanvasLayout();
+    }
+
+    private void HandlePingStatus(string ipAddress, bool isSuccess)
+    {
+        System.Windows.Application.Current.Dispatcher.InvokeAsync(() => 
+        {
+            var node = CanvasNodes.OfType<TrainService.App.Models.DeviceNodeItem>()
+                .FirstOrDefault(n => n.IpAddress == ipAddress);
+                
+            if (node != null)
+            {
+                node.HealthColor = isSuccess ? "LimeGreen" : "Red";
+                node.LastSeenText = $"Son Ping: {DateTime.Now:HH:mm:ss}";
+            }
+        });
+    }
+
+    private void HandleMqttStatus(string deviceId, bool isOnline)
+    {
+        System.Windows.Application.Current.Dispatcher.InvokeAsync(() => 
+        {
+            var node = CanvasNodes.OfType<TrainService.App.Models.DeviceNodeItem>()
+                .FirstOrDefault(n => n.DeviceEntity.Id.ToString() == deviceId);
+                
+            if (node != null)
+            {
+                if (isOnline) 
+                {
+                    node.HealthColor = "DeepSkyBlue"; 
+                    node.LastSeenText = $"MQTT Aktif: {DateTime.Now:HH:mm:ss}";
+                }
+            }
+        });
     }
 }

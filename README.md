@@ -47,6 +47,7 @@ dotnet run --project src/TrainService.App/TrainService.App.csproj
 
 ## 📝 Sürüm Geçmişi (Changelog)
 
+- **v3.0.14**: Ağ üzerindeki cihazların canlı durumlarını (DeviceHealth) takip etmek üzere PingService ve DeviceRegistry MQTT LWT sistemi birleştirildi. ElectronicsView canvasındaki cihazlara canlı durum (LED) göstergeleri eklendi. `CommunityToolkit.Mvvm` bağımlılığı Messaging katmanından ayrılarak saf C# event'lerine (`Action`) geçirildi; bu sayede temiz mimari (Clean Architecture) bağımlılık kuralları (Core -> Messaging -> App) tamamen sağlandı. PingService için `PingServiceTests` xUnit testleri projeye dâhil edildi.
 - **v3.0.13**: Node-based network topology canvas (ElectronicsView) eklendi. Switch'ler ve cihazlar DataGrid yerine tuval üzerinde render edilmeye başlandı. Cihaz pozisyonları otomatik olarak hesaplandı.
 - **v3.0.12 - Öncesi**: EF Core (SQLite) altyapısı, MQTT Embedded broker kurulumu, Dispatch (ACK/Timeout tabanlı) komut kuyruğu mekanizmaları ve birim testleri başarıyla tamamlandı.
 

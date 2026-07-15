@@ -31,6 +31,9 @@ public partial class DeviceNodeItem : BaseNodeItem
     public Device DeviceEntity { get; }
     public string IpAddress => DeviceEntity.Ip;
     
+    [ObservableProperty] private string _healthColor = "Gray"; // Gray, Green, Yellow, Red
+    [ObservableProperty] private string _lastSeenText = "Son Görülme: Bilinmiyor";
+    
     public DeviceNodeItem(Device device)
     {
         DeviceEntity = device;

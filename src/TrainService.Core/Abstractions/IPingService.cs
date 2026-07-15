@@ -14,4 +14,8 @@ public interface IPingService
     /// Ping atma işlemini güvenli bir şekilde durdurur.
     /// </summary>
     void StopPinging();
+    
+    void SetIpList(System.Collections.Generic.IEnumerable<string> ips);
+    
+    event System.Action<string, bool>? OnPingStatusChanged;
 }

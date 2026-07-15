@@ -13,8 +13,8 @@ public class PingService : IPingService, IDisposable
     private readonly ILogBus _logBus;
     private readonly IDeviceRegistry _deviceRegistry;
     
-    // Şimdilik test amaçlı sabit listeyi tutuyoruz (Ağ Şeması / DB gelince dinamik olacak)
-    private readonly List<string> _ipList = new() { "127.0.0.1", "192.168.1.999" }; 
+    // Dinamik cihaz IP listesi
+    private readonly HashSet<string> _ipList = new(); 
     private CancellationTokenSource? _cts;
 
     // Önceki durumları tutarak log kirliliğini önleyelim
@@ -24,6 +24,16 @@ public class PingService : IPingService, IDisposable
     {
         _logBus = logBus;
         _deviceRegistry = deviceRegistry;
+    }
+
+    public void SetIpList(IEnumerable<string> ips)
+    {
+        _ipList.Clear();
+        foreach (var ip in ips)
+        {
+            if (!string.IsNullOrWhiteSpace(ip))
+                _ipList.Add(ip);
+        }
     }
 
     public void StartPinging()
@@ -90,6 +100,8 @@ public class PingService : IPingService, IDisposable
         }
     }
 
+    public event Action<string, bool>? OnPingStatusChanged;
+
     private void LogIfStatusChanged(string ip, bool currentStatus, string message)
     {
         _previousStatus.TryGetValue(ip, out var previousStatus);
@@ -103,6 +115,8 @@ public class PingService : IPingService, IDisposable
                 _logBus.Success("PingService", message);
             else
                 _logBus.Error("PingService", message);
+                
+            OnPingStatusChanged?.Invoke(ip, currentStatus);
         }
     }
 
