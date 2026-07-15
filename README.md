@@ -10,8 +10,9 @@ TCP (Train Control Platform) 3.0, trenlerin otonom hareketlerini simüle eden, u
 
 - **Modern Kullanıcı Arayüzü**: WPF ve Wpf.Ui kütüphaneleriyle hazırlanmış karanlık mod ve Mica destekli Fluent tasarım.
 - **Modüler Mimari**: Bağımlılık Enjeksiyonu (Dependency Injection) ile ayrıştırılmış; Core, App, Cad, Data, Firmware, Messaging ve Simulation katmanlarından oluşan temiz yapı.
-- **Gerçek Zamanlı Haberleşme (Yakında)**: MQTTnet altyapısı sayesinde binlerce cihazdan ve trenden gelen verilerin anlık işlenmesi.
-- **Gelişmiş Log Otobüsü (LogBus)**: Uygulama içi terminali ve merkezi loglama özelliğiyle yüksek düzeyde gözlemlenebilirlik.
+- **Gerçek Zamanlı Haberleşme**: MQTTnet tabanlı Hub yapısıyla cihazlardan ve istasyonlardan gelen verilerin anlık işlenmesi.
+- **Merkezi Veritabanı ve Repository**: Entity Framework Core 8 ve SQLite kullanılarak, sistemdeki tüm trenlerin, cihazların ve ray geometrilerinin kalıcı olarak depolanması.
+- **Gelişmiş Log Otobüsü (LogBus)**: Uygulama içi terminaline ek olarak, alınan tüm önemli olayların asenkron bir biçimde veritabanındaki `EventLogs` tablosuna aynalanması.
 
 ## 🏗️ Mimari Yapı
 

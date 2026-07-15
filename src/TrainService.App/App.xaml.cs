@@ -40,6 +40,9 @@ public partial class App : Application
             }
             services.AddDbContext<TrainService.Data.TrainDbContext>(options =>
                 options.UseSqlite($"Data Source={dbPath}"));
+            
+            services.AddScoped<TrainService.Core.Abstractions.ITcpRepository, TrainService.Data.Repositories.TcpRepository>();
+            
             services.AddSingleton<TrainService.Core.Abstractions.IMqttHub, TrainService.Messaging.Hubs.MqttHub>();
             services.AddSingleton<TrainService.Core.Abstractions.ITrainManager, TrainService.App.Services.TrainManager>();
 

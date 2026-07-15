@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using TrainService.Core.Abstractions;
 using TrainService.Core.Enums;
 
@@ -11,6 +12,12 @@ public class LogBus : ILogBus
 {
     private const int MaxLogCount = 2000;
     private readonly ConcurrentQueue<LogMessage> _logs = new();
+    private readonly IServiceScopeFactory _scopeFactory;
+
+    public LogBus(IServiceScopeFactory scopeFactory)
+    {
+        _scopeFactory = scopeFactory;
+    }
 
     public event Action<LogMessage>? OnMessageReceived;
 
@@ -27,6 +34,24 @@ public class LogBus : ILogBus
         }
 
         OnMessageReceived?.Invoke(log);
+
+        // Veritabanına asenkron yaz
+        System.Threading.Tasks.Task.Run(async () =>
+        {
+            try
+            {
+                using var scope = _scopeFactory.CreateScope();
+                var repo = scope.ServiceProvider.GetRequiredService<ITcpRepository>();
+                await repo.AddLogAsync(new TrainService.Core.Entities.EventLog
+                {
+                    Timestamp = log.Timestamp,
+                    Level = level.ToString(),
+                    Source = source,
+                    Message = message
+                });
+            }
+            catch { /* Hata göz ardı edilir (log-loop döngüsüne girmemesi için) */ }
+        });
     }
 
     public void Info(string source, string message) => Write(LogLevel.Info, source, message);
