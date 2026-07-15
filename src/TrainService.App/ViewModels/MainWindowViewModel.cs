@@ -7,7 +7,10 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private string _applicationTitle = "TCP 3.0 - Train Control Platform";
 
-    public MainWindowViewModel()
+    public TerminalPanelViewModel TerminalViewModel { get; }
+
+    public MainWindowViewModel(TerminalPanelViewModel terminalViewModel)
     {
+        TerminalViewModel = terminalViewModel;
     }
 }

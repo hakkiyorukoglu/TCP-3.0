@@ -4,6 +4,9 @@
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       Title="Home">
     <Grid>
-        <TextBlock Text="Home Page" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Home Page" FontSize="24" HorizontalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,20" />
+            <ui:Button Content="Test Log Üret" Command="{Binding ViewModel.TestLogCommand}" Appearance="Primary" />
+        </StackPanel>
     </Grid>
 </Page>

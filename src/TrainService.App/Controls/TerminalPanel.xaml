@@ -1,0 +1,36 @@
+<UserControl x:Class="TrainService.App.Controls.TerminalPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:core="clr-namespace:TrainService.Core.Enums;assembly=TrainService.Core"
+             Height="80" Background="#1E1E1E">
+    <ItemsControl ItemsSource="{Binding RecentLogs}" Margin="5">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <TextBlock FontFamily="Consolas" FontSize="12" Margin="0,2">
+                    <Run Text="[" Foreground="Gray" />
+                    <Run Text="{Binding Timestamp, StringFormat=HH:mm:ss.fff}" Foreground="Gray" />
+                    <Run Text="]" Foreground="Gray" />
+                    <Run Text=" [" Foreground="Gray" />
+                    <Run Text="{Binding Source}" Foreground="Cyan" />
+                    <Run Text="]" Foreground="Gray" />
+                    <Run Text=" " />
+                    <Run Text="{Binding Message}" x:Name="MsgRun" Foreground="#D4D4D4" />
+                </TextBlock>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding Level}" Value="{x:Static core:LogLevel.Success}">
+                        <Setter TargetName="MsgRun" Property="Foreground" Value="#4CAF50" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Level}" Value="{x:Static core:LogLevel.Warn}">
+                        <Setter TargetName="MsgRun" Property="Foreground" Value="#FF9800" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Level}" Value="{x:Static core:LogLevel.Error}">
+                        <Setter TargetName="MsgRun" Property="Foreground" Value="#F44336" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Level}" Value="{x:Static core:LogLevel.Info}">
+                        <Setter TargetName="MsgRun" Property="Foreground" Value="#64B5F6" />
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

@@ -19,11 +19,15 @@ public partial class App : Application
             services.AddSingleton<ISnackbarService, SnackbarService>();
             services.AddSingleton<IContentDialogService, ContentDialogService>();
 
+            // Application Services
+            services.AddSingleton<TrainService.Core.Abstractions.ILogBus, LogBus>();
+
             // ViewModels & Windows
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<MainWindow>();
 
             // Pages & ViewModels
+            services.AddTransient<TerminalPanelViewModel>();
             services.AddTransient<TrainService.App.Views.Pages.HomeView>();
             services.AddTransient<HomeViewModel>();
             services.AddTransient<TrainService.App.Views.Pages.EditorView>();
