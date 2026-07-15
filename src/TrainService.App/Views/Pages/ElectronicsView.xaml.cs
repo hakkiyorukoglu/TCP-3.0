@@ -12,5 +12,12 @@ public partial class ElectronicsView : Page
         ViewModel = viewModel;
         DataContext = this;
         InitializeComponent();
+        
+        this.Loaded += ElectronicsView_Loaded;
+    }
+
+    private async void ElectronicsView_Loaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        await ViewModel.LoadDataAsync();
     }
 }

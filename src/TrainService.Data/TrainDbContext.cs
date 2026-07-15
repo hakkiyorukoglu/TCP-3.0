@@ -12,6 +12,8 @@ public class TrainDbContext : DbContext
     public DbSet<Station> Stations { get; set; } = null!;
     public DbSet<Train> Trains { get; set; } = null!;
     public DbSet<Device> Devices { get; set; } = null!;
+    public DbSet<NetworkSwitch> NetworkSwitches { get; set; } = null!;
+    public DbSet<SwitchPort> SwitchPorts { get; set; } = null!;
     public DbSet<EventLog> EventLogs { get; set; } = null!;
 
     public TrainDbContext(DbContextOptions<TrainDbContext> options) : base(options)

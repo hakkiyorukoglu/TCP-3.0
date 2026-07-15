@@ -64,3 +64,18 @@ public sealed class Device : CadEntity
     public string Ip { get; set; } = string.Empty;
     public string Mac { get; set; } = string.Empty;
 }
+
+public sealed class NetworkSwitch : CadEntity
+{
+    public string Name { get; set; } = string.Empty;
+    public int PortCount { get; set; } = 5;
+}
+
+public sealed class SwitchPort : CadEntity
+{
+    public Guid NetworkSwitchId { get; set; }
+    public int PortNo { get; set; }
+    public PortRole Role { get; set; }
+    public Guid? ConnectedDeviceId { get; set; }
+    public Guid? CascadeSwitchId { get; set; }
+}
