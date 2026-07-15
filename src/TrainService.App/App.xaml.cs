@@ -22,6 +22,8 @@ public partial class App : Application
             // Application Services
             services.AddSingleton<TrainService.Core.Abstractions.ILogBus, LogBus>();
             services.AddSingleton<TrainService.Core.Abstractions.ISettingsService, SettingsService>();
+            services.AddSingleton<TrainService.Core.Abstractions.IMqttHub, TrainService.Messaging.Hubs.MqttHub>();
+            services.AddSingleton<TrainService.Core.Abstractions.ITrainManager, TrainService.App.Services.TrainManager>();
 
             // ViewModels & Windows
             services.AddSingleton<MainWindowViewModel>();
@@ -47,6 +49,9 @@ public partial class App : Application
     {
         await _host.StartAsync();
         
+        var trainManager = _host.Services.GetRequiredService<TrainService.Core.Abstractions.ITrainManager>();
+        trainManager.Initialize();
+
         var mainWindow = _host.Services.GetRequiredService<MainWindow>();
         mainWindow.Show();
         

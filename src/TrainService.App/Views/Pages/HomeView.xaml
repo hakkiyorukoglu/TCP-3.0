@@ -6,7 +6,8 @@
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="Home Page" FontSize="24" HorizontalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,20" />
-            <ui:Button Content="Test Log Üret" Command="{Binding ViewModel.TestLogCommand}" Appearance="Primary" />
+            <ui:Button Content="Test Log Üret" Command="{Binding ViewModel.TestLogCommand}" Appearance="Primary" Margin="0,0,0,10" HorizontalAlignment="Center" />
+            <ui:Button Content="MQTT Mesaj Gönder" Command="{Binding ViewModel.TestMqttPublishCommand}" Appearance="Secondary" HorizontalAlignment="Center" />
         </StackPanel>
     </Grid>
 </Page>
