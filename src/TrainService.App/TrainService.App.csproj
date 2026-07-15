@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\TrainService.Core\TrainService.Core.csproj" />
+    <ProjectReference Include="..\TrainService.Cad\TrainService.Cad.csproj" />
+    <ProjectReference Include="..\TrainService.Messaging\TrainService.Messaging.csproj" />
+    <ProjectReference Include="..\TrainService.Data\TrainService.Data.csproj" />
+    <ProjectReference Include="..\TrainService.Firmware\TrainService.Firmware.csproj" />
+    <ProjectReference Include="..\TrainService.Simulation\TrainService.Simulation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.10" />
+    <PackageReference Include="WPF-UI" Version="3.0.4" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+</Project>
