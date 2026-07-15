@@ -14,3 +14,8 @@ You MUST strictly follow this sequence for any feature development:
 4. **Execution:** ONLY proceed with file modifications after the user approves the plan.
 5. **App Verification:** Once implementation is complete, run the application (`dotnet run`) and STOP. Ask the user to manually test the changes on their screen.
 6. **Finalizing & Push:** ONLY AFTER the user confirms everything works and explicitly says "pushla" (push), write a detailed walkthrough/README and push the code to Git. DO NOT push before user confirmation.
+   - **CRITICAL Git Push Method:** Since the global `git` command is not available in the environment, you MUST use the GitHub Desktop embedded git executable to push.
+   - Run the following exact command format to push:
+     ```powershell
+     $git = (Get-ChildItem -Path "$env:LOCALAPPDATA\GitHubDesktop" -Recurse -Filter "git.exe" -ErrorAction SilentlyContinue | Select-Object -First 1).FullName; & $git add .; & $git commit -m "feat(v3.0.X): message"; & $git push
+     ```

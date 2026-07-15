@@ -45,5 +45,10 @@ dotnet run --project src/TrainService.App/TrainService.App.csproj
 
 > **Not:** Windows masaüstündeki `TrainService_Baslat.bat` dosyasını çalıştırarak uygulamayı hızlıca başlatabilirsiniz.
 
+## 📝 Sürüm Geçmişi (Changelog)
+
+- **v3.0.13**: Node-based network topology canvas (ElectronicsView) eklendi. Switch'ler ve cihazlar DataGrid yerine tuval üzerinde render edilmeye başlandı. Cihaz pozisyonları otomatik olarak hesaplandı.
+- **v3.0.12 - Öncesi**: EF Core (SQLite) altyapısı, MQTT Embedded broker kurulumu, Dispatch (ACK/Timeout tabanlı) komut kuyruğu mekanizmaları ve birim testleri başarıyla tamamlandı.
+
 ---
 *Geliştirme aşamasındadır (v3.0.x).*
