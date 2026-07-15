@@ -50,7 +50,7 @@ public partial class App : Application
             services.AddSingleton<TrainService.Core.Abstractions.IDispatchService, TrainService.Messaging.Commands.DispatchService>();
             services.AddSingleton<TrainService.Messaging.Mocks.MockStationClient>();
             services.AddSingleton<TrainService.Core.Abstractions.ITrainManager, TrainService.App.Services.TrainManager>();
-            services.AddTransient<TrainService.Cad.Abstractions.ICadParser, TrainService.Cad.Parsers.JsonCadParser>();
+            // JsonCadParser söküldü. (Mimari kural gereği veriler DB'den gelecek)
 
             // ViewModels & Windows
             services.AddSingleton<MainWindowViewModel>();
@@ -80,7 +80,7 @@ public partial class App : Application
         {
             try {
                 var dbContext = scope.ServiceProvider.GetRequiredService<TrainService.Data.TrainDbContext>();
-                dbContext.Database.EnsureCreated();
+                dbContext.Database.Migrate();
             } catch (System.Exception ex) {
                 System.IO.File.WriteAllText("dberror.txt", ex.ToString());
             }
