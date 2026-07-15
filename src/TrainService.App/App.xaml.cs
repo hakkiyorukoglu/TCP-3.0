@@ -21,6 +21,7 @@ public partial class App : Application
 
             // Application Services
             services.AddSingleton<TrainService.Core.Abstractions.ILogBus, LogBus>();
+            services.AddSingleton<TrainService.Core.Abstractions.ISettingsService, SettingsService>();
 
             // ViewModels & Windows
             services.AddSingleton<MainWindowViewModel>();

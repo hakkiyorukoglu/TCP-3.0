@@ -3,7 +3,17 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       Title="Settings">
-    <Grid>
-        <TextBlock Text="Settings Page" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+    <Grid Margin="20">
+        <StackPanel MaxWidth="400" HorizontalAlignment="Left">
+            <TextBlock Text="MQTT Ayarları" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+            
+            <TextBlock Text="Broker IP Adresi" Margin="0,0,0,5" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+            <ui:TextBox Text="{Binding ViewModel.MqttBrokerIp, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15" />
+
+            <TextBlock Text="Port" Margin="0,0,0,5" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+            <ui:TextBox Text="{Binding ViewModel.MqttPort, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,25" />
+
+            <ui:Button Content="Ayarları Kaydet" Command="{Binding ViewModel.SaveSettingsCommand}" Appearance="Primary" HorizontalAlignment="Right" />
+        </StackPanel>
     </Grid>
 </Page>
