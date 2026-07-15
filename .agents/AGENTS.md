@@ -189,10 +189,12 @@ App → (Cad, Messaging, Data, Firmware, Simulation) → Core
 - **Repo:** https://github.com/hakkiyorukoglu/TCP-3.0
 - **Git path:** `C:\Users\yoruk\AppData\Local\GitHubDesktop\app-3.6.2\resources\app\git\cmd\git.exe`
 - Her versiyon (v3.0.x) tamamlandığında ve kabul kriterleri doğrulandığında:
-  1. `git add -A`
-  2. `git commit -m "v3.0.x: <versiyon açıklaması>"`
-  3. `git tag v3.0.x`
-  4. `git push origin main --tags`
+  1. `dotnet run` komutu ile uygulamayı çalıştır (`run_command` arka plan görevi olarak).
+  2. Kullanıcıya programı incelemesini söyle ve "pushla" diyene kadar BEKLE.
+  3. `git add -A`
+  4. `git commit -m "v3.0.x: <versiyon açıklaması>"`
+  5. `git tag v3.0.x`
+  6. `git push origin main --tags`
 - Commit mesajları her zaman versiyon numarasıyla başlar
 - PATH ayarı: `$env:PATH = "C:\Users\yoruk\AppData\Local\GitHubDesktop\app-3.6.2\resources\app\git\cmd;$env:PATH"`
 
