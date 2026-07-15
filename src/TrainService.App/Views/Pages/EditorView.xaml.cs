@@ -14,14 +14,7 @@ public partial class EditorView : Page
         DataContext = this;
         InitializeComponent();
 
-        ViewModel.OnTestLinesLoaded += (lines) =>
-        {
-            Application.Current.Dispatcher.Invoke(() => 
-            {
-                Viewport.SetTestLines(lines);
-            });
-        };
-        
+
         // Fare hareket ettikçe Viewport'tan dünya koordinatını alıp doğrudan Label'a yazalım
         Viewport.MouseMove += (s, e) =>
         {
@@ -43,9 +36,9 @@ public partial class EditorView : Page
             });
         };
 
-        this.Loaded += async (s, e) => 
+        this.Loaded += (s, e) => 
         {
-            await ViewModel.LoadSampleMapAsync();
+            Viewport.AttachDocument(ViewModel.Document);
         };
     }
 }

@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using TrainService.Core.Geometry;
+using TrainService.Cad;
 
 namespace TrainService.App.Controls.CadCanvas;
 
@@ -28,7 +29,7 @@ public class CadViewportControl : ContentControl
     private Stopwatch _fpsTimer = new();
     private int _frameCount = 0;
     
-    private List<(Vector2D p1, Vector2D p2)> _testLines = new();
+    private CadDocument? _document;
 
     public CadViewportControl()
     {
@@ -74,11 +75,24 @@ public class CadViewportControl : ContentControl
         }
     }
     
-    public void SetTestLines(List<(Vector2D, Vector2D)> lines)
+    public void AttachDocument(CadDocument doc)
     {
-        _testLines = lines;
-        // Model SADECE BİR KERE dünya koordinatlarında çizilir!
-        RenderModelBake(); 
+        if (_document != null)
+        {
+            _document.Changed -= OnDocumentChanged;
+        }
+        
+        _document = doc;
+        _document.Changed += OnDocumentChanged;
+        
+        RenderModelBake();
+        RequestRender();
+    }
+
+    private void OnDocumentChanged(object? sender, DocumentChangedEventArgs e)
+    {
+        // Gelişmiş versiyonlarda kirli-bölge (DirtyRegion) okunur. Şimdilik tam yeniden çizim.
+        RenderModelBake();
         RequestRender();
     }
 
@@ -162,24 +176,43 @@ public class CadViewportControl : ContentControl
     private void RenderModelBake()
     {
         using var dc = _modelVisual.RenderOpen();
-        if (_testLines.Count == 0) return;
+        if (_document == null || _document.Entities.Count == 0) return;
         
-        var pen = new Pen(Brushes.DodgerBlue, 2);
-        pen.Freeze();
+        var linePen = new Pen(Brushes.DodgerBlue, 2);
+        linePen.Freeze();
+        
+        var nodePen = new Pen(Brushes.Orange, 1);
+        nodePen.Freeze();
+        var nodeBrush = Brushes.Yellow;
 
         var streamGeometry = new StreamGeometry();
         using (var sgc = streamGeometry.Open())
         {
-            foreach (var line in _testLines)
+            foreach (var entity in _document.Entities)
             {
-                sgc.BeginFigure(new Point(line.p1.X, line.p1.Y), false, false);
-                sgc.LineTo(new Point(line.p2.X, line.p2.Y), true, false);
+                if (entity is TrainService.Core.Entities.TrackSegment segment)
+                {
+                    if (_document.TryGetEntity(segment.StartNodeId, out var sn) && sn is TrainService.Core.Entities.TrackNode startNode &&
+                        _document.TryGetEntity(segment.EndNodeId, out var en) && en is TrainService.Core.Entities.TrackNode endNode)
+                    {
+                        sgc.BeginFigure(new Point(startNode.Position.X, startNode.Position.Y), false, false);
+                        sgc.LineTo(new Point(endNode.Position.X, endNode.Position.Y), true, false);
+                    }
+                }
             }
         }
-        streamGeometry.Freeze(); // GPU'ya yükle
+        streamGeometry.Freeze();
         
-        // 10.000 DrawLine yerine 1 DrawGeometry çağrısı
-        dc.DrawGeometry(null, pen, streamGeometry);
+        dc.DrawGeometry(null, linePen, streamGeometry);
+        
+        // Düğümleri (TrackNode) kare olarak çiz
+        foreach (var entity in _document.Entities)
+        {
+            if (entity is TrainService.Core.Entities.TrackNode node)
+            {
+                dc.DrawRectangle(nodeBrush, nodePen, new Rect(node.Position.X - 5, node.Position.Y - 5, 10, 10));
+            }
+        }
     }
 
     private void RenderGrid()

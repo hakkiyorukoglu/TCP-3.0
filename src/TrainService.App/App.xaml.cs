@@ -50,7 +50,11 @@ public partial class App : Application
             services.AddSingleton<TrainService.Core.Abstractions.IDispatchService, TrainService.Messaging.Commands.DispatchService>();
             services.AddSingleton<TrainService.Messaging.Mocks.MockStationClient>();
             services.AddSingleton<TrainService.Core.Abstractions.ITrainManager, TrainService.App.Services.TrainManager>();
-            // JsonCadParser söküldü. (Mimari kural gereği veriler DB'den gelecek)
+            
+            // Cad Services
+            services.AddSingleton<TrainService.Cad.CadDocument>();
+            services.AddSingleton<TrainService.Cad.UndoRedo.CommandStack>();
+            services.AddSingleton<TrainService.Cad.Selection.SelectionService>();
 
             // ViewModels & Windows
             services.AddSingleton<MainWindowViewModel>();
