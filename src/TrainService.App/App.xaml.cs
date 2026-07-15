@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Windows;
+using TrainService.App.ViewModels;
+using Wpf.Ui;
 
 namespace TrainService.App;
 
@@ -10,6 +12,13 @@ public partial class App : Application
         .CreateDefaultBuilder()
         .ConfigureServices((context, services) =>
         {
+            // WPF-UI Services
+            services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<ISnackbarService, SnackbarService>();
+            services.AddSingleton<IContentDialogService, ContentDialogService>();
+
+            // ViewModels & Windows
+            services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<MainWindow>();
         }).Build();
 
