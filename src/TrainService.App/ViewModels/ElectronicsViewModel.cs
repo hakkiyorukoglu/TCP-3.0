@@ -20,6 +20,13 @@ public partial class ElectronicsViewModel : ObservableObject
 
     [ObservableProperty]
     private ObservableCollection<Device> _devices = new();
+    
+    // Canvas Node Listeleri
+    [ObservableProperty]
+    private ObservableCollection<TrainService.App.Models.BaseNodeItem> _canvasNodes = new();
+    
+    [ObservableProperty]
+    private ObservableCollection<TrainService.App.Models.ConnectionLineItem> _canvasConnections = new();
 
     [ObservableProperty]
     private NetworkSwitch? _selectedSwitch;
@@ -49,6 +56,47 @@ public partial class ElectronicsViewModel : ObservableObject
 
         Switches = new ObservableCollection<NetworkSwitch>(switchesList);
         Devices = new ObservableCollection<Device>(devicesList);
+        
+        GenerateCanvasLayout();
+    }
+    
+    private void GenerateCanvasLayout()
+    {
+        CanvasNodes.Clear();
+        CanvasConnections.Clear();
+        
+        double currentX = 50;
+        double currentY = 50;
+        
+        // 1. Switchleri üst sıraya diz
+        foreach (var sw in Switches)
+        {
+            var node = new TrainService.App.Models.SwitchNodeItem(sw)
+            {
+                X = currentX,
+                Y = currentY
+            };
+            CanvasNodes.Add(node);
+            currentX += 200; // Aralarında 200px boşluk
+        }
+        
+        // 2. Cihazları alt sıraya diz
+        currentX = 50;
+        currentY = 250;
+        
+        foreach (var dev in Devices)
+        {
+            var node = new TrainService.App.Models.DeviceNodeItem(dev)
+            {
+                X = currentX,
+                Y = currentY
+            };
+            CanvasNodes.Add(node);
+            currentX += 150;
+        }
+        
+        // Şimdilik bağlantıları DB'den tam parse etmedik (çünkü SwitchPorts henüz arayüzden bağlanmıyor).
+        // Ancak altyapı hazır.
     }
 
     [RelayCommand]
@@ -102,6 +150,7 @@ public partial class ElectronicsViewModel : ObservableObject
 
         await _dbContext.SaveChangesAsync();
         IsDrawerOpen = false;
+        GenerateCanvasLayout();
     }
 
     [RelayCommand]
@@ -111,6 +160,7 @@ public partial class ElectronicsViewModel : ObservableObject
         _dbContext.NetworkSwitches.Remove(sw);
         Switches.Remove(sw);
         await _dbContext.SaveChangesAsync();
+        GenerateCanvasLayout();
     }
 
     [RelayCommand]
@@ -120,5 +170,6 @@ public partial class ElectronicsViewModel : ObservableObject
         _dbContext.Devices.Remove(dev);
         Devices.Remove(dev);
         await _dbContext.SaveChangesAsync();
+        GenerateCanvasLayout();
     }
 }
