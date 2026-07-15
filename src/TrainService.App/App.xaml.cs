@@ -44,6 +44,7 @@ public partial class App : Application
             services.AddScoped<TrainService.Core.Abstractions.ITcpRepository, TrainService.Data.Repositories.TcpRepository>();
             
             services.AddSingleton<TrainService.Core.Abstractions.IMqttHub, TrainService.Messaging.Hubs.MqttHub>();
+            services.AddSingleton<TrainService.Core.Abstractions.IEmbeddedBrokerService, TrainService.Messaging.Hubs.EmbeddedBrokerService>();
             services.AddSingleton<TrainService.Core.Abstractions.ITrainManager, TrainService.App.Services.TrainManager>();
 
             // ViewModels & Windows
@@ -83,6 +84,9 @@ public partial class App : Application
         var trainManager = _host.Services.GetRequiredService<TrainService.Core.Abstractions.ITrainManager>();
         trainManager.Initialize();
 
+        var embeddedBroker = _host.Services.GetRequiredService<TrainService.Core.Abstractions.IEmbeddedBrokerService>();
+        _ = embeddedBroker.StartAsync(1883);
+
         var mainWindow = _host.Services.GetRequiredService<MainWindow>();
         mainWindow.Show();
         
@@ -91,6 +95,9 @@ public partial class App : Application
 
     protected override async void OnExit(ExitEventArgs e)
     {
+        var embeddedBroker = _host.Services.GetRequiredService<TrainService.Core.Abstractions.IEmbeddedBrokerService>();
+        await embeddedBroker.StopAsync();
+
         await _host.StopAsync();
         _host.Dispose();
         
