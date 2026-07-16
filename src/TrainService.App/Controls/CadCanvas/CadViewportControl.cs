@@ -6,9 +6,12 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using TrainService.Core.Geometry;
+using TrainService.Core.Entities;
 using TrainService.Cad;
 using TrainService.Cad.Snapping;
+using TrainService.Cad.Selection;
 using TrainService.Cad.Tools;
+using TrainService.App.Resources;
 
 namespace TrainService.App.Controls.CadCanvas;
 
@@ -36,6 +39,14 @@ public class CadViewportControl : ContentControl
     private int _frameCount = 0;
     
     private CadDocument? _document;
+    private SelectionService? _selectionService;
+    private Guid _hoveredId = Guid.Empty;
+
+    public void AttachSelection(SelectionService sel)
+    {
+        _selectionService = sel;
+        sel.SelectionChanged += (s, e) => { RenderModelBake(); RequestRender(); };
+    }
 
     private static Brush CreateFrozenAccentBrush()
     {
@@ -188,10 +199,17 @@ public class CadViewportControl : ContentControl
 
     private void OnMouseUp(object sender, MouseButtonEventArgs e)
     {
-        if (e.MiddleButton == MouseButtonState.Released && _isPanning)
+        if (e.ChangedButton == MouseButton.Middle && _isPanning)
         {
             _isPanning = false;
             this.ReleaseMouseCapture();
+            return;
+        }
+        if (!_isPanning && ToolController != null && _lastSnap != null)
+        {
+            ToolController.PointerUp(_lastSnap, e.ChangedButton);
+            RenderModelBake();
+            RequestRender();
         }
     }
 
@@ -217,6 +235,28 @@ public class CadViewportControl : ContentControl
         else if (ToolController != null)
         {
             _lastSnap = ToolController.PointerMove(currentPos, 25.0);
+            // Hover hit-test (sadece fare sol butonu basılı değilken)
+            if (e.LeftButton == MouseButtonState.Released && _document != null)
+            {
+                var world = Transform.ScreenToWorld(currentPos);
+                var tolWorld = SnapEngine.ScreenToleranceToWorld(8.0, Transform.Scale);
+                var box = BoundingBox.FromPoint(world, tolWorld);
+                var buf = new List<Guid>(16);
+                _document.QueryRegion(box, buf);
+                Guid newHover = Guid.Empty;
+                double bestSq = tolWorld * tolWorld;
+                foreach (var id in buf)
+                {
+                    if (!_document.TryGetEntity(id, out var ent)) continue;
+                    double dSq = EntityDistSq(ent, world);
+                    if (dSq <= bestSq) { bestSq = dSq; newHover = id; }
+                }
+                if (newHover != _hoveredId)
+                {
+                    _hoveredId = newHover;
+                    RenderModelBake();
+                }
+            }
             RenderToolLayer(_lastSnap);
         }
     }
@@ -237,6 +277,20 @@ public class CadViewportControl : ContentControl
             Point p2 = Transform.WorldToScreen(line.To);
             Pen pen = line.IsValid ? PreviewValidPen : PreviewInvalidPen;
             dc.DrawLine(pen, p1, p2);
+        }
+        else if (ToolController?.ActiveTool?.Preview is PreviewRectangle rect)
+        {
+            Point p1 = Transform.WorldToScreen(rect.From);
+            Point p2 = Transform.WorldToScreen(rect.To);
+            var r2 = new Rect(p1, p2);
+            if (rect.IsCrossing)
+            {
+                dc.DrawRectangle(CadColors.CrossingFill, CadColors.CrossingPen, r2);  // yeşil kesikli
+            }
+            else
+            {
+                dc.DrawRectangle(CadColors.WindowFill, CadColors.WindowPen, r2);      // mavi düz
+            }
         }
 
         // 2. Draw Snap Marker
@@ -294,23 +348,23 @@ public class CadViewportControl : ContentControl
     {
         using var dc = _modelVisual.RenderOpen();
         if (_document == null || _document.Entities.Count == 0) return;
+
+        var selectedIds = _selectionService?.SelectedIds;
         
-        var linePen = new Pen(Brushes.DodgerBlue, 2);
-        linePen.Freeze();
-        
-        var nodePen = new Pen(Brushes.Orange, 1);
-        nodePen.Freeze();
-        var nodeBrush = Brushes.Yellow;
+        // Normal kalemler
+        var normalLinePen = new Pen(Brushes.DodgerBlue, 2); normalLinePen.Freeze();
+        var normalNodePen = new Pen(Brushes.Orange, 1); normalNodePen.Freeze();
+        var normalNodeBrush = Brushes.Yellow;
 
         var streamGeometry = new StreamGeometry();
         using (var sgc = streamGeometry.Open())
         {
             foreach (var entity in _document.Entities)
             {
-                if (entity is TrainService.Core.Entities.TrackSegment segment)
+                if (entity is TrackSegment segment)
                 {
-                    if (_document.TryGetEntity(segment.StartNodeId, out var sn) && sn is TrainService.Core.Entities.TrackNode startNode &&
-                        _document.TryGetEntity(segment.EndNodeId, out var en) && en is TrainService.Core.Entities.TrackNode endNode)
+                    if (_document.TryGetEntity(segment.StartNodeId, out var sn) && sn is TrackNode startNode &&
+                        _document.TryGetEntity(segment.EndNodeId, out var en) && en is TrackNode endNode)
                     {
                         sgc.BeginFigure(new Point(startNode.Position.X, startNode.Position.Y), false, false);
                         sgc.LineTo(new Point(endNode.Position.X, endNode.Position.Y), true, false);
@@ -319,16 +373,63 @@ public class CadViewportControl : ContentControl
             }
         }
         streamGeometry.Freeze();
+        dc.DrawGeometry(null, normalLinePen, streamGeometry);
         
-        dc.DrawGeometry(null, linePen, streamGeometry);
-        
-        // Düğümleri (TrackNode) kare olarak çiz
+        // Düğümler — seçili/hover vurgusu uygulanır
         foreach (var entity in _document.Entities)
         {
-            if (entity is TrainService.Core.Entities.TrackNode node)
+            if (entity is TrackNode node)
             {
-                dc.DrawRectangle(nodeBrush, nodePen, new Rect(node.Position.X - 5, node.Position.Y - 5, 10, 10));
+                bool isSelected = selectedIds?.Contains(node.Id) ?? false;
+                bool isHovered  = node.Id == _hoveredId;
+                
+                Pen pen = isSelected ? CadColors.SelectedPen
+                        : isHovered  ? CadColors.HoverPen
+                        : normalNodePen;
+                Brush brush = isSelected || isHovered ? Brushes.White : normalNodeBrush;
+                
+                dc.DrawRectangle(brush, pen, new Rect(node.Position.X - 5, node.Position.Y - 5, 10, 10));
             }
+        }
+        
+        // Segmentleri seçim/hover rengiyle çiz (seçiliyse üstüne beyaz çiz)
+        foreach (var entity in _document.Entities)
+        {
+            if (entity is TrackSegment seg)
+            {
+                bool isSelected = selectedIds?.Contains(seg.Id) ?? false;
+                bool isHovered  = seg.Id == _hoveredId;
+                if (!isSelected && !isHovered) continue;
+
+                if (_document.TryGetEntity(seg.StartNodeId, out var sn) && sn is TrackNode sNode &&
+                    _document.TryGetEntity(seg.EndNodeId,   out var en) && en is TrackNode eNode)
+                {
+                    Pen vurgPen = isSelected ? CadColors.SelectedPen : CadColors.HoverPen;
+                    dc.DrawLine(vurgPen,
+                        new Point(sNode.Position.X, sNode.Position.Y),
+                        new Point(eNode.Position.X, eNode.Position.Y));
+                }
+            }
+        }
+    }
+
+    private double EntityDistSq(CadEntity e, Vector2D p)
+    {
+        switch (e)
+        {
+            case TrackNode n:
+            {
+                double dx = p.X - n.Position.X, dy = p.Y - n.Position.Y;
+                return dx * dx + dy * dy;
+            }
+            case TrackSegment s:
+            {
+                if (_document!.TryGetEntity(s.StartNodeId, out var sa) && sa is TrackNode a &&
+                    _document.TryGetEntity(s.EndNodeId, out var sb) && sb is TrackNode b)
+                    return TrainService.Core.Geometry.Vector2DMath.DistanceSquaredToSegment(p, a.Position, b.Position, out _);
+                return double.MaxValue;
+            }
+            default: return double.MaxValue;
         }
     }
 

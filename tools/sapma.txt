@@ -4,3 +4,12 @@ v3.0.18 Mühürleme Sürecinde Ortaya Çıkan ve Onaylanan Sapmalar:
 1. 40→10 CRUD Konsolidasyonu: `Smoke_*` dolgu testleri (90 adet) tamamen silindi, yerine 10 adet gerçek "round-trip" CRUD testi (`CrudSmokeTests.cs`) yazılarak veritabanı persist işlemi doğrulandı.
 2. Guid Converter Kaldırılması: Mimari kirlilik yarattığı tespit edildiğinden, `CadEntity` dönüşümleri için EF Core üzerindeki Guid Converter stratejisi iptal edildi. Bunun yerine saf ADO.NET kullanılarak Guid/String dönüşümü manuel yapıldı.
 3. Test Önceliği: T011 dahil olmak üzere tüm sahte (dummy) testler silinmiş, test gövdeleri API davranışı etrafında kurgulanmıştır.
+
+--- v3.0.21 ---
+Sapma-1: DeleteEntitiesCommand - node-yetim segment sınırı
+  Açıklama: Bir TrackNode silinip buna bağlı TrackSegment seçimde yoksa yetim referans kalır.
+  MVP kararı: Sadece seçili olanlar silinir; tutarlılık denetimi (bağlı segment uyarısı) v3.0.32'ye ertelendi.
+Sapma-2: SelectTool sürükleme eşiği - dünya koordinatında MVP
+  Açıklama: Sürükleme başlangıcı için eşik dünya koordinatı (epsilon) kullanılıyor.
+  App katmanı px-based DragThreshold ileride ToolContext'e eklenebilir (şimdi her hareket dragging=true).
+---

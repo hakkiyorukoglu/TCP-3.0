@@ -50,6 +50,10 @@ public sealed class TrackTool : ITool
         }
     }
 
+    public void OnPointerUp(SnapResult snapped, ToolMouseButton button, ToolContext ctx)
+    {
+    }
+
     public void OnPointerDown(SnapResult snapped, ToolMouseButton button, ToolContext ctx)
     {
         if (button == ToolMouseButton.Right)

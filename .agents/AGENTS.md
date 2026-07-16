@@ -254,8 +254,8 @@ Bu listede tek "hayır" varsa sürüm mühürlenmez.
 - v3.0.18 TrackTool: tıkla-tıkla ray + Ctrl+S ilişkisel kayıt **(MÜHÜRLENDİ)**
 - v3.0.19 SnapEngine v2: Endpoint+OnSegment+SpatialHash **(MÜHÜRLENDİ)**
 - v3.0.20 TrackGraph: topoloji grafı, komşuluk, rota doğrulama, blok bölme 🔍 **(MÜHÜRLENDİ)**
-- **v3.0.21 SelectTool + Marquee seçim** ← SIRADAKİ
-- v3.0.22 Pano: Ctrl+C/X/V
+- **v3.0.21 SelectTool + Marquee seçim (Window/Crossing, Hover, Delete)** **(MÜHÜRLENDİ)**
+- **v3.0.22 Pano: Ctrl+C/X/V** ← SIRADAKİ
 - v3.0.23 Katmanlar (Zemin/Alt/Üst)
 - v3.0.24 RouteTool (Hat çizimi + yön okları)
 - v3.0.25 HybridTool (eşzamanlı Track+Route) 🔍

@@ -59,15 +59,17 @@ public partial class EditorView : Page
         {
             _ = ViewModel.InitializeAsync();
             Viewport.AttachDocument(ViewModel.Document);
+            Viewport.AttachSelection(ViewModel.SelectionService);
+
 
             var ctx = new TrainService.Cad.Tools.ToolContext(ViewModel.Document, ViewModel.CommandStack, ViewModel.SelectionService);
-            var initialTool = new TrainService.Cad.Tools.SelectToolStub();
+            var initialTool = new TrainService.Cad.Tools.SelectTool();
             Viewport.ToolController = new TrainService.App.Controls.CadCanvas.ToolController(ctx, ViewModel.SnapEngine, Viewport.Transform, initialTool);
 
             ViewModel.ToolChangeRequested += (toolName) =>
             {
                 if (toolName == "Select")
-                    Viewport.ToolController.SetTool(new TrainService.Cad.Tools.SelectToolStub());
+                    Viewport.ToolController.SetTool(new TrainService.Cad.Tools.SelectTool());
                 else if (toolName == "Track")
                     Viewport.ToolController.SetTool(new TrainService.Cad.Tools.TrackTool());
             };

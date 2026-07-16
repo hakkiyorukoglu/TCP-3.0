@@ -18,4 +18,16 @@ public readonly record struct Vector2D(double X, double Y)
     public static Vector2D operator /(Vector2D a, double scalar) => new(a.X / scalar, a.Y / scalar);
 }
 
-public readonly record struct BoundingBox(double MinX, double MinY, double MaxX, double MaxY);
+public readonly record struct BoundingBox(double MinX, double MinY, double MaxX, double MaxY)
+{
+    public bool Contains(BoundingBox other)
+        => other.MinX >= MinX && other.MaxX <= MaxX
+        && other.MinY >= MinY && other.MaxY <= MaxY;
+
+    public bool IntersectsWith(BoundingBox other)
+        => !(other.MinX > MaxX || other.MaxX < MinX
+          || other.MinY > MaxY || other.MaxY < MinY);
+
+    public static BoundingBox FromPoint(Vector2D p, double tol)
+        => new(p.X - tol, p.Y - tol, p.X + tol, p.Y + tol);
+}

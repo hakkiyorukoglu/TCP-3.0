@@ -10,27 +10,28 @@ namespace TrainService.App.Controls.CadCanvas;
 
 public sealed class ToolController
 {
-    private readonly ToolContext _ctx;
+    private readonly ToolContext _ctxBase;
     private readonly SnapEngine _snapEngine;
     private readonly ViewportTransform _transform;
+    private const double ClickTolerancePx = 6.0;
 
     public ITool ActiveTool { get; private set; }
     public event EventHandler? ActiveToolChanged;
 
     public ToolController(ToolContext ctx, SnapEngine snapEngine, ViewportTransform transform, ITool initialTool)
     {
-        _ctx = ctx;
+        _ctxBase = ctx;
         _snapEngine = snapEngine;
         _transform = transform;
         ActiveTool = initialTool;
-        ActiveTool.Activate(_ctx);
+        ActiveTool.Activate(CtxWith());
     }
 
     public void SetTool(ITool tool)
     {
-        ActiveTool.Deactivate(_ctx);
+        ActiveTool.Deactivate(CtxWith());
         ActiveTool = tool;
-        tool.Activate(_ctx);
+        tool.Activate(CtxWith());
         ActiveToolChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -38,21 +39,21 @@ public sealed class ToolController
     {
         var world = _transform.ScreenToWorld(screen);
         var tol = SnapEngine.ScreenToleranceToWorld(snapTolerancePx, _transform.Scale);
-        var lastSnap = _snapEngine.Resolve(world, tol, _ctx.Document);
-        ActiveTool.OnPointerMove(lastSnap, _ctx);
+        var lastSnap = _snapEngine.Resolve(world, tol, _ctxBase.Document);
+        ActiveTool.OnPointerMove(lastSnap, CtxWith());
         return lastSnap;
     }
 
     public void PointerDown(SnapResult lastSnap, MouseButton button)
     {
-        ToolMouseButton tb = button switch
-        {
-            MouseButton.Left => ToolMouseButton.Left,
-            MouseButton.Right => ToolMouseButton.Right,
-            MouseButton.Middle => ToolMouseButton.Middle,
-            _ => ToolMouseButton.Left
-        };
-        ActiveTool.OnPointerDown(lastSnap, tb, _ctx);
+        ToolMouseButton tb = Map(button);
+        ActiveTool.OnPointerDown(lastSnap, tb, CtxWith());
+    }
+
+    public void PointerUp(SnapResult lastSnap, MouseButton button)
+    {
+        ToolMouseButton tb = Map(button);
+        ActiveTool.OnPointerUp(lastSnap, tb, CtxWith());
     }
 
     public bool KeyDown(Key key)
@@ -60,13 +61,30 @@ public sealed class ToolController
         switch (key)
         {
             case Key.Escape:
-                ActiveTool.OnKeyDown(ToolKey.Escape, _ctx);
+                ActiveTool.OnKeyDown(ToolKey.Escape, CtxWith());
                 return true;
             case Key.Enter:
-                ActiveTool.OnKeyDown(ToolKey.Enter, _ctx);
+                ActiveTool.OnKeyDown(ToolKey.Enter, CtxWith());
+                return true;
+            case Key.Delete:
+                ActiveTool.OnKeyDown(ToolKey.Delete, CtxWith());
                 return true;
             default:
                 return false;
         }
     }
+
+    private ToolContext CtxWith() => _ctxBase with
+    {
+        ModifierAdd = (Keyboard.Modifiers & (ModifierKeys.Shift | ModifierKeys.Control)) != 0,
+        ClickToleranceWorld = SnapEngine.ScreenToleranceToWorld(ClickTolerancePx, _transform.Scale)
+    };
+
+    private static ToolMouseButton Map(MouseButton button) => button switch
+    {
+        MouseButton.Left   => ToolMouseButton.Left,
+        MouseButton.Right  => ToolMouseButton.Right,
+        MouseButton.Middle => ToolMouseButton.Middle,
+        _                  => ToolMouseButton.Left
+    };
 }

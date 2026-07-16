@@ -47,7 +47,9 @@ dotnet run --project src/TrainService.App/TrainService.App.csproj
 
 ## 📝 Sürüm Geçmişi (Changelog)
 
+- **v3.0.21**: `SelectTool` tam implementasyonu tamamlandı. AutoCAD referanslı Marquee seçim: soldan-sağa = Window (mavi, Contains), sağdan-sola = Crossing (yeşil kesikli, IntersectsWith). Hover vurgusu (cyan), seçim vurgusu (beyaz kesikli), `DeleteEntitiesCommand` (undo'lu silme) ve merkezi `CadColors` paleti eklendi.
 - **v3.0.20**: `TrackGraph` ile ray ağının mantıksal topolojisi, komşuluk analizleri ve rota doğrulama mekanizması Core katmanına eklendi. İlk geniş çaplı "5-Sürüm Geriye Dönük Denetim" gerçekleştirildi.
+
 - **v3.0.19**: `SnapEngine v2` geliştirilerek Endpoint (uç nokta) ve OnSegment (hat üzeri) yakalama özellikleri `SpatialHash` mimarisiyle eklendi.
 - **v3.0.18**: `TrackTool` entegre edilerek ekranda tıkla-tıkla ray çizim mekanizması ve Ctrl+S (Undo/Redo CommandStack) ilişkisel kayıt altyapısı sağlandı.
 - **v3.0.17**: `SnapEngine v1` ile GridSnap (ızgaraya hizalama) altyapısı kuruldu.
