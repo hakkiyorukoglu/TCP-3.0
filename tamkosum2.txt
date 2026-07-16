@@ -1,0 +1,276 @@
+﻿  Geri yüklenecek projeler belirleniyor...
+  Geri yükleme için tüm projeler güncel.
+  TrainService.Core -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\src\TrainService.Core\bin\Release\net8.0\TrainService.Core.dll
+  TrainService.Simulation -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\src\TrainService.Simulation\bin\Release\net8.0\TrainService.Simulation.dll
+  TrainService.Firmware -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\src\TrainService.Firmware\bin\Release\net8.0\TrainService.Firmware.dll
+  TrainService.Messaging -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\src\TrainService.Messaging\bin\Release\net8.0\TrainService.Messaging.dll
+  TrainService.Cad -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\src\TrainService.Cad\bin\Release\net8.0\TrainService.Cad.dll
+  TrainService.Data -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\src\TrainService.Data\bin\Release\net8.0\TrainService.Data.dll
+  TrainService.Messaging.Tests -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Release\net8.0\TrainService.Messaging.Tests.dll
+  TrainService.Data.Tests -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Data.Tests\bin\Release\net8.0\TrainService.Data.Tests.dll
+C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Release\net8.0\TrainService.Messaging.Tests.dll (.NETCoreApp,Version=v8.0) için test çalıştırması
+C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Data.Tests\bin\Release\net8.0\TrainService.Data.Tests.dll (.NETCoreApp,Version=v8.0) için test çalıştırması
+  TrainService.Simulation.Tests -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Simulation.Tests\bin\Release\net8.0\TrainService.Simulation.Tests.dll
+C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Simulation.Tests\bin\Release\net8.0\TrainService.Simulation.Tests.dll (.NETCoreApp,Version=v8.0) için test çalıştırması
+VSTest sürümü 17.11.1 (x64)
+VSTest sürümü 17.11.1 (x64)
+
+
+  TrainService.Core.Tests -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Core.Tests\bin\Release\net8.0\TrainService.Core.Tests.dll
+C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Core.Tests\bin\Release\net8.0\TrainService.Core.Tests.dll (.NETCoreApp,Version=v8.0) için test çalıştırması
+VSTest sürümü 17.11.1 (x64)
+
+Test yürütmesi başlatılıyor, lütfen bekleyin...
+Toplam 1 test dosyası belirtilen desenle eşleşti.
+VSTest sürümü 17.11.1 (x64)
+
+Test yürütmesi başlatılıyor, lütfen bekleyin...
+Toplam 1 test dosyası belirtilen desenle eşleşti.
+Test yürütmesi başlatılıyor, lütfen bekleyin...
+Toplam 1 test dosyası belirtilen desenle eşleşti.
+Test yürütmesi başlatılıyor, lütfen bekleyin...
+Toplam 1 test dosyası belirtilen desenle eşleşti.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.28)
+[xUnit.net 00:00:00.14]   Discovering: TrainService.Data.Tests
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.28)
+[xUnit.net 00:00:00.22]   Discovered:  TrainService.Data.Tests
+[xUnit.net 00:00:00.23]   Starting:    TrainService.Data.Tests
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.28)
+[xUnit.net 00:00:00.14]   Discovering: TrainService.Messaging.Tests
+[xUnit.net 00:00:00.12]   Discovering: TrainService.Simulation.Tests
+[xUnit.net 00:00:00.22]   Discovered:  TrainService.Messaging.Tests
+[xUnit.net 00:00:00.23]   Starting:    TrainService.Messaging.Tests
+[xUnit.net 00:00:00.20]   Discovered:  TrainService.Simulation.Tests
+[xUnit.net 00:00:00.21]   Starting:    TrainService.Simulation.Tests
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.28)
+[xUnit.net 00:00:00.13]   Discovering: TrainService.Core.Tests
+[xUnit.net 00:00:00.23]   Discovered:  TrainService.Core.Tests
+[xUnit.net 00:00:00.23]   Starting:    TrainService.Core.Tests
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T537_Train_Can_Be_Added [3 ms]
+  Başarılı TrainService.Data.Tests.UnitTest1.Test1 [2 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T502_Project_Can_Be_Read [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T532_Ramp_Can_Be_Deleted [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T530_Ramp_Can_Be_Read [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T533_Station_Can_Be_Added [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T539_Train_Can_Be_Updated [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T525_Switch_Can_Be_Added [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T522_RouteStep_Can_Be_Read [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T516_TrackSegment_Can_Be_Deleted [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T523_RouteStep_Can_Be_Updated [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T526_Switch_Can_Be_Read [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T535_Station_Can_Be_Updated [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T519_Route_Can_Be_Updated [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T514_TrackSegment_Can_Be_Read [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T536_Station_Can_Be_Deleted [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T538_Train_Can_Be_Read [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T540_Train_Can_Be_Deleted [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T509_TrackNode_Can_Be_Added [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T520_Route_Can_Be_Deleted [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T503_Project_Can_Be_Updated [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T521_RouteStep_Can_Be_Added [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T512_TrackNode_Can_Be_Deleted [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T513_TrackSegment_Can_Be_Added [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T524_RouteStep_Can_Be_Deleted [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T527_Switch_Can_Be_Updated [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T531_Ramp_Can_Be_Updated [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T506_Layer_Can_Be_Read [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T515_TrackSegment_Can_Be_Updated [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T501_Project_Can_Be_Added [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T510_TrackNode_Can_Be_Read [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T507_Layer_Can_Be_Updated [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T518_Route_Can_Be_Read [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T534_Station_Can_Be_Read [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T511_TrackNode_Can_Be_Updated [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T508_Layer_Can_Be_Deleted [< 1 ms]
+[xUnit.net 00:00:00.65]   Finished:    TrainService.Data.Tests
+  Başarılı TrainService.Messaging.Tests.UnitTest1.Test1 [2 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T610_Hub_Handles_QoS2 [2 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T614_DeviceRegistry_Raises_StatusChanged_Event [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T603_Broker_Accepts_Connections [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T609_Hub_Handles_QoS1 [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T616_PingService_Handles_Timeout [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T613_DeviceRegistry_Marks_Offline_On_LWT [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T615_PingService_Pings_Known_Devices [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T605_Hub_Can_Publish_Message [< 1 ms]
+[xUnit.net 00:00:00.62]   Finished:    TrainService.Messaging.Tests
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T528_Switch_Can_Be_Deleted [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T504_Project_Can_Be_Deleted [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T529_Ramp_Can_Be_Added [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T517_Route_Can_Be_Added [< 1 ms]
+  Başarılı TrainService.Data.Tests.T5xx_DataTests.T505_Layer_Can_Be_Added [< 1 ms]
+
+Test Çalıştırması Başarılı.
+Toplam test sayısı: 41
+     Geçti: 41
+ Toplam süre: 1,8035 Saniye
+[xUnit.net 00:00:00.62]   Finished:    TrainService.Simulation.Tests
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T611_DeviceRegistry_Registers_New_Device [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T612_DeviceRegistry_Updates_LastSeen [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T602_Broker_Can_Stop [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T608_Hub_Handles_QoS0 [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T617_PingService_Updates_DeviceHealth [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T606_Hub_Can_Subscribe_To_Topic [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T607_Hub_Receives_Published_Message [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T604_Broker_Rejects_Invalid_Credentials [< 1 ms]
+  Başarılı TrainService.Messaging.Tests.T6xx_MessagingTests.T601_Broker_Can_Start [< 1 ms]
+
+Test Çalıştırması Başarılı.
+Toplam test sayısı: 18
+     Geçti: 18
+ Toplam süre: 1,7380 Saniye
+     Warning:
+     The component "Fluent Assertions" is governed by the rules defined in the Xceed License Agreement and
+     the Xceed Fluent Assertions Community License. You may use Fluent Assertions free of charge for
+     non-commercial use only. An active subscription is required to use Fluent Assertions for commercial use.
+     Please contact Xceed Sales mailto:sales@xceed.com to acquire a subscription at a very low cost.
+     A paid commercial license supports the development and continued increasing support of
+     Fluent Assertions users under both commercial and community licenses. Help us
+     keep Fluent Assertions at the forefront of unit testing.
+     For more information, visit https://xceed.com/products/unit-testing/fluent-assertions/
+  TrainService.App -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\src\TrainService.App\bin\Release\net8.0-windows10.0.17763.0\TrainService.App.dll
+  Başarılı TrainService.Core.Tests.UnitTest1.Test1 [3 ms]
+  Başarılı TrainService.Core.Tests.T1xx_VectorTests.T101_Vector2D_Matematigi [26 ms]
+  Başarılı TrainService.Core.Tests.T2xx_EntityTests.T204_Ramp_GradePercent_SifirUzunluk_PatlamazVeSifirDoner [27 ms]
+  Başarılı TrainService.Core.Tests.T1xx_VectorTests.T102_Vector2D_Normalize_ZeroVector_ReturnsZero [< 1 ms]
+  Başarılı TrainService.Core.Tests.T2xx_EntityTests.T206_Entity_ValidBounds [< 1 ms]
+  Başarılı TrainService.Core.Tests.T1xx_VectorTests.T103_Vector2D_Length_ZeroVector [< 1 ms]
+  Başarılı TrainService.Core.Tests.T2xx_EntityTests.T201_Core_Entities_Iskelte_Testi [< 1 ms]
+  Başarılı TrainService.Simulation.Tests.UnitTest1.Test1 [2 ms]
+
+Test Çalıştırması Başarılı.
+Toplam test sayısı: 1
+     Geçti: 1
+ Toplam süre: 1,7978 Saniye
+  TrainService.Cad.Tests -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Release\net8.0\TrainService.Cad.Tests.dll
+C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Release\net8.0\TrainService.Cad.Tests.dll (.NETCoreApp,Version=v8.0) için test çalıştırması
+VSTest sürümü 17.11.1 (x64)
+
+Test yürütmesi başlatılıyor, lütfen bekleyin...
+Toplam 1 test dosyası belirtilen desenle eşleşti.
+  TrainService.App.Tests -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.App.Tests\bin\Release\net8.0-windows10.0.17763.0\TrainService.App.Tests.dll
+C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.App.Tests\bin\Release\net8.0-windows10.0.17763.0\TrainService.App.Tests.dll (.NETCoreApp,Version=v8.0) için test çalıştırması
+VSTest sürümü 17.11.1 (x64)
+
+Test yürütmesi başlatılıyor, lütfen bekleyin...
+Toplam 1 test dosyası belirtilen desenle eşleşti.
+[xUnit.net 00:00:01.67]   Finished:    TrainService.Core.Tests
+  Başarılı TrainService.Core.Tests.T1xx_VectorTests.T105_Vector2D_PerpendicularCW [< 1 ms]
+  Başarılı TrainService.Core.Tests.DispatchServiceTests.SendCommandAndWaitAckAsync_ShouldReturnFalse_WhenNoAckReceived [197 ms]
+  Başarılı TrainService.Core.Tests.DispatchServiceTests.SendCommandAndWaitAckAsync_ShouldSucceed_WhenAckReceived [96 ms]
+  Başarılı TrainService.Core.Tests.DatabaseTests.Add_And_Delete_Device_ShouldSucceed [1 s]
+  Başarılı TrainService.Core.Tests.DatabaseTests.Add_And_Read_NetworkSwitch_ShouldSucceed [123 ms]
+
+Test Çalıştırması Başarılı.
+Toplam test sayısı: 12
+     Geçti: 12
+ Toplam süre: 2,7618 Saniye
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.28)
+[xUnit.net 00:00:00.09]   Discovering: TrainService.Cad.Tests
+[xUnit.net 00:00:00.15]   Discovered:  TrainService.Cad.Tests
+[xUnit.net 00:00:00.15]   Starting:    TrainService.Cad.Tests
+     Warning:
+     The component "Fluent Assertions" is governed by the rules defined in the Xceed License Agreement and
+     the Xceed Fluent Assertions Community License. You may use Fluent Assertions free of charge for
+     non-commercial use only. An active subscription is required to use Fluent Assertions for commercial use.
+     Please contact Xceed Sales mailto:sales@xceed.com to acquire a subscription at a very low cost.
+     A paid commercial license supports the development and continued increasing support of
+     Fluent Assertions users under both commercial and community licenses. Help us
+     keep Fluent Assertions at the forefront of unit testing.
+     For more information, visit https://xceed.com/products/unit-testing/fluent-assertions/
+  Başarılı TrainService.Cad.Tests.UnitTest1.Test1 [2 ms]
+  Başarılı TrainService.Cad.Tests.T3xx_ViewportTests.T301_Viewport_Test_Iskelet [3 ms]
+  Başarılı TrainService.Cad.Tests.UndoRedoTests.Test3_Undo_Then_NewDo_Clears_RedoStack [6 ms]
+  Başarılı TrainService.Cad.Tests.T3xx_ViewportTests.T303_Viewport_Transform_Maintains_Center [< 1 ms]
+  Başarılı TrainService.Cad.Tests.SnapEngineTests.T1711_Engine_Tolerance_Conversion(tolPx: 10, scale: 0,5, expectedWorldTol: 20) [19 ms]
+  Başarılı TrainService.Cad.Tests.UndoRedoTests.Test5_CompositeCommand_ExecutesInOrder_UndoesInReverseOrder [11 ms]
+  Başarılı TrainService.Cad.Tests.SnapEngineTests.T1711_Engine_Tolerance_Conversion(tolPx: 10, scale: -1, expectedWorldTol: 0) [< 1 ms]
+  Başarılı TrainService.Cad.Tests.SnapEngineTests.T1711_Engine_Tolerance_Conversion(tolPx: 10, scale: 0, expectedWorldTol: 0) [< 1 ms]
+  Başarılı TrainService.Cad.Tests.UndoRedoTests.Test7_Capacity2_Stack_Drops_OldestCommand [< 1 ms]
+  Başarılı TrainService.Cad.Tests.SnapEngineTests.T1711_Engine_Tolerance_Conversion(tolPx: 10, scale: 2, expectedWorldTol: 5) [< 1 ms]
+  Başarılı TrainService.Cad.Tests.SnapEngineTests.T1710_Engine_EmptyProviders_Returns_None [1 ms]
+  Başarılı TrainService.Cad.Tests.SnapEngineTests.T1713_Engine_NoAllocation_On_Resolve [3 ms]
+  Başarılı TrainService.Cad.Tests.UndoRedoTests.T409_SelectionService_Set_DoesNotSpamEvent_ForSameSelection [12 ms]
+  Başarılı TrainService.Cad.Tests.UndoRedoTests.Test2_Undo_Redo_RoundTrip_EntityCount [< 1 ms]
+  Başarılı TrainService.Cad.Tests.UndoRedoTests.Test1_Do_Sets_CanUndoTrue_CanRedoFalse [< 1 ms]
+  Başarılı TrainService.Cad.Tests.CadDocumentTests.T1715_CadDocument_GridSize_InvalidThrows(invalidSize: 0) [33 ms]
+  Başarılı TrainService.Cad.Tests.UndoRedoTests.T416_DebugAddLineCommand_OrphanReference_ShouldNotCrash [< 1 ms]
+  Başarılı TrainService.Cad.Tests.UndoRedoTests.Test4_EmptyStack_UndoRedo_Is_NoOp [< 1 ms]
+  Başarılı TrainService.Cad.Tests.CadDocumentTests.T1715_CadDocument_GridSize_InvalidThrows(invalidSize: NaN) [1 ms]
+  Başarılı TrainService.Cad.Tests.CadDocumentTests.T1715_CadDocument_GridSize_InvalidThrows(invalidSize: -1) [< 1 ms]
+  Başarılı TrainService.Cad.Tests.CadDocumentTests.T1715_CadDocument_GridSize_InvalidThrows(invalidSize: -∞) [2 ms]
+  Başarılı TrainService.Cad.Tests.UndoRedoTests.T406_CompositeCommand_ThrowsAndRollsBack_OnPartialFailure [3 ms]
+  Başarılı TrainService.Cad.Tests.CadDocumentTests.T1715_CadDocument_GridSize_InvalidThrows(invalidSize: ∞) [< 1 ms]
+  Başarılı TrainService.Cad.Tests.CadDocumentTests.T1712_CadDocument_GridSize_FiresEvent_OnlyOnRealChange [1 ms]
+  Başarılı TrainService.Cad.Tests.UndoRedoTests.Test6_SelectionService_PruneMissing_FiresOnce [4 ms]
+  Başarılı TrainService.Cad.Tests.UndoRedoTests.T410_CommandStack_Undo_RaisesEvent [< 1 ms]
+  Başarılı TrainService.Cad.Tests.SnapEngineTests.T1709_Engine_OncelikZinciri_KisaDevre [20 ms]
+  Başarılı TrainService.Cad.Tests.SnapEngineTests.T1708_Engine_Disabled_Returns_None [2 ms]
+  Başarılı TrainService.Cad.Tests.GridSnapProviderTests.T1714_Invariant_SapmaYariHucreyiAsamaz [111 ms]
+  Başarılı TrainService.Cad.Tests.GridSnapProviderTests.T170x_GridYuvarlama(x: 250, y: 250, ex: 300, ey: 300) [< 1 ms]
+  Başarılı TrainService.Cad.Tests.GridSnapProviderTests.T170x_GridYuvarlama(x: 300, y: 400, ex: 300, ey: 400) [< 1 ms]
+  Başarılı TrainService.Cad.Tests.GridSnapProviderTests.T170x_GridYuvarlama(x: 104, y: 197, ex: 100, ey: 200) [< 1 ms]
+  Başarılı TrainService.Cad.Tests.GridSnapProviderTests.T170x_GridYuvarlama(x: -104, y: -197, ex: -100, ey: -200) [< 1 ms]
+  Başarılı TrainService.Cad.Tests.GridSnapProviderTests.T170x_GridYuvarlama(x: 50, y: 50, ex: 100, ey: 100) [< 1 ms]
+  Başarılı TrainService.Cad.Tests.GridSnapProviderTests.T170x_GridYuvarlama(x: 150, y: 150, ex: 200, ey: 200) [< 1 ms]
+  Başarılı TrainService.Cad.Tests.GridSnapProviderTests.T170x_GridYuvarlama(x: -50, y: -50, ex: -100, ey: -100) [< 1 ms]
+  Başarılı TrainService.Cad.Tests.GridSnapProviderTests.T1705_GridSnap_FractionalGridSize [< 1 ms]
+  Başarılı TrainService.Cad.Tests.GridSnapProviderTests.T1706_GridSnap_HighPrecision [< 1 ms]
+  Başarılı TrainService.Cad.Tests.GridSnapProviderTests.T1707_GridSnap_InvalidGridSize_ReturnsNull(invalidSize: 0) [< 1 ms]
+  Başarılı TrainService.Cad.Tests.GridSnapProviderTests.T1707_GridSnap_InvalidGridSize_ReturnsNull(invalidSize: -5) [< 1 ms]
+[xUnit.net 00:00:00.32]   Finished:    TrainService.Cad.Tests
+  Başarılı TrainService.Cad.Tests.GridSnapProviderTests.T1707_GridSnap_InvalidGridSize_ReturnsNull(invalidSize: NaN) [< 1 ms]
+
+Test Çalıştırması Başarılı.
+Toplam test sayısı: 41
+     Geçti: 41
+ Toplam süre: 1,0971 Saniye
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.28)
+[xUnit.net 00:00:00.07]   Discovering: TrainService.App.Tests
+[xUnit.net 00:00:00.10]   Discovered:  TrainService.App.Tests
+[xUnit.net 00:00:00.11]   Starting:    TrainService.App.Tests
+[xUnit.net 00:00:00.16]   Finished:    TrainService.App.Tests
+  Başarılı TrainService.App.Tests.T3xx_ViewportTests.T302_ZoomToCursor_ShouldKeepWorldPointInvariant [4 ms]
+  Başarılı TrainService.App.Tests.T7xx_LogBusTests.T702_LogBus_Raises_Event_On_Log [4 ms]
+  Başarılı TrainService.App.Tests.T8xx_BootTests.T802_MainWindow_ViewModel_Resolves [4 ms]
+  Başarılı TrainService.App.Tests.T7xx_LogBusTests.T703_LogBus_Clears_Old_Logs_When_Exceeding_Limit [< 1 ms]
+  Başarılı TrainService.App.Tests.T8xx_BootTests.T801_App_Boots_Without_Errors [< 1 ms]
+  Başarılı TrainService.App.Tests.T7xx_LogBusTests.T704_LogBus_Provides_IReadOnlyList [< 1 ms]
+  Başarılı TrainService.App.Tests.T8xx_BootTests.T803_DI_Container_Validates [< 1 ms]
+  Başarılı TrainService.App.Tests.T7xx_LogBusTests.T701_LogBus_Records_Log_Message [< 1 ms]
+
+  TrainService.Architecture.Tests -> C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Release\net8.0\TrainService.Architecture.Tests.dll
+Test Çalıştırması Başarılı.
+Toplam test sayısı: 8
+     Geçti: 8
+ Toplam süre: 0,7712 Saniye
+C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Release\net8.0\TrainService.Architecture.Tests.dll (.NETCoreApp,Version=v8.0) için test çalıştırması
+VSTest sürümü 17.11.1 (x64)
+
+Test yürütmesi başlatılıyor, lütfen bekleyin...
+Toplam 1 test dosyası belirtilen desenle eşleşti.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.28)
+[xUnit.net 00:00:00.07]   Discovering: TrainService.Architecture.Tests
+[xUnit.net 00:00:00.11]   Discovered:  TrainService.Architecture.Tests
+[xUnit.net 00:00:00.11]   Starting:    TrainService.Architecture.Tests
+  Başarılı TrainService.Architecture.Tests.UnitTest1.Test1 [2 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T004_Data_Only_Depends_On_Core [2 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T001_Core_Has_No_Dependencies [< 1 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T005_Simulation_Only_Depends_On_Core [< 1 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T010_TestSayisi_GerileyemeZ(assemblyName: "TrainService.Data.Tests", minimum: 40) [1 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T010_TestSayisi_GerileyemeZ(assemblyName: "TrainService.Cad.Tests", minimum: 26) [1 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T010_TestSayisi_GerileyemeZ(assemblyName: "TrainService.Messaging.Tests", minimum: 17) [< 1 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T010_TestSayisi_GerileyemeZ(assemblyName: "TrainService.Core.Tests", minimum: 7) [< 1 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T002_Cad_Only_Depends_On_Core [< 1 ms]
+[xUnit.net 00:00:00.19]   Finished:    TrainService.Architecture.Tests
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T006_App_Depends_On_All_Layers [< 1 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T008_Commands_Must_Implement_ICadCommand [< 1 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T003_Messaging_Only_Depends_On_Core [< 1 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T008_Cad_WpfBagimliligiYok [< 1 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T009_KopyaKoordinatTipiYok [7 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T007_Entities_Must_Inherit_CadEntity [< 1 ms]
+  Başarılı TrainService.Architecture.Tests.T0xx_ArchitectureTests.T007_Cad_SnapEngine_ArayuzeSarilmamis [< 1 ms]
+
+Test Çalıştırması Başarılı.
+Toplam test sayısı: 16
+     Geçti: 16
+ Toplam süre: 0,6228 Saniye

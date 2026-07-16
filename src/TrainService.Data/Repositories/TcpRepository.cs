@@ -34,7 +34,7 @@ public class TcpRepository : ITcpRepository
     public async Task<List<EventLog>> GetLogsAsync(int count = 100)
     {
         return await _context.EventLogs
-            .OrderByDescending(x => x.Timestamp)
+            .OrderByDescending(x => x.Ts)
             .Take(count)
             .ToListAsync();
     }

@@ -23,6 +23,7 @@ public partial class App : Application
             // Application Services
             services.AddSingleton<TrainService.Core.Abstractions.ILogBus, LogBus>();
             services.AddSingleton<TrainService.Core.Abstractions.ISettingsService, SettingsService>();
+            services.AddSingleton<TrainService.Cad.ICadProject, TrainService.Cad.CadProject>();
 
             var dbPath = "trainservice.db";
             if (System.IO.File.Exists("appsettings.json"))
@@ -55,6 +56,15 @@ public partial class App : Application
             services.AddSingleton<TrainService.Cad.CadDocument>();
             services.AddSingleton<TrainService.Cad.UndoRedo.CommandStack>();
             services.AddSingleton<TrainService.Cad.Selection.SelectionService>();
+            
+            // v3.0.19 eklentileri (GridSnapProvider'dan önce eklendi):
+            services.AddSingleton<TrainService.Cad.Snapping.ISnapProvider, TrainService.Cad.Snapping.EndpointSnapProvider>();
+            services.AddSingleton<TrainService.Cad.Snapping.ISnapProvider, TrainService.Cad.Snapping.OnSegmentSnapProvider>();
+            
+            // v3.0.17:
+            services.AddSingleton<TrainService.Cad.Snapping.ISnapProvider, TrainService.Cad.Snapping.GridSnapProvider>();
+            services.AddSingleton<TrainService.Cad.Snapping.SnapEngine>();
+            services.AddScoped<TrainService.Cad.Persistence.ICadDocumentStore, TrainService.App.Services.CadDocumentStore>();
 
             // ViewModels & Windows
             services.AddSingleton<MainWindowViewModel>();
@@ -75,6 +85,8 @@ public partial class App : Application
             services.AddTransient<TrainService.App.Views.Pages.SettingsView>();
             services.AddTransient<SettingsViewModel>();
         }).Build();
+
+    public static IHost CreateHostForTest() => _host;
 
     protected override async void OnStartup(StartupEventArgs e)
     {
@@ -113,3 +125,5 @@ public partial class App : Application
         base.OnExit(e);
     }
 }
+
+

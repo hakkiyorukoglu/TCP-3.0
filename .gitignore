@@ -53,3 +53,5 @@ desktop.ini
 
 # User-specific
 settings.json
+
+designtime_migrations.db

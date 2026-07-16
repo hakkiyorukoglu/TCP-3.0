@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Xunit;
 using TrainService.Cad;
 using TrainService.Cad.UndoRedo;
 using TrainService.Cad.Selection;
 using TrainService.Core.Entities;
+using TrainService.Core.Geometry;
 
 namespace TrainService.Cad.Tests;
 
@@ -173,5 +175,98 @@ public class UndoRedoTests
         stack.Undo(doc); // Undo 2
 
         Assert.False(stack.CanUndo); // 1 zaten capacity'den düştüğü için artık undo yapılamaz
+    }
+    [Fact]
+    public void T406_CompositeCommand_ThrowsAndRollsBack_OnPartialFailure()
+    {
+        var doc = new CadDocument();
+        var stack = new CommandStack();
+        var execOrder = new List<string>();
+        var undoOrder = new List<string>();
+
+        var cmd1 = new TrackOrderCommand("C1", s => execOrder.Add(s), s => undoOrder.Add(s));
+        var cmd2 = new TrackOrderCommand("C2", s => { throw new InvalidOperationException("Fail"); }, s => undoOrder.Add(s));
+        var cmd3 = new TrackOrderCommand("C3", s => execOrder.Add(s), s => undoOrder.Add(s));
+
+        var composite = new CompositeCadCommand("CompFail", new[] { cmd1, cmd2, cmd3 });
+
+        // Act & Assert
+        Assert.Throws<InvalidOperationException>(() => stack.Do(composite, doc));
+
+        // C1 execute edildi, C2 patladı. C1 geri alındı.
+        Assert.Equal(new[] { "C1" }, execOrder);
+        Assert.Equal(new[] { "C1" }, undoOrder); // Rollback oldu
+        Assert.False(stack.CanUndo); // Stack'e girmemiş olmalı
+    }
+
+    [Fact]
+    public void T409_SelectionService_Set_DoesNotSpamEvent_ForSameSelection()
+    {
+        var selection = new SelectionService();
+        var id1 = Guid.NewGuid();
+        var id2 = Guid.NewGuid();
+        
+        selection.Set(new[] { id1, id2 });
+
+        int fireCount = 0;
+        selection.SelectionChanged += (s, e) => fireCount++;
+
+        // Act: Aynı ID'lerle tekrar Set yapalım
+        selection.Set(new[] { id1, id2 });
+        selection.Set(new[] { id2, id1 }); // Sıra farklı olsa bile HashSet eşitlik kontrolü aynı diyecek
+
+        // Assert
+        Assert.Equal(0, fireCount);
+    }
+
+    [Fact]
+    public void T416_DebugAddLineCommand_OrphanReference_ShouldNotCrash()
+    {
+        // T416 senaryosu: Komut, içindeki entity'nin Document'te kalıp kalmadığına bağlı olarak 
+        // çökmemelidir. Document entity'yi zaten sildiyse veya bulamazsa güvenli bir dönüş olmalı.
+        var doc = new CadDocument();
+        var entity = new TrackNode();
+        
+        // Arrange: entity eklendi, sonra silindi (orphan kaldı).
+        doc.AddEntity(entity);
+        doc.RemoveEntity(entity.Id);
+
+        // Act: Entity'yi tekrar eklemeye (veya silmeye) çalışan command
+        var cmd = new DummyCommand("T416", entity);
+        var exception = Record.Exception(() => 
+        {
+            cmd.Execute(doc); // Zaten objenin kendisini doc içine atıyor (Duplicate vb patlamamalı)
+            cmd.Undo(doc);    // Obje belgede yokken (veya varken) Remove edince patlamamalı
+        });
+
+        // Assert
+        Assert.Null(exception);
+    }
+    [Fact]
+    public void T410_Document_Changed_Added_DirtyRegionDolu()
+    {
+        var doc = new CadDocument();
+        DocumentChangedEventArgs? yakalanan = null;
+        doc.Changed += (_, e) => yakalanan = e;
+        var stack = new CommandStack();
+        var node = new TrackNode{ Position = new Vector2D(10,20), LayerId = doc.ActiveLayerId };
+        stack.Do(new AddEntityCommand(node), doc);
+        yakalanan.Should().NotBeNull();
+        yakalanan!.Kind.Should().Be(DocumentChangeKind.Added);
+        yakalanan.DirtyRegion.Should().NotBeNull("viewport kirli bölgeyi bilmeli");
+    }
+
+    [Fact]
+    public void T411_Document_Changed_Removed_BoundsTasir()
+    {
+        var doc = new CadDocument();
+        var stack = new CommandStack();
+        var node = new TrackNode{ Position = new Vector2D(10,20), LayerId = doc.ActiveLayerId };
+        stack.Do(new AddEntityCommand(node), doc);
+        DocumentChangedEventArgs? sil = null;
+        doc.Changed += (_, e) => { if (e.Kind == DocumentChangeKind.Removed) sil = e; };
+        stack.Undo(doc);
+        sil.Should().NotBeNull("silme event'i yayınlanmalı");
+        sil!.DirtyRegion.Should().NotBeNull("silinen nesnenin bölgesi temizlenebilsin");
     }
 }

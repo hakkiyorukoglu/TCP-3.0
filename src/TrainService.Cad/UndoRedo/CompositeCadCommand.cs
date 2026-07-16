@@ -17,9 +17,23 @@ public sealed class CompositeCadCommand : ICadCommand
 
     public void Execute(CadDocument doc)
     {
-        foreach (var cmd in _commands)
+        int executedCount = 0;
+        try
         {
-            cmd.Execute(doc);
+            for (int i = 0; i < _commands.Count; i++)
+            {
+                _commands[i].Execute(doc);
+                executedCount++;
+            }
+        }
+        catch
+        {
+            // Rollback previously executed commands in reverse order
+            for (int i = executedCount - 1; i >= 0; i--)
+            {
+                _commands[i].Undo(doc);
+            }
+            throw;
         }
     }
 

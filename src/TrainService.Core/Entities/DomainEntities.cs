@@ -8,8 +8,10 @@ namespace TrainService.Core.Entities;
 public abstract class CadEntity
 {
     public Guid Id { get; init; } = Guid.NewGuid();
+    public Guid ProjectId { get; set; }
     public Guid LayerId { get; set; }
     public bool IsSelected { get; set; }
+    public virtual BoundingBox? Bounds => null;
 }
 
 public sealed class TrackNode : CadEntity
@@ -18,6 +20,8 @@ public sealed class TrackNode : CadEntity
     public double Z { get; set; }
     public List<Guid> ConnectedSegments { get; } = new();
     public NodeRole Role { get; set; }
+    
+    public override BoundingBox? Bounds => new BoundingBox(Position.X, Position.Y, Position.X, Position.Y);
 }
 
 public sealed class TrackSegment : CadEntity
@@ -41,6 +45,19 @@ public sealed class RailSwitch : CadEntity
     public Guid MainSegmentId { get; set; }
     public Guid DivergingSegmentId { get; set; }
     public SwitchState State { get; set; }
+}
+
+public sealed class Ramp : CadEntity
+{
+    public Guid SegmentId { get; set; }
+    public double StartZ { get; set; }
+    public double EndZ { get; set; }
+    public double LengthMm { get; set; }
+    
+    public double GradePercent =>
+        LengthMm <= 0 || double.IsNaN(LengthMm)
+            ? 0
+            : (EndZ - StartZ) / LengthMm * 100.0;
 }
 
 public sealed class Station : CadEntity

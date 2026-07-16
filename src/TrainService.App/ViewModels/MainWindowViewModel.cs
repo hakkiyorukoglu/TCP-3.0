@@ -9,8 +9,15 @@ public partial class MainWindowViewModel : ObservableObject
 
     public TerminalPanelViewModel TerminalViewModel { get; }
 
-    public MainWindowViewModel(TerminalPanelViewModel terminalViewModel)
+    public MainWindowViewModel(TerminalPanelViewModel terminalViewModel, TrainService.Cad.CadDocument document)
     {
         TerminalViewModel = terminalViewModel;
+        
+        document.Changed += (s, e) =>
+        {
+            ApplicationTitle = document.IsDirty 
+                ? "TCP 3.0 - Train Control Platform *" 
+                : "TCP 3.0 - Train Control Platform";
+        };
     }
 }

@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="323e244b-18b4-46ba-bc0e-f41736a80b7b" name="yoruk@HAKKI 2026-07-16 02:49:14" runUser="HAKKI\yoruk" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-07-16T02:49:14.1488269+03:00" queuing="2026-07-16T02:49:14.1488273+03:00" start="2026-07-16T02:49:11.0811343+03:00" finish="2026-07-16T02:49:14.5111201+03:00" />
+  <TestSettings name="default" id="555bfcac-fdd3-4769-9e8c-1a7611833f0a">
+    <Deployment runDeploymentRoot="yoruk_HAKKI_2026-07-16_02_49_14" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="e92e528b-e99d-4533-9997-ec2e901f0374" testId="1f0f4880-e688-49ef-357b-dee1c6c3f237" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T601_Broker_Can_Start" computerName="HAKKI" duration="00:00:00.0000376" startTime="2026-07-16T02:49:14.3734834+03:00" endTime="2026-07-16T02:49:14.3734835+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e92e528b-e99d-4533-9997-ec2e901f0374" />
+    <UnitTestResult executionId="495291f4-2d2e-49f7-a0f1-bd09aa4af429" testId="aca99846-a1dd-2f8f-32fb-2d276d4cbd7d" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T616_PingService_Handles_Timeout" computerName="HAKKI" duration="00:00:00.0000459" startTime="2026-07-16T02:49:14.3695675+03:00" endTime="2026-07-16T02:49:14.3695676+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="495291f4-2d2e-49f7-a0f1-bd09aa4af429" />
+    <UnitTestResult executionId="faeaee34-8b88-4573-addf-10d4150c97d0" testId="76be87dd-b570-9cdf-4254-8cc6de273b2f" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T602_Broker_Can_Stop" computerName="HAKKI" duration="00:00:00.0000333" startTime="2026-07-16T02:49:14.3731700+03:00" endTime="2026-07-16T02:49:14.3731701+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="faeaee34-8b88-4573-addf-10d4150c97d0" />
+    <UnitTestResult executionId="05ce53e4-7daf-459f-9318-0f4062946a84" testId="3c6ab541-3cd4-027f-1d06-eb0992e1efb7" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T611_DeviceRegistry_Registers_New_Device" computerName="HAKKI" duration="00:00:00.0000277" startTime="2026-07-16T02:49:14.3697861+03:00" endTime="2026-07-16T02:49:14.3697862+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="05ce53e4-7daf-459f-9318-0f4062946a84" />
+    <UnitTestResult executionId="f4cf0861-0fbb-44b6-9196-77602d7fc7a6" testId="53750f6b-778f-f022-dc98-8c67d747bc3e" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T605_Hub_Can_Publish_Message" computerName="HAKKI" duration="00:00:00.0000289" startTime="2026-07-16T02:49:14.3697292+03:00" endTime="2026-07-16T02:49:14.3697293+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f4cf0861-0fbb-44b6-9196-77602d7fc7a6" />
+    <UnitTestResult executionId="0bce8be3-2f52-4c98-93b7-bac9f319e7c3" testId="8da86454-a3db-57ed-8052-38c29bee12c2" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T608_Hub_Handles_QoS0" computerName="HAKKI" duration="00:00:00.0000278" startTime="2026-07-16T02:49:14.3732209+03:00" endTime="2026-07-16T02:49:14.3732209+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0bce8be3-2f52-4c98-93b7-bac9f319e7c3" />
+    <UnitTestResult executionId="f156995e-f266-4acd-8c27-b5144bd21796" testId="a50fe7b9-a0a8-1e04-c168-da77fa108279" testName="TrainService.Messaging.Tests.UnitTest1.Test1" computerName="HAKKI" duration="00:00:00.0031179" startTime="2026-07-16T02:49:13.9467246+03:00" endTime="2026-07-16T02:49:13.9467459+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f156995e-f266-4acd-8c27-b5144bd21796" />
+    <UnitTestResult executionId="35faf177-ec35-4197-aa5b-86519976a2f4" testId="7eaf4768-c945-63e2-ed8c-09a0e0cca412" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T617_PingService_Updates_DeviceHealth" computerName="HAKKI" duration="00:00:00.0000272" startTime="2026-07-16T02:49:14.3732777+03:00" endTime="2026-07-16T02:49:14.3732777+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="35faf177-ec35-4197-aa5b-86519976a2f4" />
+    <UnitTestResult executionId="ac18bf24-4366-42b0-af1b-63a98429675f" testId="d7947b1f-a3e5-5fed-baee-5251349f0266" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T615_PingService_Pings_Known_Devices" computerName="HAKKI" duration="00:00:00.0000331" startTime="2026-07-16T02:49:14.3696746+03:00" endTime="2026-07-16T02:49:14.3696746+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ac18bf24-4366-42b0-af1b-63a98429675f" />
+    <UnitTestResult executionId="c93ce48e-67a8-40fd-8726-afa03eee2230" testId="50ba80d3-6089-b701-cd6e-691ea0332387" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T614_DeviceRegistry_Raises_StatusChanged_Event" computerName="HAKKI" duration="00:00:00.0001210" startTime="2026-07-16T02:49:14.3693587+03:00" endTime="2026-07-16T02:49:14.3693589+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c93ce48e-67a8-40fd-8726-afa03eee2230" />
+    <UnitTestResult executionId="95dea2c8-aa16-406b-8017-6c536bad0a17" testId="76a3d780-69bc-a3ed-4ceb-f896e51b0d1d" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T604_Broker_Rejects_Invalid_Credentials" computerName="HAKKI" duration="00:00:00.0000291" startTime="2026-07-16T02:49:14.3734326+03:00" endTime="2026-07-16T02:49:14.3734326+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="95dea2c8-aa16-406b-8017-6c536bad0a17" />
+    <UnitTestResult executionId="da6d496b-0112-4ea6-9584-a9b047acf785" testId="f4b37e08-0722-52b1-c839-b4ef7a777db8" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T610_Hub_Handles_QoS2" computerName="HAKKI" duration="00:00:00.4301837" startTime="2026-07-16T02:49:14.3686963+03:00" endTime="2026-07-16T02:49:14.3686970+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="da6d496b-0112-4ea6-9584-a9b047acf785" />
+    <UnitTestResult executionId="51b20c83-6d97-4b1a-9ba3-00144e892f8a" testId="a0205318-5664-b062-76fe-88d5414d0566" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T609_Hub_Handles_QoS1" computerName="HAKKI" duration="00:00:00.0000427" startTime="2026-07-16T02:49:14.3694931+03:00" endTime="2026-07-16T02:49:14.3694931+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="51b20c83-6d97-4b1a-9ba3-00144e892f8a" />
+    <UnitTestResult executionId="581be515-c239-4900-8059-9054eaf7644b" testId="2cb87474-6e20-088b-59db-b11623d79f21" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T613_DeviceRegistry_Marks_Offline_On_LWT" computerName="HAKKI" duration="00:00:00.0000353" startTime="2026-07-16T02:49:14.3696205+03:00" endTime="2026-07-16T02:49:14.3696206+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="581be515-c239-4900-8059-9054eaf7644b" />
+    <UnitTestResult executionId="e70e5e68-328c-49a1-9b5a-a7f005d330f6" testId="5f3cfd1a-110d-f193-9307-1a89e58baf71" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T603_Broker_Accepts_Connections" computerName="HAKKI" duration="00:00:00.0000595" startTime="2026-07-16T02:49:14.3694301+03:00" endTime="2026-07-16T02:49:14.3694302+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e70e5e68-328c-49a1-9b5a-a7f005d330f6" />
+    <UnitTestResult executionId="ba17d51a-9d9c-4c50-bd8f-07a1a93fe69d" testId="bf301f5c-8a67-af86-e6a0-3b96063fd7e2" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T607_Hub_Receives_Published_Message" computerName="HAKKI" duration="00:00:00.0000226" startTime="2026-07-16T02:49:14.3733791+03:00" endTime="2026-07-16T02:49:14.3733800+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ba17d51a-9d9c-4c50-bd8f-07a1a93fe69d" />
+    <UnitTestResult executionId="2180c706-2358-42d4-ad9b-85440fe48027" testId="2d0d7e41-9965-a6a6-2d15-05f0e4787cdd" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T606_Hub_Can_Subscribe_To_Topic" computerName="HAKKI" duration="00:00:00.0000239" startTime="2026-07-16T02:49:14.3733323+03:00" endTime="2026-07-16T02:49:14.3733324+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2180c706-2358-42d4-ad9b-85440fe48027" />
+    <UnitTestResult executionId="91361cd3-d040-4dcf-8c04-8e4cd2f0cc27" testId="9dd318f5-7c78-febd-0621-221edeca2c78" testName="TrainService.Messaging.Tests.T6xx_MessagingTests.T612_DeviceRegistry_Updates_LastSeen" computerName="HAKKI" duration="00:00:00.0000240" startTime="2026-07-16T02:49:14.3730616+03:00" endTime="2026-07-16T02:49:14.3730618+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="91361cd3-d040-4dcf-8c04-8e4cd2f0cc27" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T607_Hub_Receives_Published_Message" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="bf301f5c-8a67-af86-e6a0-3b96063fd7e2">
+      <Execution id="ba17d51a-9d9c-4c50-bd8f-07a1a93fe69d" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T607_Hub_Receives_Published_Message" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T615_PingService_Pings_Known_Devices" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="d7947b1f-a3e5-5fed-baee-5251349f0266">
+      <Execution id="ac18bf24-4366-42b0-af1b-63a98429675f" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T615_PingService_Pings_Known_Devices" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.UnitTest1.Test1" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="a50fe7b9-a0a8-1e04-c168-da77fa108279">
+      <Execution id="f156995e-f266-4acd-8c27-b5144bd21796" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.UnitTest1" name="Test1" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T606_Hub_Can_Subscribe_To_Topic" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="2d0d7e41-9965-a6a6-2d15-05f0e4787cdd">
+      <Execution id="2180c706-2358-42d4-ad9b-85440fe48027" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T606_Hub_Can_Subscribe_To_Topic" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T610_Hub_Handles_QoS2" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="f4b37e08-0722-52b1-c839-b4ef7a777db8">
+      <Execution id="da6d496b-0112-4ea6-9584-a9b047acf785" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T610_Hub_Handles_QoS2" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T601_Broker_Can_Start" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="1f0f4880-e688-49ef-357b-dee1c6c3f237">
+      <Execution id="e92e528b-e99d-4533-9997-ec2e901f0374" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T601_Broker_Can_Start" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T612_DeviceRegistry_Updates_LastSeen" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="9dd318f5-7c78-febd-0621-221edeca2c78">
+      <Execution id="91361cd3-d040-4dcf-8c04-8e4cd2f0cc27" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T612_DeviceRegistry_Updates_LastSeen" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T603_Broker_Accepts_Connections" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="5f3cfd1a-110d-f193-9307-1a89e58baf71">
+      <Execution id="e70e5e68-328c-49a1-9b5a-a7f005d330f6" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T603_Broker_Accepts_Connections" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T611_DeviceRegistry_Registers_New_Device" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="3c6ab541-3cd4-027f-1d06-eb0992e1efb7">
+      <Execution id="05ce53e4-7daf-459f-9318-0f4062946a84" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T611_DeviceRegistry_Registers_New_Device" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T605_Hub_Can_Publish_Message" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="53750f6b-778f-f022-dc98-8c67d747bc3e">
+      <Execution id="f4cf0861-0fbb-44b6-9196-77602d7fc7a6" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T605_Hub_Can_Publish_Message" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T604_Broker_Rejects_Invalid_Credentials" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="76a3d780-69bc-a3ed-4ceb-f896e51b0d1d">
+      <Execution id="95dea2c8-aa16-406b-8017-6c536bad0a17" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T604_Broker_Rejects_Invalid_Credentials" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T613_DeviceRegistry_Marks_Offline_On_LWT" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="2cb87474-6e20-088b-59db-b11623d79f21">
+      <Execution id="581be515-c239-4900-8059-9054eaf7644b" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T613_DeviceRegistry_Marks_Offline_On_LWT" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T609_Hub_Handles_QoS1" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="a0205318-5664-b062-76fe-88d5414d0566">
+      <Execution id="51b20c83-6d97-4b1a-9ba3-00144e892f8a" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T609_Hub_Handles_QoS1" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T616_PingService_Handles_Timeout" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="aca99846-a1dd-2f8f-32fb-2d276d4cbd7d">
+      <Execution id="495291f4-2d2e-49f7-a0f1-bd09aa4af429" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T616_PingService_Handles_Timeout" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T614_DeviceRegistry_Raises_StatusChanged_Event" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="50ba80d3-6089-b701-cd6e-691ea0332387">
+      <Execution id="c93ce48e-67a8-40fd-8726-afa03eee2230" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T614_DeviceRegistry_Raises_StatusChanged_Event" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T602_Broker_Can_Stop" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="76be87dd-b570-9cdf-4254-8cc6de273b2f">
+      <Execution id="faeaee34-8b88-4573-addf-10d4150c97d0" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T602_Broker_Can_Stop" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T617_PingService_Updates_DeviceHealth" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="7eaf4768-c945-63e2-ed8c-09a0e0cca412">
+      <Execution id="35faf177-ec35-4197-aa5b-86519976a2f4" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T617_PingService_Updates_DeviceHealth" />
+    </UnitTest>
+    <UnitTest name="TrainService.Messaging.Tests.T6xx_MessagingTests.T608_Hub_Handles_QoS0" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.messaging.tests\bin\debug\net8.0\trainservice.messaging.tests.dll" id="8da86454-a3db-57ed-8052-38c29bee12c2">
+      <Execution id="0bce8be3-2f52-4c98-93b7-bac9f319e7c3" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Messaging.Tests\bin\Debug\net8.0\TrainService.Messaging.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Messaging.Tests.T6xx_MessagingTests" name="T608_Hub_Handles_QoS0" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="1f0f4880-e688-49ef-357b-dee1c6c3f237" executionId="e92e528b-e99d-4533-9997-ec2e901f0374" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="aca99846-a1dd-2f8f-32fb-2d276d4cbd7d" executionId="495291f4-2d2e-49f7-a0f1-bd09aa4af429" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="76be87dd-b570-9cdf-4254-8cc6de273b2f" executionId="faeaee34-8b88-4573-addf-10d4150c97d0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3c6ab541-3cd4-027f-1d06-eb0992e1efb7" executionId="05ce53e4-7daf-459f-9318-0f4062946a84" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="53750f6b-778f-f022-dc98-8c67d747bc3e" executionId="f4cf0861-0fbb-44b6-9196-77602d7fc7a6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8da86454-a3db-57ed-8052-38c29bee12c2" executionId="0bce8be3-2f52-4c98-93b7-bac9f319e7c3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a50fe7b9-a0a8-1e04-c168-da77fa108279" executionId="f156995e-f266-4acd-8c27-b5144bd21796" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7eaf4768-c945-63e2-ed8c-09a0e0cca412" executionId="35faf177-ec35-4197-aa5b-86519976a2f4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d7947b1f-a3e5-5fed-baee-5251349f0266" executionId="ac18bf24-4366-42b0-af1b-63a98429675f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="50ba80d3-6089-b701-cd6e-691ea0332387" executionId="c93ce48e-67a8-40fd-8726-afa03eee2230" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="76a3d780-69bc-a3ed-4ceb-f896e51b0d1d" executionId="95dea2c8-aa16-406b-8017-6c536bad0a17" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f4b37e08-0722-52b1-c839-b4ef7a777db8" executionId="da6d496b-0112-4ea6-9584-a9b047acf785" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a0205318-5664-b062-76fe-88d5414d0566" executionId="51b20c83-6d97-4b1a-9ba3-00144e892f8a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2cb87474-6e20-088b-59db-b11623d79f21" executionId="581be515-c239-4900-8059-9054eaf7644b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5f3cfd1a-110d-f193-9307-1a89e58baf71" executionId="e70e5e68-328c-49a1-9b5a-a7f005d330f6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bf301f5c-8a67-af86-e6a0-3b96063fd7e2" executionId="ba17d51a-9d9c-4c50-bd8f-07a1a93fe69d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2d0d7e41-9965-a6a6-2d15-05f0e4787cdd" executionId="2180c706-2358-42d4-ad9b-85440fe48027" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9dd318f5-7c78-febd-0621-221edeca2c78" executionId="91361cd3-d040-4dcf-8c04-8e4cd2f0cc27" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Bir Listede Olmayan Sonuçlar" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Yüklenen Tüm Sonuçlar" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="18" executed="18" passed="18" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.28)&#xD;
+[xUnit.net 00:00:01.14]   Discovering: TrainService.Messaging.Tests&#xD;
+[xUnit.net 00:00:01.18]   Discovered:  TrainService.Messaging.Tests&#xD;
+[xUnit.net 00:00:01.18]   Starting:    TrainService.Messaging.Tests&#xD;
+[xUnit.net 00:00:01.68]   Finished:    TrainService.Messaging.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

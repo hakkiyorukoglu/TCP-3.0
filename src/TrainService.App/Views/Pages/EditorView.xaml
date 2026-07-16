@@ -9,7 +9,8 @@
     <Page.InputBindings>
         <KeyBinding Key="Z" Modifiers="Control" Command="{Binding ViewModel.UndoCommand}" />
         <KeyBinding Key="Y" Modifiers="Control" Command="{Binding ViewModel.RedoCommand}" />
-        <KeyBinding Key="Z" Modifiers="Control+Shift" Command="{Binding ViewModel.RedoCommand}" />
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding ViewModel.SaveCommand}" />
+        <KeyBinding Key="F9" Command="{Binding ViewModel.ToggleSnapCommand}" />
     </Page.InputBindings>
     
     <Grid>
@@ -25,23 +26,33 @@
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                     <ui:SymbolIcon Symbol="TargetArrow24" Foreground="DeepSkyBlue" Margin="0,0,5,0"/>
                     <TextBlock x:Name="LblCoordinates" Text="X: 0.0 Y: 0.0 mm" FontFamily="Consolas" FontSize="14" Foreground="White" FontWeight="Bold"/>
+                    <TextBlock x:Name="LblSnapStatus" Text="{Binding ViewModel.SnapStatusText}" FontFamily="Consolas" FontSize="14" Foreground="Yellow" FontWeight="Bold" Visibility="Visible"/>
                 </StackPanel>
                 
-                <!-- FPS Sayacı -->
+                <!-- Durum Çubuğu ve FPS -->
                 <StackPanel Orientation="Horizontal">
                     <ui:SymbolIcon Symbol="Video24" Foreground="LimeGreen" Margin="0,0,5,0"/>
-                    <TextBlock x:Name="LblFps" Text="FPS: 0" FontFamily="Consolas" FontSize="14" Foreground="LimeGreen" FontWeight="Bold"/>
+                    <TextBlock x:Name="LblFps" Text="FPS: 0" FontFamily="Consolas" FontSize="14" Foreground="LimeGreen" FontWeight="Bold" Margin="0,0,15,0"/>
+                    
+                    <ui:SymbolIcon Symbol="Document24" Foreground="LightGray" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding ViewModel.DocumentStatusText}" FontFamily="Consolas" FontSize="14" Foreground="LightGray" FontWeight="Bold"/>
                 </StackPanel>
             </StackPanel>
         </Border>
         
-        <!-- Geçici Test Butonu (v3.0.18'de TrackTool ile değişecek) -->
+        <!-- Toolbar -->
         <Border Panel.ZIndex="1000" HorizontalAlignment="Right" VerticalAlignment="Top" 
                 Margin="10" Padding="5" Background="#EE1E1E1E" CornerRadius="6">
             <StackPanel Orientation="Horizontal">
-                <ui:Button Command="{Binding ViewModel.DebugAddLineCommand}" 
-                           Icon="Add24" 
-                           Appearance="Primary" Content="Test Çizgisi Ekle" Margin="0,0,5,0" />
+                <ui:Button Command="{Binding ViewModel.SetToolCommand}" CommandParameter="Select"
+                           Icon="SelectObject24" 
+                           Appearance="Primary" ToolTip="Seç (S)" Margin="0,0,5,0" />
+                <ui:Button Command="{Binding ViewModel.SetToolCommand}" CommandParameter="Track"
+                           Icon="ArrowFlowUpRight24" 
+                           Appearance="Primary" ToolTip="Ray (T)" Margin="0,0,5,0" />
+                <ui:Button Command="{Binding ViewModel.SaveCommand}" 
+                           Icon="Save24" 
+                           Appearance="Secondary" ToolTip="Kaydet (Ctrl+S)" Margin="0,0,5,0" />
                 <ui:Button Command="{Binding ViewModel.UndoCommand}" 
                            Icon="ArrowUndo24" 
                            Appearance="Secondary" ToolTip="Geri Al (Ctrl+Z)" Margin="0,0,5,0" />

@@ -44,8 +44,8 @@ public class LogBus : ILogBus
                 var repo = scope.ServiceProvider.GetRequiredService<ITcpRepository>();
                 await repo.AddLogAsync(new TrainService.Core.Entities.EventLog
                 {
-                    Timestamp = log.Timestamp,
-                    Level = level.ToString(),
+                    Ts = log.Timestamp,
+                    Level = (int)level,
                     Source = source,
                     Message = message
                 });

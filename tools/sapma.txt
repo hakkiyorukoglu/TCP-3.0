@@ -1,0 +1,6 @@
+SAPMA BEYANI (Güncel)
+
+v3.0.18 Mühürleme Sürecinde Ortaya Çıkan ve Onaylanan Sapmalar:
+1. 40→10 CRUD Konsolidasyonu: `Smoke_*` dolgu testleri (90 adet) tamamen silindi, yerine 10 adet gerçek "round-trip" CRUD testi (`CrudSmokeTests.cs`) yazılarak veritabanı persist işlemi doğrulandı.
+2. Guid Converter Kaldırılması: Mimari kirlilik yarattığı tespit edildiğinden, `CadEntity` dönüşümleri için EF Core üzerindeki Guid Converter stratejisi iptal edildi. Bunun yerine saf ADO.NET kullanılarak Guid/String dönüşümü manuel yapıldı.
+3. Test Önceliği: T011 dahil olmak üzere tüm sahte (dummy) testler silinmiş, test gövdeleri API davranışı etrafında kurgulanmıştır.

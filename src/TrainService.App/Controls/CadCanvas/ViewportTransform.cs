@@ -12,7 +12,7 @@ public sealed class ViewportTransform
     public double Scale
     {
         get => _scale;
-        set => _scale = Math.Max(0.01, Math.Min(100.0, value)); // limit zoom
+        set => _scale = Math.Max(0.001, Math.Min(1000.0, value)); // limit zoom
     }
 
     // Sol üst köşenin Dünya Koordinatındaki mm değeri

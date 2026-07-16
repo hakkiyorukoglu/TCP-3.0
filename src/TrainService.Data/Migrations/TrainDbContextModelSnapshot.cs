@@ -45,6 +45,9 @@ namespace TrainService.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Devices");
@@ -56,9 +59,8 @@ namespace TrainService.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Level")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Level")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -68,12 +70,62 @@ namespace TrainService.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Timestamp")
+                    b.Property<DateTime>("Ts")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("EventLogs");
+                });
+
+            modelBuilder.Entity("TrainService.Core.Entities.HardwareBinding", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("DeviceId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ElementId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("LayerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HardwareBindings");
+                });
+
+            modelBuilder.Entity("TrainService.Core.Entities.Layer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("LayerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Layers");
                 });
 
             modelBuilder.Entity("TrainService.Core.Entities.NetworkSwitch", b =>
@@ -95,9 +147,30 @@ namespace TrainService.Data.Migrations
                     b.Property<int>("PortCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("NetworkSwitches");
+                });
+
+            modelBuilder.Entity("TrainService.Core.Entities.Project", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("GridSizeMm")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("TrainService.Core.Entities.RailSwitch", b =>
@@ -121,12 +194,47 @@ namespace TrainService.Data.Migrations
                     b.Property<Guid>("NodeId")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("State")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.ToTable("Switches");
+                });
+
+            modelBuilder.Entity("TrainService.Core.Entities.Ramp", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("EndZ")
+                        .HasColumnType("REAL");
+
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("LayerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("LengthMm")
+                        .HasColumnType("REAL");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("SegmentId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("StartZ")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ramps");
                 });
 
             modelBuilder.Entity("TrainService.Core.Entities.Route", b =>
@@ -145,9 +253,62 @@ namespace TrainService.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Routes");
+                });
+
+            modelBuilder.Entity("TrainService.Core.Entities.Scenario", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("LayerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Scenarios");
+                });
+
+            modelBuilder.Entity("TrainService.Core.Entities.ScenarioStep", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("LayerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ScenarioId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ScenarioSteps");
                 });
 
             modelBuilder.Entity("TrainService.Core.Entities.Station", b =>
@@ -167,6 +328,9 @@ namespace TrainService.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProjectId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TableNo")
@@ -201,12 +365,69 @@ namespace TrainService.Data.Migrations
                     b.Property<int>("PortNo")
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Role")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.ToTable("SwitchPorts");
+                });
+
+            modelBuilder.Entity("TrainService.Core.Entities.SwitchStateEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("LayerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("State")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("SwitchId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SwitchStates");
+                });
+
+            modelBuilder.Entity("TrainService.Core.Entities.SystemState", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("LayerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StateKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StateValue")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemState");
                 });
 
             modelBuilder.Entity("TrainService.Core.Entities.TrackNode", b =>
@@ -223,6 +444,9 @@ namespace TrainService.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid>("LayerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProjectId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Role")
@@ -263,6 +487,9 @@ namespace TrainService.Data.Migrations
                     b.Property<double>("LengthMm")
                         .HasColumnType("REAL");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("StartNodeId")
                         .HasColumnType("TEXT");
 
@@ -294,18 +521,44 @@ namespace TrainService.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Trains");
+                });
+
+            modelBuilder.Entity("TrainService.Core.Entities.TrainState", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("LayerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Speed")
+                        .HasColumnType("REAL");
+
+                    b.Property<Guid>("TrainId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TrainStates");
                 });
 
             modelBuilder.Entity("TrainService.Core.Entities.Route", b =>
                 {
                     b.OwnsMany("TrainService.Core.Entities.RouteStep", "Steps", b1 =>
                         {
-                            b1.Property<Guid>("RouteId")
-                                .HasColumnType("TEXT");
-
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("INTEGER");
@@ -313,14 +566,17 @@ namespace TrainService.Data.Migrations
                             b1.Property<int>("Direction")
                                 .HasColumnType("INTEGER");
 
+                            b1.Property<Guid>("RouteId")
+                                .HasColumnType("TEXT");
+
                             b1.Property<Guid>("SegmentId")
                                 .HasColumnType("TEXT");
 
-                            b1.HasKey("RouteId", "Id");
+                            b1.HasKey("Id");
 
-                            b1.ToTable("Routes");
+                            b1.HasIndex("RouteId");
 
-                            b1.ToJson("Steps");
+                            b1.ToTable("RouteSteps", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("RouteId");

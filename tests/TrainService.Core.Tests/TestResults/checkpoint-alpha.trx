@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="2d4cb4d0-42d5-445e-b3ac-c11afbd0c4f3" name="yoruk@HAKKI 2026-07-16 02:38:50" runUser="HAKKI\yoruk" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-07-16T02:38:50.3733523+03:00" queuing="2026-07-16T02:38:50.3733531+03:00" start="2026-07-16T02:38:48.3281248+03:00" finish="2026-07-16T02:38:50.3823383+03:00" />
+  <TestSettings name="default" id="a0fc61d7-779f-4e8c-9473-62eea12007d6">
+    <Deployment runDeploymentRoot="yoruk_HAKKI_2026-07-16_02_38_50" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="625c4cb0-649f-4184-b056-84b351c440c4" testId="886457a1-90db-b283-8443-ef20307cf17c" testName="TrainService.Core.Tests.DatabaseTests.Add_And_Delete_Device_ShouldSucceed" computerName="HAKKI" duration="00:00:00.7610151" startTime="2026-07-16T02:38:50.1689413+03:00" endTime="2026-07-16T02:38:50.1689421+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="625c4cb0-649f-4184-b056-84b351c440c4" />
+    <UnitTestResult executionId="b567387f-b2c7-4000-ac8d-bfcbbeb632ed" testId="00465698-795b-c516-6b23-a994eafaf10e" testName="TrainService.Core.Tests.DispatchServiceTests.SendCommandAndWaitAckAsync_ShouldSucceed_WhenAckReceived" computerName="HAKKI" duration="00:00:00.0798249" startTime="2026-07-16T02:38:49.7017344+03:00" endTime="2026-07-16T02:38:49.7017349+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b567387f-b2c7-4000-ac8d-bfcbbeb632ed" />
+    <UnitTestResult executionId="ad895c78-a310-453f-bd74-8cf2db1a90f9" testId="40ba7101-a0cd-7ba3-48bc-8bc02729271f" testName="TrainService.Core.Tests.UnitTest1.Test1" computerName="HAKKI" duration="00:00:00.0028120" startTime="2026-07-16T02:38:49.4148946+03:00" endTime="2026-07-16T02:38:49.4149209+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ad895c78-a310-453f-bd74-8cf2db1a90f9" />
+    <UnitTestResult executionId="128b52a1-e318-4805-8561-3f198bf815e5" testId="4b34e1fc-1387-01ad-27cd-e7e91346d272" testName="TrainService.Core.Tests.DispatchServiceTests.SendCommandAndWaitAckAsync_ShouldReturnFalse_WhenNoAckReceived" computerName="HAKKI" duration="00:00:00.2083209" startTime="2026-07-16T02:38:49.6200508+03:00" endTime="2026-07-16T02:38:49.6200512+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="128b52a1-e318-4805-8561-3f198bf815e5" />
+    <UnitTestResult executionId="0078311e-c4dd-44b1-b60e-8db67693ba8c" testId="d15dffb0-f32a-b521-4dda-433f40207a65" testName="TrainService.Core.Tests.DatabaseTests.Add_And_Read_NetworkSwitch_ShouldSucceed" computerName="HAKKI" duration="00:00:00.0697326" startTime="2026-07-16T02:38:50.2388121+03:00" endTime="2026-07-16T02:38:50.2388126+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0078311e-c4dd-44b1-b60e-8db67693ba8c" />
+    <UnitTestResult executionId="5bb79f9b-bd15-4062-9758-0f41d3d30f19" testId="b55b4df7-f407-ae91-134c-98011aaa5f5d" testName="TrainService.Core.Tests.T2xx_EntityTests.T201_Core_Entities_Iskelte_Testi" computerName="HAKKI" duration="00:00:00.0033383" startTime="2026-07-16T02:38:49.4176663+03:00" endTime="2026-07-16T02:38:49.4176665+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5bb79f9b-bd15-4062-9758-0f41d3d30f19" />
+    <UnitTestResult executionId="e9581d2b-3ad0-48fd-a02f-1fefe0ee982f" testId="55de805b-5152-ac95-20b5-964f3ecb50a4" testName="TrainService.Core.Tests.T1xx_VectorTests.T101_Vector2D_Matematigi" computerName="HAKKI" duration="00:00:00.0032813" startTime="2026-07-16T02:38:49.4180191+03:00" endTime="2026-07-16T02:38:49.4180192+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e9581d2b-3ad0-48fd-a02f-1fefe0ee982f" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="TrainService.Core.Tests.T2xx_EntityTests.T201_Core_Entities_Iskelte_Testi" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.core.tests\bin\debug\net8.0\trainservice.core.tests.dll" id="b55b4df7-f407-ae91-134c-98011aaa5f5d">
+      <Execution id="5bb79f9b-bd15-4062-9758-0f41d3d30f19" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Core.Tests\bin\Debug\net8.0\TrainService.Core.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Core.Tests.T2xx_EntityTests" name="T201_Core_Entities_Iskelte_Testi" />
+    </UnitTest>
+    <UnitTest name="TrainService.Core.Tests.DispatchServiceTests.SendCommandAndWaitAckAsync_ShouldSucceed_WhenAckReceived" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.core.tests\bin\debug\net8.0\trainservice.core.tests.dll" id="00465698-795b-c516-6b23-a994eafaf10e">
+      <Execution id="b567387f-b2c7-4000-ac8d-bfcbbeb632ed" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Core.Tests\bin\Debug\net8.0\TrainService.Core.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Core.Tests.DispatchServiceTests" name="SendCommandAndWaitAckAsync_ShouldSucceed_WhenAckReceived" />
+    </UnitTest>
+    <UnitTest name="TrainService.Core.Tests.UnitTest1.Test1" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.core.tests\bin\debug\net8.0\trainservice.core.tests.dll" id="40ba7101-a0cd-7ba3-48bc-8bc02729271f">
+      <Execution id="ad895c78-a310-453f-bd74-8cf2db1a90f9" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Core.Tests\bin\Debug\net8.0\TrainService.Core.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Core.Tests.UnitTest1" name="Test1" />
+    </UnitTest>
+    <UnitTest name="TrainService.Core.Tests.DatabaseTests.Add_And_Delete_Device_ShouldSucceed" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.core.tests\bin\debug\net8.0\trainservice.core.tests.dll" id="886457a1-90db-b283-8443-ef20307cf17c">
+      <Execution id="625c4cb0-649f-4184-b056-84b351c440c4" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Core.Tests\bin\Debug\net8.0\TrainService.Core.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Core.Tests.DatabaseTests" name="Add_And_Delete_Device_ShouldSucceed" />
+    </UnitTest>
+    <UnitTest name="TrainService.Core.Tests.T1xx_VectorTests.T101_Vector2D_Matematigi" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.core.tests\bin\debug\net8.0\trainservice.core.tests.dll" id="55de805b-5152-ac95-20b5-964f3ecb50a4">
+      <Execution id="e9581d2b-3ad0-48fd-a02f-1fefe0ee982f" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Core.Tests\bin\Debug\net8.0\TrainService.Core.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Core.Tests.T1xx_VectorTests" name="T101_Vector2D_Matematigi" />
+    </UnitTest>
+    <UnitTest name="TrainService.Core.Tests.DispatchServiceTests.SendCommandAndWaitAckAsync_ShouldReturnFalse_WhenNoAckReceived" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.core.tests\bin\debug\net8.0\trainservice.core.tests.dll" id="4b34e1fc-1387-01ad-27cd-e7e91346d272">
+      <Execution id="128b52a1-e318-4805-8561-3f198bf815e5" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Core.Tests\bin\Debug\net8.0\TrainService.Core.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Core.Tests.DispatchServiceTests" name="SendCommandAndWaitAckAsync_ShouldReturnFalse_WhenNoAckReceived" />
+    </UnitTest>
+    <UnitTest name="TrainService.Core.Tests.DatabaseTests.Add_And_Read_NetworkSwitch_ShouldSucceed" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.core.tests\bin\debug\net8.0\trainservice.core.tests.dll" id="d15dffb0-f32a-b521-4dda-433f40207a65">
+      <Execution id="0078311e-c4dd-44b1-b60e-8db67693ba8c" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Core.Tests\bin\Debug\net8.0\TrainService.Core.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Core.Tests.DatabaseTests" name="Add_And_Read_NetworkSwitch_ShouldSucceed" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="886457a1-90db-b283-8443-ef20307cf17c" executionId="625c4cb0-649f-4184-b056-84b351c440c4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="00465698-795b-c516-6b23-a994eafaf10e" executionId="b567387f-b2c7-4000-ac8d-bfcbbeb632ed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="40ba7101-a0cd-7ba3-48bc-8bc02729271f" executionId="ad895c78-a310-453f-bd74-8cf2db1a90f9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4b34e1fc-1387-01ad-27cd-e7e91346d272" executionId="128b52a1-e318-4805-8561-3f198bf815e5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d15dffb0-f32a-b521-4dda-433f40207a65" executionId="0078311e-c4dd-44b1-b60e-8db67693ba8c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b55b4df7-f407-ae91-134c-98011aaa5f5d" executionId="5bb79f9b-bd15-4062-9758-0f41d3d30f19" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="55de805b-5152-ac95-20b5-964f3ecb50a4" executionId="e9581d2b-3ad0-48fd-a02f-1fefe0ee982f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Bir Listede Olmayan Sonuçlar" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Yüklenen Tüm Sonuçlar" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="7" executed="7" passed="7" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.28)&#xD;
+[xUnit.net 00:00:00.16]   Discovering: TrainService.Core.Tests&#xD;
+[xUnit.net 00:00:00.23]   Discovered:  TrainService.Core.Tests&#xD;
+[xUnit.net 00:00:00.23]   Starting:    TrainService.Core.Tests&#xD;
+[xUnit.net 00:00:01.24]   Finished:    TrainService.Core.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

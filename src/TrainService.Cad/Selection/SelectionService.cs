@@ -13,8 +13,11 @@ public sealed class SelectionService
 
     public void Set(IEnumerable<Guid> ids)
     {
+        var newSet = new HashSet<Guid>(ids);
+        if (_selectedIds.SetEquals(newSet)) return;
+
         _selectedIds.Clear();
-        foreach (var id in ids) _selectedIds.Add(id);
+        foreach (var id in newSet) _selectedIds.Add(id);
         SelectionChanged?.Invoke(this, EventArgs.Empty);
     }
 

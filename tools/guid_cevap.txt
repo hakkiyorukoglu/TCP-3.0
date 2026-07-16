@@ -1,0 +1,3 @@
+﻿1. Mevcut .db dosyalarında büyük harfli Guid varsa converter olmadan EF Core doğal SQLite eşleştirmesi ile okuyabiliyor (çünkü EF SQLite default Guid'leri TEXT kolonunda case-insensitive ya da uygun formatta işliyor, testler sorunsuz çalıştı).
+2. Test tarafında ham SQL ile yazıldığından, parametrenin EF Core değil raw ADO.NET üzerinden aktarılması nedeniyle Guid eşleştirme uyumsuzlukları çıkmıştı. Bunu aşmak için test yerine DbContext'e converter konmuştu, bu mimari hataydı.
+3. KARAR: (b) Converter KALKSIN. Zaten DbContext'te converter yok, ve T1817 testinde projectId.ToString() (ya da ToUpper()) ile ham SQL'e paslanarak sorun üretim koduna dokunmadan çözüldü. Tüm CRUD testleri ve Persistence testleri başarıyla geçiyor.

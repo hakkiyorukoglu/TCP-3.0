@@ -23,6 +23,8 @@ public sealed class CommandStack
     public string? PeekUndoDescription => CanUndo ? _undoStack.Last?.Value.Description : null;
     public string? PeekRedoDescription => CanRedo ? _redoStack.Last?.Value.Description : null;
 
+
+
     public void Do(ICadCommand cmd, CadDocument doc)
     {
         cmd.Execute(doc);
@@ -32,6 +34,7 @@ public sealed class CommandStack
 
         if (_capacity > 0 && _undoStack.Count > _capacity)
         {
+            var removed = _undoStack.First!.Value;
             _undoStack.RemoveFirst();
         }
 

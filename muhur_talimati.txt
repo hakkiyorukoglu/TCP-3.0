@@ -1,0 +1,675 @@
+<USER_REQUEST>
+# v3.0.18 MÜHÜR — TEST BORCU KAPATMA (TAM VE SON TALİMAT)
+## 90 Dolgu Testinin Gerçek Gövdelerle Değiştirilmesi + Tek Seferlik Mühür
+
+> Bu talimat v3.0.18'i KAPATIR. Section [3] taraması bittiğinde **0 dolgu** olacak,
+> section [5]'te tüm T-kimlikli gövdeler gerçek olacak. Bu talimattan sonra "şu eksikti"
+> denecek hiçbir şey kalmayacak — çünkü aşağıda HER testin tam kodu, HER doğrulama komutu,
+> raporun HER satırı yazılı.
+>
+> **KURAL 1:** Aşağıdaki her test gövdesi AYNEN kopyalanır. Serbest olan tek şey: using/namespace
+>   satırları, fixture adına bağlama, projedeki gerçek sınıf/metot adlarına uydurma. ASSERT'LER
+>   ve senaryo adımları DEĞİŞTİRİLEMEZ.
+> **KURAL 2:** Bir test derlenmiyorsa (API adı farklı vb.) → gerçek API'ye bağla, ama davranışı koru.
+>   Davranışı koruyamıyorsan → o testi `Skip="sebep"` ile işaretle (Skip GÖRÜNÜR; dolgu görünmez).
+>   Dolgu assert (`dummy1+dummy2`, `Assert.True(true)`, `Assert.Equal(3,...)`) HİÇBİR yerde kalamaz.
+> **KURAL 3:** Üretim kodu bir testi geçiremiyorsa ÜRETİM KODU düzeltilir, test değil.
+>   Hangi üretim kodunu düzelttiysen sapma.txt'ye yazılır.
+> **KURAL 4:** Testi geçirmek için gövdeye anlamsız satır eklemek = mühür reddi + baştan.
+
+---
+
+## İŞ SIRASI (5 parti, sıralı; her parti bitince derleme yeşil)
+
+Parti A: Architecture T001–T008 (A1 bekçileri — önce bunlar, çünkü gerisini bunlar korur)
+Parti B: Messaging T601–T617 (A3)
+Parti C: App T701–T803 (A5)
+Parti D: Core T2xx + Cad T3xx/T410
+Parti E: Data CrudSmoke (gerçek CRUD ya da dürüst silme) + Guid converter kararı
+Sonra: T011 güçlendirme + tek script koşumu + tek rapor.
+
+═══════════════════════════════════════════════════════════════════════
+## PARTİ A — ARCHITECTURE BEKÇİLERİ (T001–T008)
+═══════════════════════════════════════════════════════════════════════
+
+Dosya: `tests/TrainService.Architecture.Tests/T0xx_ArchitectureTests.cs` (dolgular SİLİNİR, aşağısı yazılır)
+NuGet: `NetArchTest.Rules` referansı yoksa eklenir. `using NetArchTest.Rules;`
+
+Yardımcı (sınıf başına bir kez): assembly'leri adla yükle.
+```csharp
+private static System.Reflection.Assembly Core => typeof(TrainService.Core.Geometry.Vector2D).Assembly;
+private static System.Reflection.Assembly Cad  => typeof(TrainService.Cad.CadDocument).Assembly;
+private static System.Reflection.Assembly Data => typeof(TrainService.Data.TrainDbContext).Assembly;
+private static System.Reflection.Assembly Msg  => System.Reflection.Assembly.Load("TrainService.Messaging");
+private static System.Reflection.Assembly Sim  => System.Reflection.Assembly.Load("TrainService.Simulation");
+```
+
+```csharp
+[Fact]
+public void T001_Core_HicbirProjeyeBagimliDegil()
+{
+    var r = Types.InAssembly(Core)
+        .ShouldNot().HaveDependencyOnAny(
+            "TrainService.Cad", "TrainService.Data", "TrainService.Messaging",
+            "TrainService.App", "TrainService.Simulation", "TrainService.Firmware")
+        .GetResult();
+    r.IsSuccessful.Should().BeTrue(
+        $"Core saf olmalı. İhlal edenler: {string.Join(", ", r.FailingTypeNames ?? new List<string>())}");
+}
+
+[Fact]
+public void T002_Cad_SadeceCoreyeBagimli()
+{
+    var r = Types.InAssembly(Cad)
+        .ShouldNot().HaveDependencyOnAny(
+            "TrainService.Data", "TrainService.Messaging", "TrainService.App")
+        .GetResult();
+    r.IsSuccessful.Should().BeTrue(
+        $"Cad yalnızca Core'a bakar. İhlal: {string.Join(", ", r.FailingTypeNames ?? new List<string>())}");
+}
+
+[Fact]
+public void T003_Core_WpfTipiIcermez()
+{
+    var r = Types.InAssembly(Core)
+        .ShouldNot().HaveDependencyOnAny("System.Windows", "PresentationCore", "PresentationFramework", "WindowsBase")
+        .GetResult();
+    r.IsSuccessful.Should().BeTrue("Core'a WPF tipi (Point, Brush) sızmamalı");
+}
+
+[Fact]
+public void T004_Cad_WpfTipiIcermez()
+{
+    // Snap/Tool/Command çekirdeği WPF tanımamalı (headless test edilebilirliğin garantisi)
+    var r = Types.InAssembly(Cad)
+        .ShouldNot().HaveDependencyOnAny("System.Windows", "PresentationCore", "PresentationFramework", "WindowsBase")
+        .GetResult();
+    r.IsSuccessful.Should().BeTrue(
+        $"Cad WPF'siz olmalı. İhlal: {string.Join(", ", r.FailingTypeNames ?? new List<string>())}");
+}
+
+[Fact]
+public void T005_Messaging_DataBagimsiz()
+{
+    var r = Types.InAssembly(Msg)
+        .ShouldNot().HaveDependencyOn("TrainService.Data")
+        .GetResult();
+    r.IsSuccessful.Should().BeTrue("Messaging cihaz kayıtlarını arayüz üzerinden almalı, Data'ya bağlanmamalı");
+}
+
+[Fact]
+public void T006_Simulation_IskeletBos()
+{
+    // Faz H'ye kadar Simulation'da fizik/sinyalizasyon MANTIĞI olmamalı.
+    // İskelet dışı public tip sayısı düşük kalmalı (SimulationLoop iskeleti hariç).
+    var tipler = Sim.GetTypes()
+        .Where(t => t.IsPublic && !t.IsInterface && !t.IsAbstract && !t.IsEnum)
+        .Select(t => t.Name).ToList();
+    tipler.Count.Should().BeLessThanOrEqualTo(2,
+        $"Simulation erken doldurulmamalı (Roadmap Faz H). Bulunan: {string.Join(", ", tipler)}");
+}
+
+[Fact]
+public void T007_TumEntityler_CadEntityMirasAlir()
+{
+    // Core.Entities altındaki tüm somut varlıklar CadEntity'den türemeli (tek hiyerarşi)
+    var baseType = typeof(TrainService.Core.Entities.CadEntity);
+    var ihlal = Core.GetTypes()
+        .Where(t => t.Namespace == "TrainService.Core.Entities"
+                    && t.IsClass && !t.IsAbstract
+                    && t != baseType
+                    && !baseType.IsAssignableFrom(t))
+        .Select(t => t.Name).ToList();
+    ihlal.Should().BeEmpty($"CadEntity mirası almayan varlık(lar): {string.Join(", ", ihlal)}");
+}
+
+[Fact]
+public void T008_TumKomutlar_ICadCommandUygular()
+{
+    // Cad.UndoRedo altındaki *Command sınıfları ICadCommand uygulamalı
+    var iface = typeof(TrainService.Cad.UndoRedo.ICadCommand);
+    var ihlal = Cad.GetTypes()
+        .Where(t => t.IsClass && !t.IsAbstract && t.Name.EndsWith("Command")
+                    && t != typeof(TrainService.Cad.UndoRedo.CompositeCadCommand)  // composite ayrı test edildi
+                    && !iface.IsAssignableFrom(t))
+        .Select(t => t.Name).ToList();
+    ihlal.Should().BeEmpty($"ICadCommand uygulamayan komut(lar): {string.Join(", ", ihlal)}");
+}
+```
+
+**PARTİ A DOĞRULAMA (her testin GERÇEKTEN çalıştığını kanıtla — "kırmızı görebilme" ilkesi):**
+Bu bekçiler kritik olduğu için, her birinin YAKALAYABİLDİĞİNİ bir kez ispatla:
+1. Geçici olarak Cad'e `using TrainService.Data;` ekleyip derle → T002/T004 KIRMIZI olmalı.
+2. Çıktıyı `tools/partiA_ispat.txt`'ye yaz, using'i geri al, yeşile dönsün.
+Bu ispat rapora girecek. (NetArchTest yoksa veya API farklıysa: reflection ile
+`asm.GetReferencedAssemblies()` üzerinden aynı kontrolü kur — davranış korunur, sapma.txt'ye yaz.)
+
+═══════════════════════════════════════════════════════════════════════
+## PARTİ B — MESSAGING (T601–T617)  [A3 arteri]
+═══════════════════════════════════════════════════════════════════════
+
+Dosya: `tests/TrainService.Messaging.Tests/T6xx_MessagingTests.cs` (dolgular silinir)
+Altyapı: `EmbeddedBrokerFixture` — rastgele boş portta gerçek broker. Yoksa BU PARTİDE yazılır:
+```csharp
+public sealed class EmbeddedBrokerFixture : IAsyncLifetime
+{
+    public int Port { get; private set; }
+    public EmbeddedBrokerService Broker { get; private set; } = default!;
+    public async Task InitializeAsync()
+    {
+        Port = BosPortBul();                       // TcpListener(0) ile boş port
+        Broker = new EmbeddedBrokerService(Port, keepAliveSec: 2);  // keep-alive kısa: LWT testi hızlı
+        await Broker.StartAsync();
+    }
+    public async Task DisposeAsync() => await Broker.StopAsync();
+    public async Task<IMqttClient> ClientAsync(string id, (string topic,string payload)? lwt = null) { /* MQTTnet client */ }
+    static int BosPortBul(){ var l=new TcpListener(IPAddress.Loopback,0); l.Start(); var p=((IPEndPoint)l.LocalEndpoint).Port; l.Stop(); return p; }
+}
+```
+Bekleme kuralı: `Task.Delay(sabit)` YASAK. `TaskCompletionSource` + `WaitAsync(3sn timeout)`.
+
+```csharp
+[Fact]
+public async Task T601_Broker_Baslat_Durdur_TekrarBaslat()
+{
+    var b = new EmbeddedBrokerService(_fx.Port + 1, 2);
+    await b.StartAsync();
+    await b.StopAsync();
+    var act = async () => { await b.StartAsync(); await b.StopAsync(); };  // ikinci döngü port sızıntısı yapmamalı
+    await act.Should().NotThrowAsync();
+}
+
+[Fact]
+public async Task T602_Loopback_PubSub()
+{
+    var alindi = new TaskCompletionSource<string>();
+    var sub = await _fx.ClientAsync("sub");
+    await sub.SubscribeAsync("test/konu");
+    sub.ApplicationMessageReceivedAsync += e => {
+        alindi.TrySetResult(e.ApplicationMessage.ConvertPayloadToString()); return Task.CompletedTask; };
+    var pub = await _fx.ClientAsync("pub");
+    await pub.PublishStringAsync("test/konu", "merhaba");
+    (await alindi.Task.WaitAsync(TimeSpan.FromSeconds(3))).Should().Be("merhaba");
+}
+
+[Fact]
+public void T603_TopicContract_SabitlerFormatDogru()
+{
+    // Core'daki topic sabitleri şablon formatına uymalı (Roadmap 4.1)
+    TrainService.Core.Messaging.Topics.Commands.Should().Be("restaurant/commands");
+    TrainService.Core.Messaging.Topics.RfidTelemetry("5").Should().Be("restaurant/telemetry/5/rfid");
+    TrainService.Core.Messaging.Topics.Ack("5").Should().Be("restaurant/ack/5");
+    TrainService.Core.Messaging.Topics.Status("dev1").Should().Be("restaurant/status/dev1");
+}
+
+[Fact]
+public void T604_Payload_JsonRoundTrip_BilinmeyenAlanYokSayilir()
+{
+    var cmd = new CommandPayload(CmdId: Guid.NewGuid(), TrainId: "T1", TargetStationId: "5", Action: "GO");
+    var json = JsonSerializer.Serialize(cmd);
+    var geri = JsonSerializer.Deserialize<CommandPayload>(json);
+    geri.Should().BeEquivalentTo(cmd);
+    // İleri uyumluluk: fazladan alan gelirse patlamamalı
+    var act = () => JsonSerializer.Deserialize<CommandPayload>(json.Insert(1, "\"yeniAlan\":42,"));
+    act.Should().NotThrow();
+}
+
+[Fact]
+public async Task T605_LWT_KabaKopus_OfflineAlgilanir()
+{
+    // ★ Gerçek saha kopması: DisconnectAsync DEĞİL, soketi Dispose ile kabaca kes.
+    var offline = new TaskCompletionSource<string>();
+    var izleyici = await _fx.ClientAsync("izleyici");
+    await izleyici.SubscribeAsync("restaurant/status/dev1");
+    izleyici.ApplicationMessageReceivedAsync += e => {
+        if (e.ApplicationMessage.ConvertPayloadToString() == "offline") offline.TrySetResult("offline");
+        return Task.CompletedTask; };
+
+    var dev = await _fx.ClientAsync("dev1", lwt: ("restaurant/status/dev1", "offline"));
+    dev.Dispose();   // kaba kopuş → broker keep-alive sonrası LWT yayınlar
+
+    (await offline.Task.WaitAsync(TimeSpan.FromSeconds(6))).Should().Be("offline",
+        "kaba kopuşta LWT ile offline algılanmalı (keep-alive=2sn)");
+}
+
+[Fact]
+public async Task T606_Status_Retained_GecBaglananGorur()
+{
+    var dev = await _fx.ClientAsync("dev2");
+    await dev.PublishAsync(new MqttApplicationMessageBuilder()
+        .WithTopic("restaurant/status/dev2").WithPayload("online").WithRetainFlag().Build());
+    await Task.Yield();
+    var gorulen = new TaskCompletionSource<string>();
+    var gec = await _fx.ClientAsync("gec-izleyici");   // SONRADAN bağlanan
+    gec.ApplicationMessageReceivedAsync += e => { gorulen.TrySetResult(e.ApplicationMessage.ConvertPayloadToString()); return Task.CompletedTask; };
+    await gec.SubscribeAsync("restaurant/status/dev2");
+    (await gorulen.Task.WaitAsync(TimeSpan.FromSeconds(3))).Should().Be("online", "retained mesaj geç gelene ulaşmalı");
+}
+
+// T607–T610: Hub publish/subscribe + QoS 0/1/2 teslim.
+[Theory]
+[InlineData(0)] [InlineData(1)] [InlineData(2)]
+public async Task T607_610_Hub_QoS_Teslim(int qos)
+{
+    var alindi = new TaskCompletionSource<bool>();
+    var sub = await _fx.ClientAsync($"q{qos}s");
+    await sub.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("q/test")
+        .WithQualityOfServiceLevel((MqttQualityOfServiceLevel)qos).Build());
+    sub.ApplicationMessageReceivedAsync += e => { alindi.TrySetResult(true); return Task.CompletedTask; };
+    var pub = await _fx.ClientAsync($"q{qos}p");
+    await pub.PublishAsync(new MqttApplicationMessageBuilder().WithTopic("q/test")
+        .WithPayload("x").WithQualityOfServiceLevel((MqttQualityOfServiceLevel)qos).Build());
+    (await alindi.Task.WaitAsync(TimeSpan.FromSeconds(3))).Should().BeTrue($"QoS{qos} teslim edilmeli");
+}
+
+[Fact]
+public async Task T611_DeviceRegistry_YeniCihazKaydeder()
+{
+    var reg = new DeviceRegistry(_fx.Broker);   // gerçek registry
+    var dev = await _fx.ClientAsync("regdev");
+    await dev.PublishAsync(new MqttApplicationMessageBuilder()
+        .WithTopic("restaurant/status/regdev").WithPayload("online").WithRetainFlag().Build());
+    await Eventually(() => reg.IsOnline("regdev"), 3);   // yardımcı: koşul sağlanana kadar bekle
+    reg.IsOnline("regdev").Should().BeTrue();
+}
+
+[Fact]
+public async Task T612_DeviceRegistry_LastSeenGuncellenir()
+{
+    var reg = new DeviceRegistry(_fx.Broker);
+    var dev = await _fx.ClientAsync("seen");
+    await dev.PublishStringAsync("restaurant/status/seen", "online");
+    await Eventually(() => reg.LastSeen("seen") != null, 3);
+    var t1 = reg.LastSeen("seen");
+    await dev.PublishStringAsync("restaurant/status/seen", "online");
+    await Eventually(() => reg.LastSeen("seen") > t1, 3);
+    reg.LastSeen("seen").Should().BeAfter(t1!.Value);
+}
+
+[Fact]
+public async Task T613_DeviceRegistry_LWT_OfflineIsaretler()
+{
+    var reg = new DeviceRegistry(_fx.Broker);
+    var dev = await _fx.ClientAsync("lwtdev", lwt: ("restaurant/status/lwtdev", "offline"));
+    await dev.PublishStringAsync("restaurant/status/lwtdev", "online");
+    await Eventually(() => reg.IsOnline("lwtdev"), 3);
+    dev.Dispose();
+    await Eventually(() => !reg.IsOnline("lwtdev"), 6);
+    reg.IsOnline("lwtdev").Should().BeFalse();
+}
+
+[Fact]
+public async Task T614_DeviceRegistry_StatusChangedEvent_TekYayin()
+{
+    var reg = new DeviceRegistry(_fx.Broker);
+    int sayac = 0; reg.StatusChanged += (_, __) => Interlocked.Increment(ref sayac);
+    var dev = await _fx.ClientAsync("evt");
+    await dev.PublishStringAsync("restaurant/status/evt", "online");
+    await Eventually(() => sayac >= 1, 3);
+    await dev.PublishStringAsync("restaurant/status/evt", "online");  // AYNI durum tekrar
+    await Task.Delay(300);
+    sayac.Should().Be(1, "aynı duruma ikinci 'online' event tekrar üretmemeli (LED titremesi tuzağı)");
+}
+
+[Fact]
+public void T615_PingService_BilinenCihazlariPingler()
+{
+    var ping = new PingService(new[] { "127.0.0.1" });
+    var sonuc = ping.PingAll();   // senkron/asenkron: projedeki imza
+    sonuc.Should().ContainKey("127.0.0.1");
+}
+
+[Fact]
+public async Task T616_PingService_Timeout_ CokmezSarilir()
+{
+    var ping = new PingService(new[] { "10.255.255.1" });  // ulaşılamaz → timeout
+    var act = async () => await ping.PingAllAsync(timeoutMs: 300);
+    await act.Should().NotThrowAsync("timeout exception'a değil, 'ulaşılamaz' sonucuna dönüşmeli");
+}
+
+[Fact]
+public void T617_DeviceHealth_DortDurumBirlesimi()
+{
+    // (Ping,MQTT) → renk. Saf birleşim fonksiyonu, ağ gerektirmez.
+    DeviceHealth.Combine(ping:true,  mqtt:true ).Should().Be(HealthState.Green);
+    DeviceHealth.Combine(ping:true,  mqtt:false).Should().Be(HealthState.Yellow);
+    DeviceHealth.Combine(ping:false, mqtt:false).Should().Be(HealthState.Red);
+    DeviceHealth.Combine(ping:false, mqtt:true ).Should().Be(HealthState.Yellow); // MQTT var ama ping yok → kısmi
+}
+```
+> `Eventually(Func<bool>, saniye)`: koşul sağlanana kadar 50ms aralıkla yoklayan yardımcı; timeout'ta FAIL.
+> Projede DeviceRegistry/PingService/DeviceHealth API'si farklı adlandırılmışsa GERÇEK ADA bağla,
+> davranışı koru, farkı sapma.txt'ye yaz. Bir tip HİÇ yoksa (örn. DeviceHealth) → BU PARTİDE üret
+> (15 satırlık saf fonksiyon) çünkü v3.0.14'te zaten olması gerekiyordu.
+
+═══════════════════════════════════════════════════════════════════════
+## PARTİ C — APP: LOGBUS + BOOT (T701–T803)  [A5 arteri]
+═══════════════════════════════════════════════════════════════════════
+
+Dosya: `tests/TrainService.App.Tests/T7xx_AppTests.cs` (dolgular silinir)
+WPF gerektiren testler `[StaFact]` (Xunit.StaFact paketi) kullanır.
+
+```csharp
+[Fact]
+public void T701_LogBus_LogKaydeder()
+{
+    var bus = new LogBus(capacity: 2000);
+    bus.Info("test mesajı");
+    bus.Entries.Should().ContainSingle(e => e.Message == "test mesajı" && e.Level == LogLevel.Info);
+}
+
+[Fact]
+public void T702_LogBus_EsZamanliYazim_KayipYok()
+{
+    // ★ MQTT/ping/derleme thread'leri aynı anda yazacak. 8 task × 1000 = 8000, kayıpsız.
+    var bus = new LogBus(capacity: 100_000);
+    Parallel.For(0, 8, t => { for (int i = 0; i < 1000; i++) bus.Info($"t{t}-{i}"); });
+    bus.TotalWritten.Should().Be(8000, "eşzamanlı yazımda log kaybı olmamalı");
+}
+
+[Fact]
+public void T703_LogBus_HalkaliTemizlik_EnYeniKalir()
+{
+    var bus = new LogBus(capacity: 2000);
+    for (int i = 0; i < 2500; i++) bus.Info($"m{i}");
+    bus.Entries.Should().HaveCount(2000);
+    bus.Entries.Any(e => e.Message == "m2499").Should().BeTrue("en yeni korunmalı");
+    bus.Entries.Any(e => e.Message == "m0").Should().BeFalse("en eski düşmeli");
+}
+
+[Fact]
+public void T704_LogBus_SeviyeFiltreleme()
+{
+    var bus = new LogBus(2000);
+    bus.Info("i"); bus.Warn("w"); bus.Error("e"); bus.Success("s");
+    bus.Filter(LogLevel.Error).Should().ContainSingle(e => e.Message == "e");
+}
+
+[Fact]
+public void T705_LogBus_Write_UIyiBloklamaz()
+{
+    // Write çağrısı < 1ms olmalı (DB aynası asenkron kuyrukta olmalı, senkron değil)
+    var bus = new LogBus(2000);
+    var sw = System.Diagnostics.Stopwatch.StartNew();
+    bus.Info("hız testi");
+    sw.Elapsed.TotalMilliseconds.Should().BeLessThan(5);
+}
+
+[StaFact]
+public void T801_Host_TumServisler_Cozulur()
+{
+    // ★ Eksik DI kaydı çalışma anında değil, BURADA patlar.
+    using var host = App.CreateHostForTest();   // App.xaml.cs'teki host kurulumunu test'e açan yardımcı
+    var act = () => {
+        foreach (var sd in host.Services.GetRequiredService<IServiceCollectionSnapshot>().Descriptors)
+            if (sd.ServiceType.Namespace?.StartsWith("TrainService") == true)
+                host.Services.GetRequiredService(sd.ServiceType);
+    };
+    act.Should().NotThrow("tüm TrainService servisleri çözülebilmeli");
+}
+// Not: IServiceCollectionSnapshot pratik değilse — bilinen kritik servisleri ELLE çöz:
+//   GetRequiredService<SnapEngine>(), <CommandStack>(), <ILogBus>(), <IMqttHub>(),
+//   <ICadDocumentStore>(), <EditorViewModel>(), <MainWindowViewModel>() → hiçbiri null/throw değil.
+
+[StaFact]
+public void T802_EditorViewModel_CtorInjection()
+{
+    using var host = App.CreateHostForTest();
+    var vm = host.Services.GetRequiredService<EditorViewModel>();
+    vm.Should().NotBeNull();
+    vm.UndoCommand.CanExecute(null).Should().BeFalse("başlangıçta undo yığını boş");
+    vm.RedoCommand.CanExecute(null).Should().BeFalse();
+}
+
+[StaFact]
+public void T803_DI_KayitDogrulama_ScopeCakismasiYok()
+{
+    using var host = App.CreateHostForTest();
+    // Singleton bir servis, Scoped bir servise bağımlı olmamalı (captive dependency)
+    var act = () => host.Services.GetRequiredService<SnapEngine>();
+    act.Should().NotThrow();
+    host.Services.GetRequiredService<SnapEngine>()
+        .Should().BeSameAs(host.Services.GetRequiredService<SnapEngine>(), "SnapEngine singleton olmalı");
+}
+```
+> `App.CreateHostForTest()` yoksa: App.xaml.cs'teki `ConfigureServices` bloğunu ayrı bir
+> `HostBuilderFactory.Build()` metoduna çıkar (App hem onu kullansın hem test). Bu refactor
+> A1'i güçlendirir; sapma.txt'ye "test için host factory ayrıştırıldı" yaz.
+
+═══════════════════════════════════════════════════════════════════════
+## PARTİ D — CORE ENTITY + CAD VIEWPORT/UNDO (T2xx, T3xx, T410)
+═══════════════════════════════════════════════════════════════════════
+
+### Core: `tests/TrainService.Core.Tests/T2xx_EntityTests.cs`
+```csharp
+[Fact]
+public void T201_CadEntity_Id_BenzersizVeBosDegil()
+{
+    var idler = Enumerable.Range(0,1000)
+        .Select(_ => new TrackNode{ Position = default, LayerId = Guid.NewGuid() }.Id).ToList();
+    idler.Should().OnlyHaveUniqueItems();
+    idler.Should().NotContain(Guid.Empty);
+}
+
+[Fact]
+public void T202_TrackSegment_LengthMm_OkunurYazilir()
+{
+    var s = new TrackSegment { LengthMm = 5000 };
+    s.LengthMm.Should().Be(5000);
+}
+
+[Fact]
+public void T203_Ramp_GradePercent_Hesabi()
+{
+    new Ramp{ StartZ=0, EndZ=400, LengthMm=8000 }.GradePercent.Should().BeApproximately(5.0, 1e-9);
+}
+
+[Fact]
+public void T204_Ramp_GradePercent_SifirUzunluk_Patlamaz()
+{
+    var r = new Ramp{ StartZ=0, EndZ=400, LengthMm=0 };
+    var act = () => r.GradePercent;
+    act.Should().NotThrow();
+    double.IsNaN(r.GradePercent).Should().BeFalse();
+    double.IsInfinity(r.GradePercent).Should().BeFalse();
+    r.GradePercent.Should().Be(0);
+}
+
+[Fact]
+public void T205_RouteStep_Direction_RoundTrip()
+{
+    var step = new RouteStep(Guid.NewGuid(), TravelDirection.Forward);
+    step.Direction.Should().Be(TravelDirection.Forward);
+}
+
+// T206: eski dolgu "Entity_ValidBounds" — GERÇEK gövde:
+[Fact]
+public void T206_Entity_Bounds_NegatifKoordinat()
+{
+    var n = new TrackNode{ Position = new Vector2D(-100, -50) };
+    n.Bounds.Should().NotBeNull();   // Bounds hesabı negatif koordinatta çökmemeli
+}
+```
+
+### Cad: `tests/TrainService.Cad.Tests/T3xx_ViewportTests.cs`
+(T301/T302/T303 gövdeleri — bir önceki talimattaki KOD birebir kullanılır:)
+- T301_Transform_RoundTrip_500Nokta
+- T302_ZoomAt_ImlecAltiSabit   ★
+- T303_ZoomAt_20Kez_BirikimliHataYok
+Ek:
+```csharp
+[Fact]
+public void T304_Scale_SinirKontrol()
+{
+    var t = new ViewportTransform();
+    t.SetForTest(scale: 1.0, pan: default);
+    for (int i=0;i<200;i++) t.ZoomAt(new System.Windows.Point(100,100), 2.0);  // aşırı zoom-in
+    t.Scale.Should().BeLessThanOrEqualTo(t.MaxScale, "üst sınır aşılmamalı");
+    for (int i=0;i<400;i++) t.ZoomAt(new System.Windows.Point(100,100), 0.5);  // aşırı zoom-out
+    t.Scale.Should().BeGreaterThanOrEqualTo(t.MinScale, "alt sınır aşılmamalı");
+}
+```
+> Transform'da MinScale/MaxScale yoksa ekle (varsayılan 1e-4 .. 1e4). Sapma.txt'ye yaz.
+
+### Cad Undo: `tests/TrainService.Cad.Tests/UndoRedoTests.cs` (T410 dolgusu → gerçek)
+```csharp
+[Fact]
+public void T410_Document_Changed_Added_DirtyRegionDolu()
+{
+    var doc = new CadDocument();
+    DocumentChangedEventArgs? yakalanan = null;
+    doc.Changed += (_, e) => yakalanan = e;
+    var stack = new CommandStack();
+    var node = new TrackNode{ Position = new Vector2D(10,20), LayerId = doc.ActiveLayerId };
+    stack.Do(new AddEntityCommand(node), doc);
+    yakalanan.Should().NotBeNull();
+    yakalanan!.Kind.Should().Be(DocumentChangeKind.Added);
+    yakalanan.DirtyRegion.Should().NotBeNull("viewport kirli bölgeyi bilmeli");
+}
+
+[Fact]
+public void T411_Document_Changed_Removed_BoundsTasir()
+{
+    var doc = new CadDocument();
+    var stack = new CommandStack();
+    var node = new TrackNode{ Position = new Vector2D(10,20), LayerId = doc.ActiveLayerId };
+    stack.Do(new AddEntityCommand(node), doc);
+    DocumentChangedEventArgs? sil = null;
+    doc.Changed += (_, e) => { if (e.Kind == DocumentChangeKind.Removed) sil = e; };
+    stack.Undo(doc);
+    sil.Should().NotBeNull("silme event'i yayınlanmalı");
+    sil!.DirtyRegion.Should().NotBeNull("silinen nesnenin bölgesi temizlenebilsin");
+}
+```
+
+═══════════════════════════════════════════════════════════════════════
+## PARTİ E — DATA CRUD + GUID CONVERTER KARARI
+═══════════════════════════════════════════════════════════════════════
+
+### E.1 CrudSmoke: 40 dolgu → gerçek CRUD (kimliksiz)
+Dosya: `tests/TrainService.Data.Tests/CrudSmokeTests.cs`. Her entity için TEK örnek kalıp
+(hepsini bu kalıba göre yaz — 40 metot yerine parametrik de olur ama davranış aynı):
+```csharp
+[Fact]
+public void Crud_TrackNode_AddReadUpdateDelete()
+{
+    using var db = _fx.CreateContext();
+    var p = new Project{ Name="crud" }; db.Projects.Add(p); db.SaveChanges();
+
+    var n = new TrackNodeRow{ Id=Guid.NewGuid(), ProjectId=p.Id, X=1, Y=2, Z=0, Role=0 };
+    db.TrackNodes.Add(n); db.SaveChanges();                          // ADD
+    db.TrackNodes.Find(n.Id).Should().NotBeNull();                   // READ
+    n.X = 99; db.SaveChanges(); db.TrackNodes.Find(n.Id)!.X.Should().Be(99);  // UPDATE
+    db.TrackNodes.Remove(n); db.SaveChanges();                       // DELETE
+    db.TrackNodes.Find(n.Id).Should().BeNull();
+}
+```
+> 40 ayrı `Crud_X_Add/Read/Update/Delete` yerine, her entity için tek `AddReadUpdateDelete`
+> yazmak KABUL — test sayısı düşer ama HER biri gerçek 4 işlem yapar. Düşüşü sapma.txt'ye yaz:
+> "40 dolgu CRUD → 10 gerçek round-trip testine konsolide edildi." Bu dürüst bir düşüştür.
+> Alternatif: 40'ı da gerçek yaz (daha çok satır, aynı değer). Tercihini rapora yaz.
+
+### E.2 Smoke_Save/Load/IsDirty (3 dolgu) → önceki talimattaki T1815/T1816/T1818'e YÖNLENDİR
+Bu üç dolgu metodu SİL; işlevleri zaten T1815 (round-trip), T1816 (izolasyon), T1818 (IsDirty)
+gerçek testlerinde var. Silme sapma.txt'ye: "Smoke_* metotları gerçek T18xx ile örtüştüğü için silindi."
+
+### E.3 GUID CONVERTER KARARI (mutabakat)
+`tools/guid_cevap.txt` şu 3 soruyu cevaplar + KARARI uygular:
+1. Mevcut/eski .db dosyalarında büyük harfli Guid varsa converter onları okuyabiliyor mu? (test et: elle
+   büyük harfli guid'li satır ekle, LoadDocument çağır, sonucu yaz.)
+2. Neden test tarafında `projectId.ToString()` (SQLite'ın kendi lowercase formatına uyan) yerine
+   ÜRETİM DbContext'i değiştirildi?
+3. KARAR: (a) Converter KALSIN — o zaman tüm Guid kolonları için tutarlı olduğunu ve T1817 dışında
+   bir testi bozmadığını göster; VEYA (b) Converter KALKSIN — T1817 testini `projectId.ToString()`
+   ile SQLite formatına uydurarak geçir (üretim koduna dokunma). **Öneri: (b)** — üretim kodunu test
+   uğruna değiştirmek en son çaredir. Kararı uygula, hangisini seçtiysen sapma.txt'ye gerekçesiyle yaz.
+
+═══════════════════════════════════════════════════════════════════════
+## T011 GÜÇLENDİRME (dolgular temizlendikten SONRA)
+═══════════════════════════════════════════════════════════════════════
+
+Dosya: `tests/TrainService.Architecture.Tests/T011_TrivialTestGuard.cs`
+IL katmanı (≤12 byte) KALIR. Yorum satırındaki dolgu metnini SİL (kendi taramasına takılmasın).
+Bu talimatın script'i kaynak-desen katmanını üstlenir (aşağıda [3]).
+T011 gövdesi gerçek olmalı (dolgu değil) — reflection taraması, önceki talimattaki gövde.
+
+═══════════════════════════════════════════════════════════════════════
+## TEK SCRIPT — TEK RAPOR (tüm partiler bitince)
+═══════════════════════════════════════════════════════════════════════
+
+`tools/muhur-final.ps1` (öncekiyle aynı yapı, kritik farklarla):
+```powershell
+$ErrorActionPreference="Continue"
+$out=Join-Path ([Environment]::GetFolderPath("Desktop")) "RAPOR_MUHUR_FINAL.txt"
+"=== v3.0.18 MUHUR FINAL — $(Get-Date -Format 'yyyy-MM-dd HH:mm') ===" | Out-File $out -Encoding utf8
+function B($t,$s){ "`n########## $t ##########"|Out-File $out -Append -Encoding utf8; & $s 2>&1|Out-File $out -Append -Encoding utf8 }
+
+B "[1] KAYNAK-ICI DOLGU TARAMASI (SIFIR eslesme ZORUNLU)" {
+  Get-ChildItem -Recurse tests -Include *.cs |
+    Select-String -Pattern "dummy1","dummy2","Assert\.True\(true\)","Assert\.Equal\(3," 
+  "-- ustte HIC satir yoksa TEMIZ; VARSA MUHUR YOK --" }
+
+B "[2] BEKCI ISPATI: sahte test ekli -> T011 KIRMIZI -> silinince yesil" {
+  '[Xunit.Fact] public class ZZ{[Xunit.Fact] public void S()=>Xunit.Assert.True(true);}'|Out-File tests/TrainService.Data.Tests/ZZ.cs -Encoding utf8
+  dotnet test tests/TrainService.Architecture.Tests -c Release --filter "T011" --logger "console;verbosity=normal" --nologo
+  Remove-Item tests/TrainService.Data.Tests/ZZ.cs -Force; "-- sahte silindi --" }
+
+B "[3] PARTI A BEKCI ISPATI (Cad->Data using ile T002/T004 kirmizi kaniti)" { Get-Content tools/partiA_ispat.txt -EA SilentlyContinue }
+
+B "[4] TAM KOSUM (Release, test ADLARIYLA)" {
+  dotnet test TrainService.sln -c Release --logger "console;verbosity=detailed" --nologo }
+
+B "[5] KIMLIKLI GOVDELER (denetci okuyacak)" {
+  foreach($f in @(
+    "tests/TrainService.Architecture.Tests/T0xx_ArchitectureTests.cs",
+    "tests/TrainService.Messaging.Tests/T6xx_MessagingTests.cs",
+    "tests/TrainService.App.Tests/T7xx_AppTests.cs",
+    "tests/TrainService.Core.Tests/T2xx_EntityTests.cs",
+    "tests/TrainService.Cad.Tests/T3xx_ViewportTests.cs",
+    "tests/TrainService.Data.Tests/T5xx_ArteryTests.cs",
+    "tests/TrainService.Data.Tests/T18xx_PersistenceTests.cs"
+  )){ "===== $f ====="; Get-Content $f -EA SilentlyContinue } }
+
+B "[6] JSON/KISAYOL/MIGRATION" {
+  "-- CadProjectEntity(0) --"; Get-ChildItem -Recurse src,tests -Include *.cs|Select-String "CadProjectEntity"
+  "-- F9(snap)/F1(yok) --"; Get-ChildItem -Recurse src/TrainService.App -Include *.xaml,*.cs|Select-String "Key=.F9|Key\.F9|Key=.F1|Key\.F1"
+  "-- migrations --"; dotnet ef migrations list --project src/TrainService.Data --no-build }
+
+B "[7] TEST SAYILARI OZETI" { dotnet test TrainService.sln -c Release --nologo|Select-String "Basari|Gecti|Passed|Toplam|Total|Atlan|Skip" }
+
+B "[8] GUID CONVERTER KARARI" { Get-Content tools/guid_cevap.txt -EA SilentlyContinue }
+B "[9] SAPMA BEYANI" { if(Test-Path tools/sapma.txt){Get-Content tools/sapma.txt}else{"SAPMA YOK"} }
+"`n=== SON ===" | Out-File $out -Append -Encoding utf8; Write-Host "Yazildi: $out"
+```
+
+═══════════════════════════════════════════════════════════════════════
+## DENETÇİ KABUL KRİTERLERİ (mühür için HEPSİ zorunlu)
+═══════════════════════════════════════════════════════════════════════
+
+1. **[1] dolgu taraması: SIFIR satır.** Tek `dummy`/`Assert.Equal(3,`/`Assert.True(true)` = MÜHÜR YOK.
+2. **[2] T011 sahte-test ekliyken KIRMIZI**, silinince yeşil.
+3. **[3] Parti A ispatı:** Cad→Data using eklenince T002/T004 kırmızı olmuş (bekçi gerçek).
+4. **[4] tüm testler ADLARIYLA**, Fail=0. Skip varsa [9]'da tek tek gerekçeli.
+5. **[5] gövdeler bu talimattaki kodla eşleşiyor** — T302/T605/T702/T1815 assert'leri tam,
+   sulandırma yok. Süreler gerçekçi (T605 ~saniyeler, T1815 >1ms).
+6. **[6]:** CadProjectEntity=0, F9=snap, F1=yok, RemoveCadProjectJson+AddGridSizeToProject listede.
+7. **[8] guid kararı uygulanmış**, **[9] sapma [1][6] ile tutarlı.**
+8. **Test sayıları düşebilir** (konsolidasyon/silme) — her düşüş [9]'da gerekçeli. Dürüst-az > sahte-çok.
+
+Bu 8 madde `RAPOR_MUHUR_FINAL.txt`'de sağlanınca → v3.0.18 MÜHÜRLÜ.
+Kalan tek şey: kullanıcının M-v18 manuel turu (uygulamayı açarak).
+
+═══════════════════════════════════════════════════════════════════════
+## GEMİNİ İÇİN SON HATIRLATMA
+═══════════════════════════════════════════════════════════════════════
+- Bu talimatta "şu eksik" diyebileceğim hiçbir boşluk yok: her test gövdesi, her doğrulama,
+  raporun her satırı yukarıda. Uygulayamadığın tek bir şey olursa DURDUR, sapma.txt'ye yaz, SORMA-yı
+  bekle — kendi çözümünü uydurma (JSON kayıt, dummy assert bu yüzden çıktı).
+- Testi geçirmek için teste dokunma; kodu düzelt ya da sor.
+- Bitince TEK script çalıştır, TEK rapor üret. Parça parça rapor gönderme.
+
+harfi harfine uy
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-07-16T12:03:28+03:00.
+</ADDITIONAL_METADATA>

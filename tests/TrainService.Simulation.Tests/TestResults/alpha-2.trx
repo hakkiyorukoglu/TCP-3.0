@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="4c24cab2-e6f7-467a-9eb3-431a8bdaeb18" name="yoruk@HAKKI 2026-07-16 02:49:15" runUser="HAKKI\yoruk" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-07-16T02:49:15.8177799+03:00" queuing="2026-07-16T02:49:15.8177805+03:00" start="2026-07-16T02:49:15.0117050+03:00" finish="2026-07-16T02:49:15.8266076+03:00" />
+  <TestSettings name="default" id="b510a55c-c4f4-483e-b761-44b5b7cdfa8b">
+    <Deployment runDeploymentRoot="yoruk_HAKKI_2026-07-16_02_49_15" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="10a4f54a-f4ac-40a4-9407-2ccab00ff40e" testId="c3084bd9-842c-a7b0-c67c-dc914b586d4b" testName="TrainService.Simulation.Tests.UnitTest1.Test1" computerName="HAKKI" duration="00:00:00.0024913" startTime="2026-07-16T02:49:15.6869638+03:00" endTime="2026-07-16T02:49:15.6869865+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="10a4f54a-f4ac-40a4-9407-2ccab00ff40e" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="TrainService.Simulation.Tests.UnitTest1.Test1" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.simulation.tests\bin\debug\net8.0\trainservice.simulation.tests.dll" id="c3084bd9-842c-a7b0-c67c-dc914b586d4b">
+      <Execution id="10a4f54a-f4ac-40a4-9407-2ccab00ff40e" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Simulation.Tests\bin\Debug\net8.0\TrainService.Simulation.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Simulation.Tests.UnitTest1" name="Test1" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="c3084bd9-842c-a7b0-c67c-dc914b586d4b" executionId="10a4f54a-f4ac-40a4-9407-2ccab00ff40e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Bir Listede Olmayan Sonuçlar" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Yüklenen Tüm Sonuçlar" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="1" executed="1" passed="1" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.28)&#xD;
+[xUnit.net 00:00:00.12]   Discovering: TrainService.Simulation.Tests&#xD;
+[xUnit.net 00:00:00.17]   Discovered:  TrainService.Simulation.Tests&#xD;
+[xUnit.net 00:00:00.17]   Starting:    TrainService.Simulation.Tests&#xD;
+[xUnit.net 00:00:00.23]   Finished:    TrainService.Simulation.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

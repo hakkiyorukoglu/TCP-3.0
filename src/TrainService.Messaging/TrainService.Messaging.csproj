@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\TrainService.Core\TrainService.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MQTTnet" Version="4.3.3.952" />
+    <PackageReference Include="MQTTnet" Version="4.3.1.873" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -15,3 +15,4 @@
   </PropertyGroup>
 
 </Project>
+

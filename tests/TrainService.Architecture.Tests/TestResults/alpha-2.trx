@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="2249af9f-94b1-4bc1-aef8-81f0e9f83439" name="yoruk@HAKKI 2026-07-16 02:49:14" runUser="HAKKI\yoruk" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-07-16T02:49:14.1108019+03:00" queuing="2026-07-16T02:49:14.1108024+03:00" start="2026-07-16T02:49:11.2434191+03:00" finish="2026-07-16T02:49:14.5050778+03:00" />
+  <TestSettings name="default" id="fa3190ad-6ac1-476f-9bb9-ec43858e79d9">
+    <Deployment runDeploymentRoot="yoruk_HAKKI_2026-07-16_02_49_14" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="788aa86f-1c9c-426e-8889-b1113f699134" testId="0ddbddeb-1e9f-200c-74d5-3da1687ca5a4" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T007_Entities_Must_Inherit_CadEntity" computerName="HAKKI" duration="00:00:00.0000249" startTime="2026-07-16T02:49:14.3360613+03:00" endTime="2026-07-16T02:49:14.3360613+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="788aa86f-1c9c-426e-8889-b1113f699134" />
+    <UnitTestResult executionId="0da0b525-353c-495e-84d7-a1dbcb738d1f" testId="8a3c6642-711b-a128-96ab-d4eb3fff54cf" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T004_Data_Only_Depends_On_Core" computerName="HAKKI" duration="00:00:00.4076962" startTime="2026-07-16T02:49:14.3351961+03:00" endTime="2026-07-16T02:49:14.3351969+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0da0b525-353c-495e-84d7-a1dbcb738d1f" />
+    <UnitTestResult executionId="f5430c33-4d22-4d9b-a39e-cbdf44b6f649" testId="2c7a591b-07d7-5d7f-06d2-3679ff9ecd00" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T002_Cad_Only_Depends_On_Core" computerName="HAKKI" duration="00:00:00.0000406" startTime="2026-07-16T02:49:14.3358794+03:00" endTime="2026-07-16T02:49:14.3358794+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f5430c33-4d22-4d9b-a39e-cbdf44b6f649" />
+    <UnitTestResult executionId="f8e76f07-5f67-4b9e-9634-d790faea0e04" testId="bd542f22-0703-a25a-7b92-1e8be36965c1" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T005_Simulation_Only_Depends_On_Core" computerName="HAKKI" duration="00:00:00.0000478" startTime="2026-07-16T02:49:14.3358317+03:00" endTime="2026-07-16T02:49:14.3358317+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f8e76f07-5f67-4b9e-9634-d790faea0e04" />
+    <UnitTestResult executionId="7af3b42d-b5f5-4687-87e0-a25a6c7db0eb" testId="796e9747-b1f2-2f1d-9a4a-e98e4c1c2439" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T003_Messaging_Only_Depends_On_Core" computerName="HAKKI" duration="00:00:00.0000279" startTime="2026-07-16T02:49:14.3360176+03:00" endTime="2026-07-16T02:49:14.3360177+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7af3b42d-b5f5-4687-87e0-a25a6c7db0eb" />
+    <UnitTestResult executionId="90f3ab1c-91d5-491e-af7e-2672910618cf" testId="11f598bf-abfd-c46f-46a0-31bfab25ccbe" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T001_Core_Has_No_Dependencies" computerName="HAKKI" duration="00:00:00.0000866" startTime="2026-07-16T02:49:14.3357758+03:00" endTime="2026-07-16T02:49:14.3357758+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="90f3ab1c-91d5-491e-af7e-2672910618cf" />
+    <UnitTestResult executionId="1b87f51d-8030-49bd-857c-90c39f1c6437" testId="f27e5649-f3c4-cf29-6b51-57e9856061e4" testName="TrainService.Architecture.Tests.UnitTest1.Test1" computerName="HAKKI" duration="00:00:00.0023706" startTime="2026-07-16T02:49:13.9332050+03:00" endTime="2026-07-16T02:49:13.9332327+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1b87f51d-8030-49bd-857c-90c39f1c6437" />
+    <UnitTestResult executionId="199566b0-e3d8-48fb-a617-9efb49f901b1" testId="c858e9a9-2103-3670-39b6-934b27dff146" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T008_Commands_Must_Implement_ICadCommand" computerName="HAKKI" duration="00:00:00.0000264" startTime="2026-07-16T02:49:14.3359766+03:00" endTime="2026-07-16T02:49:14.3359766+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="199566b0-e3d8-48fb-a617-9efb49f901b1" />
+    <UnitTestResult executionId="d6d210d5-c00a-4401-a6b7-5233711027aa" testId="47fdb196-3811-0b61-e1ed-49038eb3d28c" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T006_App_Depends_On_All_Layers" computerName="HAKKI" duration="00:00:00.0000329" startTime="2026-07-16T02:49:14.3359346+03:00" endTime="2026-07-16T02:49:14.3359347+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d6d210d5-c00a-4401-a6b7-5233711027aa" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T004_Data_Only_Depends_On_Core" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0\trainservice.architecture.tests.dll" id="8a3c6642-711b-a128-96ab-d4eb3fff54cf">
+      <Execution id="0da0b525-353c-495e-84d7-a1dbcb738d1f" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T004_Data_Only_Depends_On_Core" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T007_Entities_Must_Inherit_CadEntity" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0\trainservice.architecture.tests.dll" id="0ddbddeb-1e9f-200c-74d5-3da1687ca5a4">
+      <Execution id="788aa86f-1c9c-426e-8889-b1113f699134" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T007_Entities_Must_Inherit_CadEntity" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T006_App_Depends_On_All_Layers" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0\trainservice.architecture.tests.dll" id="47fdb196-3811-0b61-e1ed-49038eb3d28c">
+      <Execution id="d6d210d5-c00a-4401-a6b7-5233711027aa" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T006_App_Depends_On_All_Layers" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.UnitTest1.Test1" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0\trainservice.architecture.tests.dll" id="f27e5649-f3c4-cf29-6b51-57e9856061e4">
+      <Execution id="1b87f51d-8030-49bd-857c-90c39f1c6437" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.UnitTest1" name="Test1" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T005_Simulation_Only_Depends_On_Core" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0\trainservice.architecture.tests.dll" id="bd542f22-0703-a25a-7b92-1e8be36965c1">
+      <Execution id="f8e76f07-5f67-4b9e-9634-d790faea0e04" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T005_Simulation_Only_Depends_On_Core" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T001_Core_Has_No_Dependencies" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0\trainservice.architecture.tests.dll" id="11f598bf-abfd-c46f-46a0-31bfab25ccbe">
+      <Execution id="90f3ab1c-91d5-491e-af7e-2672910618cf" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T001_Core_Has_No_Dependencies" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T008_Commands_Must_Implement_ICadCommand" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0\trainservice.architecture.tests.dll" id="c858e9a9-2103-3670-39b6-934b27dff146">
+      <Execution id="199566b0-e3d8-48fb-a617-9efb49f901b1" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T008_Commands_Must_Implement_ICadCommand" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T003_Messaging_Only_Depends_On_Core" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0\trainservice.architecture.tests.dll" id="796e9747-b1f2-2f1d-9a4a-e98e4c1c2439">
+      <Execution id="7af3b42d-b5f5-4687-87e0-a25a6c7db0eb" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T003_Messaging_Only_Depends_On_Core" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T002_Cad_Only_Depends_On_Core" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0\trainservice.architecture.tests.dll" id="2c7a591b-07d7-5d7f-06d2-3679ff9ecd00">
+      <Execution id="f5430c33-4d22-4d9b-a39e-cbdf44b6f649" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T002_Cad_Only_Depends_On_Core" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="0ddbddeb-1e9f-200c-74d5-3da1687ca5a4" executionId="788aa86f-1c9c-426e-8889-b1113f699134" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8a3c6642-711b-a128-96ab-d4eb3fff54cf" executionId="0da0b525-353c-495e-84d7-a1dbcb738d1f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2c7a591b-07d7-5d7f-06d2-3679ff9ecd00" executionId="f5430c33-4d22-4d9b-a39e-cbdf44b6f649" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bd542f22-0703-a25a-7b92-1e8be36965c1" executionId="f8e76f07-5f67-4b9e-9634-d790faea0e04" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="796e9747-b1f2-2f1d-9a4a-e98e4c1c2439" executionId="7af3b42d-b5f5-4687-87e0-a25a6c7db0eb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="11f598bf-abfd-c46f-46a0-31bfab25ccbe" executionId="90f3ab1c-91d5-491e-af7e-2672910618cf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f27e5649-f3c4-cf29-6b51-57e9856061e4" executionId="1b87f51d-8030-49bd-857c-90c39f1c6437" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c858e9a9-2103-3670-39b6-934b27dff146" executionId="199566b0-e3d8-48fb-a617-9efb49f901b1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="47fdb196-3811-0b61-e1ed-49038eb3d28c" executionId="d6d210d5-c00a-4401-a6b7-5233711027aa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Bir Listede Olmayan Sonuçlar" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Yüklenen Tüm Sonuçlar" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="9" executed="9" passed="9" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.28)&#xD;
+[xUnit.net 00:00:01.17]   Discovering: TrainService.Architecture.Tests&#xD;
+[xUnit.net 00:00:01.21]   Discovered:  TrainService.Architecture.Tests&#xD;
+[xUnit.net 00:00:01.21]   Starting:    TrainService.Architecture.Tests&#xD;
+[xUnit.net 00:00:01.70]   Finished:    TrainService.Architecture.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

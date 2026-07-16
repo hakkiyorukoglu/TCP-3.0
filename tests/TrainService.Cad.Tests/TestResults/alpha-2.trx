@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="96d7246c-b963-4ce6-9896-d532105cec76" name="yoruk@HAKKI 2026-07-16 02:49:13" runUser="HAKKI\yoruk" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-07-16T02:49:13.5509949+03:00" queuing="2026-07-16T02:49:13.5509954+03:00" start="2026-07-16T02:49:12.0989926+03:00" finish="2026-07-16T02:49:13.5914959+03:00" />
+  <TestSettings name="default" id="4fb50414-d18b-440c-882b-2d7b2c67c290">
+    <Deployment runDeploymentRoot="yoruk_HAKKI_2026-07-16_02_49_13" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="9a35447c-09a9-4de4-a10b-60719da2c4f3" testId="48f7ecfd-70dd-053e-53be-7b81ae2fb05c" testName="TrainService.Cad.Tests.UndoRedoTests.Test5_CompositeCommand_ExecutesInOrder_UndoesInReverseOrder" computerName="HAKKI" duration="00:00:00.0085263" startTime="2026-07-16T02:49:13.4756321+03:00" endTime="2026-07-16T02:49:13.4756324+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9a35447c-09a9-4de4-a10b-60719da2c4f3" />
+    <UnitTestResult executionId="3593e002-38e5-42e1-b295-41a60e2c87d6" testId="dfad49ee-ddb7-93f8-2c1b-0b1c59da17a8" testName="TrainService.Cad.Tests.T3xx_ViewportTests.T301_Viewport_Test_Iskelet" computerName="HAKKI" duration="00:00:00.0029843" startTime="2026-07-16T02:49:13.4678252+03:00" endTime="2026-07-16T02:49:13.4678394+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3593e002-38e5-42e1-b295-41a60e2c87d6" />
+    <UnitTestResult executionId="ebfcaf9f-d8e8-43d5-8bfc-42994a7fc03f" testId="b68db0a0-b70e-f570-04b2-aa11e77ebdac" testName="TrainService.Cad.Tests.UndoRedoTests.Test2_Undo_Redo_RoundTrip_EntityCount" computerName="HAKKI" duration="00:00:00.0004969" startTime="2026-07-16T02:49:13.4802196+03:00" endTime="2026-07-16T02:49:13.4802197+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ebfcaf9f-d8e8-43d5-8bfc-42994a7fc03f" />
+    <UnitTestResult executionId="60416842-503b-49f7-818a-e3a4f39bb1d0" testId="56d3158a-72d6-9059-d749-d5c32e260f96" testName="TrainService.Cad.Tests.UndoRedoTests.Test7_Capacity2_Stack_Drops_OldestCommand" computerName="HAKKI" duration="00:00:00.0001722" startTime="2026-07-16T02:49:13.4758255+03:00" endTime="2026-07-16T02:49:13.4758256+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="60416842-503b-49f7-818a-e3a4f39bb1d0" />
+    <UnitTestResult executionId="d45e3c5f-bd98-415f-af04-b73c0657dc59" testId="ca28eaf4-ea30-ca04-c6e9-7ce0b2675228" testName="TrainService.Cad.Tests.UndoRedoTests.Test1_Do_Sets_CanUndoTrue_CanRedoFalse" computerName="HAKKI" duration="00:00:00.0000881" startTime="2026-07-16T02:49:13.4803650+03:00" endTime="2026-07-16T02:49:13.4803650+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d45e3c5f-bd98-415f-af04-b73c0657dc59" />
+    <UnitTestResult executionId="662fe76e-8594-45ee-a3b7-e6a8cca70736" testId="38912bca-a5ad-43c7-10aa-8f05af3ef25e" testName="TrainService.Cad.Tests.UnitTest1.Test1" computerName="HAKKI" duration="00:00:00.0027487" startTime="2026-07-16T02:49:13.4710607+03:00" endTime="2026-07-16T02:49:13.4710607+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="662fe76e-8594-45ee-a3b7-e6a8cca70736" />
+    <UnitTestResult executionId="477f91ef-1d9f-4ecf-8673-a7f27b4cfe56" testId="105d462f-7fa8-26db-f99e-68eb3f5e8487" testName="TrainService.Cad.Tests.UndoRedoTests.Test6_SelectionService_PruneMissing_FiresOnce" computerName="HAKKI" duration="00:00:00.0023398" startTime="2026-07-16T02:49:13.5088290+03:00" endTime="2026-07-16T02:49:13.5088290+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="477f91ef-1d9f-4ecf-8673-a7f27b4cfe56" />
+    <UnitTestResult executionId="95e5e391-c189-4870-a7cb-96a74c6148ff" testId="c2f12458-bf28-114b-0296-8fbb60b84422" testName="TrainService.Cad.Tests.UndoRedoTests.T409_SelectionService_Set_DoesNotSpamEvent_ForSameSelection" computerName="HAKKI" duration="00:00:00.0037432" startTime="2026-07-16T02:49:13.4797047+03:00" endTime="2026-07-16T02:49:13.4797053+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="95e5e391-c189-4870-a7cb-96a74c6148ff" />
+    <UnitTestResult executionId="d1a49ee2-8928-4399-93b3-48f965a0ad4a" testId="207f3fe0-9613-77cb-9532-ea5ea525a171" testName="TrainService.Cad.Tests.UndoRedoTests.T416_DebugAddLineCommand_OrphanReference_ShouldNotCrash" computerName="HAKKI" duration="00:00:00.0003086" startTime="2026-07-16T02:49:13.4807623+03:00" endTime="2026-07-16T02:49:13.4807624+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d1a49ee2-8928-4399-93b3-48f965a0ad4a" />
+    <UnitTestResult executionId="8d18b7fd-ab1e-482a-9bf7-a584ac17cc74" testId="3d378aa7-cf31-2a7d-d96c-6dd089b28303" testName="TrainService.Cad.Tests.UndoRedoTests.Test3_Undo_Then_NewDo_Clears_RedoStack" computerName="HAKKI" duration="00:00:00.0060181" startTime="2026-07-16T02:49:13.4713480+03:00" endTime="2026-07-16T02:49:13.4713481+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8d18b7fd-ab1e-482a-9bf7-a584ac17cc74" />
+    <UnitTestResult executionId="a2b0fbc8-1b91-4e9b-8e2d-c836af25f8d4" testId="741b7ba0-0aff-50ef-d7bb-6f6c1b6412d2" testName="TrainService.Cad.Tests.UndoRedoTests.Test4_EmptyStack_UndoRedo_Is_NoOp" computerName="HAKKI" duration="00:00:00.0001498" startTime="2026-07-16T02:49:13.5086731+03:00" endTime="2026-07-16T02:49:13.5086732+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a2b0fbc8-1b91-4e9b-8e2d-c836af25f8d4" />
+    <UnitTestResult executionId="52cc2cf7-1ffd-4901-9753-dff36983fcaa" testId="d3d38314-bffb-b76c-97b6-ea8e9a3c823e" testName="TrainService.Cad.Tests.UndoRedoTests.T406_CompositeCommand_ThrowsAndRollsBack_OnPartialFailure" computerName="HAKKI" duration="00:00:00.0008095" startTime="2026-07-16T02:49:13.5088061+03:00" endTime="2026-07-16T02:49:13.5088061+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="52cc2cf7-1ffd-4901-9753-dff36983fcaa" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="TrainService.Cad.Tests.UndoRedoTests.Test5_CompositeCommand_ExecutesInOrder_UndoesInReverseOrder" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.cad.tests\bin\debug\net8.0\trainservice.cad.tests.dll" id="48f7ecfd-70dd-053e-53be-7b81ae2fb05c">
+      <Execution id="9a35447c-09a9-4de4-a10b-60719da2c4f3" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Debug\net8.0\TrainService.Cad.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Cad.Tests.UndoRedoTests" name="Test5_CompositeCommand_ExecutesInOrder_UndoesInReverseOrder" />
+    </UnitTest>
+    <UnitTest name="TrainService.Cad.Tests.UndoRedoTests.Test6_SelectionService_PruneMissing_FiresOnce" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.cad.tests\bin\debug\net8.0\trainservice.cad.tests.dll" id="105d462f-7fa8-26db-f99e-68eb3f5e8487">
+      <Execution id="477f91ef-1d9f-4ecf-8673-a7f27b4cfe56" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Debug\net8.0\TrainService.Cad.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Cad.Tests.UndoRedoTests" name="Test6_SelectionService_PruneMissing_FiresOnce" />
+    </UnitTest>
+    <UnitTest name="TrainService.Cad.Tests.UnitTest1.Test1" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.cad.tests\bin\debug\net8.0\trainservice.cad.tests.dll" id="38912bca-a5ad-43c7-10aa-8f05af3ef25e">
+      <Execution id="662fe76e-8594-45ee-a3b7-e6a8cca70736" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Debug\net8.0\TrainService.Cad.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Cad.Tests.UnitTest1" name="Test1" />
+    </UnitTest>
+    <UnitTest name="TrainService.Cad.Tests.UndoRedoTests.Test1_Do_Sets_CanUndoTrue_CanRedoFalse" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.cad.tests\bin\debug\net8.0\trainservice.cad.tests.dll" id="ca28eaf4-ea30-ca04-c6e9-7ce0b2675228">
+      <Execution id="d45e3c5f-bd98-415f-af04-b73c0657dc59" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Debug\net8.0\TrainService.Cad.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Cad.Tests.UndoRedoTests" name="Test1_Do_Sets_CanUndoTrue_CanRedoFalse" />
+    </UnitTest>
+    <UnitTest name="TrainService.Cad.Tests.UndoRedoTests.Test7_Capacity2_Stack_Drops_OldestCommand" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.cad.tests\bin\debug\net8.0\trainservice.cad.tests.dll" id="56d3158a-72d6-9059-d749-d5c32e260f96">
+      <Execution id="60416842-503b-49f7-818a-e3a4f39bb1d0" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Debug\net8.0\TrainService.Cad.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Cad.Tests.UndoRedoTests" name="Test7_Capacity2_Stack_Drops_OldestCommand" />
+    </UnitTest>
+    <UnitTest name="TrainService.Cad.Tests.UndoRedoTests.Test4_EmptyStack_UndoRedo_Is_NoOp" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.cad.tests\bin\debug\net8.0\trainservice.cad.tests.dll" id="741b7ba0-0aff-50ef-d7bb-6f6c1b6412d2">
+      <Execution id="a2b0fbc8-1b91-4e9b-8e2d-c836af25f8d4" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Debug\net8.0\TrainService.Cad.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Cad.Tests.UndoRedoTests" name="Test4_EmptyStack_UndoRedo_Is_NoOp" />
+    </UnitTest>
+    <UnitTest name="TrainService.Cad.Tests.UndoRedoTests.Test2_Undo_Redo_RoundTrip_EntityCount" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.cad.tests\bin\debug\net8.0\trainservice.cad.tests.dll" id="b68db0a0-b70e-f570-04b2-aa11e77ebdac">
+      <Execution id="ebfcaf9f-d8e8-43d5-8bfc-42994a7fc03f" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Debug\net8.0\TrainService.Cad.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Cad.Tests.UndoRedoTests" name="Test2_Undo_Redo_RoundTrip_EntityCount" />
+    </UnitTest>
+    <UnitTest name="TrainService.Cad.Tests.T3xx_ViewportTests.T301_Viewport_Test_Iskelet" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.cad.tests\bin\debug\net8.0\trainservice.cad.tests.dll" id="dfad49ee-ddb7-93f8-2c1b-0b1c59da17a8">
+      <Execution id="3593e002-38e5-42e1-b295-41a60e2c87d6" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Debug\net8.0\TrainService.Cad.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Cad.Tests.T3xx_ViewportTests" name="T301_Viewport_Test_Iskelet" />
+    </UnitTest>
+    <UnitTest name="TrainService.Cad.Tests.UndoRedoTests.T416_DebugAddLineCommand_OrphanReference_ShouldNotCrash" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.cad.tests\bin\debug\net8.0\trainservice.cad.tests.dll" id="207f3fe0-9613-77cb-9532-ea5ea525a171">
+      <Execution id="d1a49ee2-8928-4399-93b3-48f965a0ad4a" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Debug\net8.0\TrainService.Cad.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Cad.Tests.UndoRedoTests" name="T416_DebugAddLineCommand_OrphanReference_ShouldNotCrash" />
+    </UnitTest>
+    <UnitTest name="TrainService.Cad.Tests.UndoRedoTests.T409_SelectionService_Set_DoesNotSpamEvent_ForSameSelection" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.cad.tests\bin\debug\net8.0\trainservice.cad.tests.dll" id="c2f12458-bf28-114b-0296-8fbb60b84422">
+      <Execution id="95e5e391-c189-4870-a7cb-96a74c6148ff" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Debug\net8.0\TrainService.Cad.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Cad.Tests.UndoRedoTests" name="T409_SelectionService_Set_DoesNotSpamEvent_ForSameSelection" />
+    </UnitTest>
+    <UnitTest name="TrainService.Cad.Tests.UndoRedoTests.Test3_Undo_Then_NewDo_Clears_RedoStack" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.cad.tests\bin\debug\net8.0\trainservice.cad.tests.dll" id="3d378aa7-cf31-2a7d-d96c-6dd089b28303">
+      <Execution id="8d18b7fd-ab1e-482a-9bf7-a584ac17cc74" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Debug\net8.0\TrainService.Cad.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Cad.Tests.UndoRedoTests" name="Test3_Undo_Then_NewDo_Clears_RedoStack" />
+    </UnitTest>
+    <UnitTest name="TrainService.Cad.Tests.UndoRedoTests.T406_CompositeCommand_ThrowsAndRollsBack_OnPartialFailure" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.cad.tests\bin\debug\net8.0\trainservice.cad.tests.dll" id="d3d38314-bffb-b76c-97b6-ea8e9a3c823e">
+      <Execution id="52cc2cf7-1ffd-4901-9753-dff36983fcaa" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Cad.Tests\bin\Debug\net8.0\TrainService.Cad.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Cad.Tests.UndoRedoTests" name="T406_CompositeCommand_ThrowsAndRollsBack_OnPartialFailure" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="48f7ecfd-70dd-053e-53be-7b81ae2fb05c" executionId="9a35447c-09a9-4de4-a10b-60719da2c4f3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dfad49ee-ddb7-93f8-2c1b-0b1c59da17a8" executionId="3593e002-38e5-42e1-b295-41a60e2c87d6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b68db0a0-b70e-f570-04b2-aa11e77ebdac" executionId="ebfcaf9f-d8e8-43d5-8bfc-42994a7fc03f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="56d3158a-72d6-9059-d749-d5c32e260f96" executionId="60416842-503b-49f7-818a-e3a4f39bb1d0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ca28eaf4-ea30-ca04-c6e9-7ce0b2675228" executionId="d45e3c5f-bd98-415f-af04-b73c0657dc59" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="38912bca-a5ad-43c7-10aa-8f05af3ef25e" executionId="662fe76e-8594-45ee-a3b7-e6a8cca70736" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="105d462f-7fa8-26db-f99e-68eb3f5e8487" executionId="477f91ef-1d9f-4ecf-8673-a7f27b4cfe56" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c2f12458-bf28-114b-0296-8fbb60b84422" executionId="95e5e391-c189-4870-a7cb-96a74c6148ff" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="207f3fe0-9613-77cb-9532-ea5ea525a171" executionId="d1a49ee2-8928-4399-93b3-48f965a0ad4a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3d378aa7-cf31-2a7d-d96c-6dd089b28303" executionId="8d18b7fd-ab1e-482a-9bf7-a584ac17cc74" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="741b7ba0-0aff-50ef-d7bb-6f6c1b6412d2" executionId="a2b0fbc8-1b91-4e9b-8e2d-c836af25f8d4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d3d38314-bffb-b76c-97b6-ea8e9a3c823e" executionId="52cc2cf7-1ffd-4901-9753-dff36983fcaa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Bir Listede Olmayan Sonuçlar" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Yüklenen Tüm Sonuçlar" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="12" executed="12" passed="12" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.28)&#xD;
+[xUnit.net 00:00:00.21]   Discovering: TrainService.Cad.Tests&#xD;
+[xUnit.net 00:00:00.25]   Discovered:  TrainService.Cad.Tests&#xD;
+[xUnit.net 00:00:00.26]   Starting:    TrainService.Cad.Tests&#xD;
+[xUnit.net 00:00:00.38]   Finished:    TrainService.Cad.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

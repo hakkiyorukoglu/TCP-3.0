@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  <UseWPF>true</UseWPF></PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NetArchTest.Rules" Version="1.3.2" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TrainService.Cad\TrainService.Cad.csproj" />
+    <ProjectReference Include="..\..\src\TrainService.Core\TrainService.Core.csproj" />
+    <ProjectReference Include="..\..\src\TrainService.Data\TrainService.Data.csproj" />
+    <ProjectReference Include="..\..\src\TrainService.Messaging\TrainService.Messaging.csproj" />
+    <ProjectReference Include="..\TrainService.Cad.Tests\TrainService.Cad.Tests.csproj" />
+    <ProjectReference Include="..\TrainService.Core.Tests\TrainService.Core.Tests.csproj" />
+    <ProjectReference Include="..\TrainService.Data.Tests\TrainService.Data.Tests.csproj" />
+    <ProjectReference Include="..\TrainService.Messaging.Tests\TrainService.Messaging.Tests.csproj" />
+    <ProjectReference Include="..\TrainService.App.Tests\TrainService.App.Tests.csproj" />
+    <ProjectReference Include="..\TrainService.Simulation.Tests\TrainService.Simulation.Tests.csproj" />
+  </ItemGroup>
+
+</Project>
