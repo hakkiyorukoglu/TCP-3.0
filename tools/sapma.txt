@@ -98,3 +98,44 @@
     GREEN: [Fact] T236 → 96 >= 96 → BAŞARILI  ✅
     Detay: tools/RAPOR_T010_ISPAT.txt
 ═══════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+ SAPMA RAPORU — v3.0.25 HybridTool
+ Tarih  : 2026-07-18
+ Hazırlayan: Claude Sonnet 4.6 (DeepSeek Reasoner)
+═══════════════════════════════════════════════════════════════
+
+11) _tiklananSegmentIds — AdaySegment takibi için ek liste
+───────────────────────────────────────────────────
+Dosya : src/TrainService.Cad/Tools/HybridTool.cs
+Sorun : İlk implementasyonda GecerliAdayMi, _steps listesindeki
+        pending (henüz commit edilmemiş) segment ID'lerini kullanarak
+        grafikte komşuluk sorgusu yapıyordu. Bu segment ID'leri daha
+        dokümanda olmadığı için TrackGraph.ValidateRoute her zaman
+        başarısız oluyordu.
+Düzeltme: _tiklananSegmentIds adlı ayrı liste eklendi. Bu liste,
+        kullanıcının tıkladığı mevcut (dokümanda var olan) segmentlerin
+        ID'lerini tutar. GecerliAdayMi, _tiklananSegmentIds üzerinden
+        komşuluk sorgusu yapar. Commit anında da bayat graf kontrolü
+        _tiklananSegmentIds üzerinden yapılır.
+
+12) T010 eşik güncellemesi: 96 → 106
+───────────────────────────────────────────────────
+Dosya : tests/TrainService.Architecture.Tests/T010_KapsamBekcisi.cs
+Gerekçe: v3.0.25 — T260 HybridTool testleri eklendi (+10 test)
+        Cad.Tests: 96 → 106
+
+13) Test senaryosu düzeltmeleri (T261-T269)
+───────────────────────────────────────────────────
+Dosya : tests/TrainService.Cad.Tests/Tools/T260_HybridToolTests.cs
+Detay : İlk yazılan testlerdeki assertion hataları düzeltildi:
+  - T261: From beklentisi (50,0) → (150,0) (chainTail pozisyonu)
+  - T262: 4 tık 3 step → 3 tık 2 step (state machine doğru)
+  - T263: ilkKume sayısı 7 → 9 (5 düğüm + 4 segment)
+  - T266: _tiklananSegmentIds kullanımı ile düzeltildi
+  - T268: SegmentGecerli=false (imleç==chainTail)
+  - T269: step sayısı 3 → 2 (3 tık = 2 segment = 2 step)
+
+═══════════════════════════════════════════════════════════════
+ SAPMA RAPORU — SON
+═══════════════════════════════════════════════════════════════

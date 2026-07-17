@@ -29,3 +29,12 @@ public sealed record PreviewLine(Vector2D From, Vector2D To, bool IsValid) : Pre
 public sealed record PreviewRectangle(Vector2D From, Vector2D To, bool IsCrossing) : PreviewShape;
 
 public sealed record PreviewRoute(System.Collections.Generic.IReadOnlyList<TrainService.Core.Entities.RouteStep> Steps, System.Guid AdaySegmentId, bool AdayGecerli) : PreviewShape;
+
+public sealed record PreviewHybrid(
+    TrainService.Core.Geometry.Vector2D From,
+    TrainService.Core.Geometry.Vector2D To,
+    bool SegmentGecerli,
+    System.Collections.Generic.IReadOnlyList<TrainService.Core.Entities.RouteStep> Steps,
+    System.Guid AdaySegmentId,
+    bool AdayGecerli
+) : PreviewShape;

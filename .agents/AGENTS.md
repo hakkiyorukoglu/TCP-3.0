@@ -44,11 +44,15 @@ Depoya erişemiyorsan DUR, kullanıcıya bildir — metodolojiyi uydurma.
   sadece kullanıcı onayıyla. Elle rapor = mühür reddi.
 - **TÜM raporlar** `Masaüstü\TrainService_Raporlar\v3.0.X\` altına kaydedilir (utf8BOM).
   İçerik = HAM ÇIKTI, özet/beyan değil.
-- **Her ek test/doğrulama adımının çıktısı** ayrı bir dosyaya yazılır ve rapordakiyle birlikte bu dizinde
-  saklanır. Dosya adı şablonu: `RAPOR_{KONU}_v{MAJOR}{MINOR}{PATCH}.txt`. Örnek:
-  - `RAPOR_T010_ISPAT_v3024.txt` — bekçi ispatı KIRMIZI+YEŞİL ham çıktıları
-  - `RAPOR_TAM_KOSUM_v3024.txt` — `dotnet test` tam koşum çıktısı
-  - `RAPOR_MUHUR.txt` — `muhur.ps1` tarafından üretilen mühür raporu
+- **Her test/doğrulama adımının HAM çıktısı** ayrı bir dosyaya yazılır ve bu dizinde saklanır.
+  Kopyalanacak raporlar (her sürümde zorunlu):
+  1. `RAPOR_MUHUR_v{MAJOR}{MINOR}{PATCH}.txt` — mühür raporu (script çıktısı)
+  2. `RAPOR_T010_ISPAT_v{MAJOR}{MINOR}{PATCH}.txt` — T010 bekçi ispatı (YEŞİL ham çıktı)
+  3. `RAPOR_TAM_KOSUM_v{MAJOR}{MINOR}{PATCH}.txt` — `dotnet test -c Release` tam koşum çıktısı
+  Dosya adı şablonu: `RAPOR_{KONU}_v{MAJOR}{MINOR}{PATCH}.txt`. Örnek:
+  - `RAPOR_T010_ISPAT_v3025.txt` — bekçi ispatı KIRMIZI+YEŞİL ham çıktıları
+  - `RAPOR_TAM_KOSUM_v3025.txt` — `dotnet test` tam koşum çıktısı
+  - `RAPOR_MUHUR_v3025.txt` — `muhur.ps1` tarafından üretilen mühür raporu
 - Mühür şartları: dolgu=0, tüm testler yeşil+Skip=0, bekçi ispatı (Bölüm 4 yöntemiyle), migration
   Pending yok, F9=snap, sapma güncel (bayat kopya yasak), kullanıcı manuel turu (somut gözlem cümlesi).
 - Her 5 sürümde bir (🔍 roadmap'te işaretli): geriye-dönük denetim → `VERSIYON_KONTROL_DENETIMI.txt`.
