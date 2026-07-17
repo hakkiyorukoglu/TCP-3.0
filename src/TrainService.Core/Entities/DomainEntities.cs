@@ -43,10 +43,13 @@ public sealed class Route : CadEntity
 
 public sealed class RailSwitch : CadEntity
 {
-    public Guid NodeId { get; set; }
-    public Guid MainSegmentId { get; set; }
-    public Guid DivergingSegmentId { get; set; }
+    public Vector2D Position { get; set; }
+    public double RotationDeg { get; set; }
+    public Guid EntryNodeId { get; set; }
+    public Guid MainExitNodeId { get; set; }
+    public Guid DivergingExitNodeId { get; set; }
     public SwitchState State { get; set; }
+    public Guid? BoundServoDeviceId { get; set; }
 }
 
 public sealed class Ramp : CadEntity

@@ -188,21 +188,25 @@ public sealed class Route : CadEntity              // Mantıksal hat: SADECE ray
 }
 public sealed record RouteStep(Guid SegmentId, TravelDirection Direction); // Forward = Start->End
 
-public sealed class RailSwitch : CadEntity         // Makas: 3 bacaklı düğüm
+public sealed class RailSwitch : CadEntity         // Makas: prefab nesnesi
 {
-    public Guid NodeId { get; set; }               // ana düğüm
-    public Guid MainSegmentId { get; set; }        // ana hat devamı
-    public Guid DivergingSegmentId { get; set; }   // cebe (masa hattına) sapan
+    public Vector2D Position { get; set; }         // merkez konumu (mm)
+    public double RotationDeg { get; set; }        // dönüş açısı (derece)
+    public Guid EntryNodeId { get; set; }          // giriş port düğümü
+    public Guid MainExitNodeId { get; set; }       // ana hat çıkış port düğümü
+    public Guid DivergingExitNodeId { get; set; }  // sapma çıkış port düğümü
     public SwitchState State { get; set; }         // Main / Diverging
     public Guid? BoundServoDeviceId { get; set; }  // Hardware Binding sonucu
 }
 
-public sealed class Ramp : CadEntity               // Katmanlar arası Z interpolasyonu
+public sealed class Ramp : CadEntity               // Katmanlar arası Z interpolasyonu (prefab)
 {
-    public Guid SegmentId { get; set; }
-    public double StartZ { get; set; }
-    public double EndZ { get; set; }
-    public double GradePercent => (EndZ - StartZ) / LengthMm * 100.0;  // eğim % → simülasyonda yerçekimi direnci
+    public Vector2D Position { get; set; }         // merkez konumu (mm)
+    public double RotationDeg { get; set; }        // dönüş açısı (derece)
+    public Guid EntryNodeId { get; set; }          // giriş port düğümü
+    public Guid ExitNodeId { get; set; }           // çıkış port düğümü
+    public double StartZ { get; set; }             // başlangıç Z (mm)
+    public double EndZ { get; set; }               // bitiş Z (mm)
 }
 ```
 
@@ -259,6 +263,8 @@ Her çizim modu bir `ITool` durum makinesidir; `CadInteractionController` fare/k
 
 - **TrackTool:** Tık → düğüm; ikinci tık → segment; Esc → bitir. Snap zorunlu.
 - **RouteTool:** Sadece segment-üstü snap kabul eder; yön, tıklama sırasından türetilir.
+- **SwitchTool:** 1 tıklamada makas prefab yerleştirme (RailSwitch + 3 port düğümü: Entry/MainExit/DivergingExit). CompositeCadCommand ile tek undo.
+- **RampTool:** 1 tıklamada rampa prefab yerleştirme (Ramp + 2 port düğümü: Entry/Exit), StartZ/EndZ atama, eğim % etiketi.
 - **HybridTool (Eşzamanlı Mod):** Her segment onayında hem `TrackSegment` hem eşlenik `RouteStep` üretir (tek `CompositeCadCommand` içinde — tek Undo adımı).
 - **SelectTool:** Tek tık hit-test + **MarqueeSelector** (kutu içine alma; soldan-sağa = tamamen içerde, sağdan-sola = kesişen — Alphacam/AutoCAD davranışı).
 - **BindTool:** Rubber-band donanım bağlama (Bölüm 3).
@@ -365,8 +371,8 @@ TrackNodes      (Id, ProjectId, LayerId, X, Y, Z, Role)
 TrackSegments   (Id, ProjectId, LayerId, StartNodeId, EndNodeId, LengthMm)
 Routes          (Id, ProjectId, Name, ColorArgb)
 RouteSteps      (Id, RouteId, OrderIndex, SegmentId, Direction)
-Switches        (Id, ProjectId, NodeId, MainSegmentId, DivergingSegmentId, DefaultState)
-Ramps           (Id, ProjectId, SegmentId, StartZ, EndZ)
+Switches        (Id, ProjectId, PositionX, PositionY, RotationDeg, EntryNodeId, MainExitNodeId, DivergingExitNodeId, DefaultState)
+Ramps           (Id, ProjectId, PositionX, PositionY, RotationDeg, EntryNodeId, ExitNodeId, StartZ, EndZ)
 Stations        (Id, ProjectId, TableNo, Name, EntrySwitchId, PocketRouteId, Priority)
 Trains          (Id, ProjectId, Name, NfcTagId, MaxSpeedMmS, AccelMmS2, DecelMmS2, MassKg)
 Devices         (Id, ProjectId, Name, Kind, Ip, Mac, MqttClientId, FirmwareVersion)
@@ -565,8 +571,8 @@ Sonuç: rampa çıkarken doğal yavaşlama, inişte hız artışı, engelde mesa
 | v3.0.23 | **Katmanlar:** Zemin/Alt Kat/Üst Kat (ZHeight), aktif katman seçimi, görünürlük/kilit; çizim aktif katmana yazılır. | Katman gizle → nesneler görünmez, seçilemez. |
 | v3.0.24 | **RouteTool (Hat):** sadece segment-üstü kabul, komşuluk doğrulama (TrackGraph), yön okları render. | Boş alana hat çizilemez; ok yönleri doğru. |
 | v3.0.25 | **HybridTool (Eşzamanlı):** tek harekette Track+Route, tek undo adımı (CompositeCommand). | Hibrit çizim tek Ctrl+Z ile geri alınır. |
-| v3.0.26 | **Makas nesnesi:** 3 bacaklı düğüm oluşturma, Main/Diverging atama, tuvalde durum görseli. | Makas Feature Tree'de ve tuvalde doğru. |
-| v3.0.27 | **Rampa nesnesi:** segmente StartZ/EndZ atama, eğim % etiketi; katmanlar arası bağlantı doğrulaması. | Zemin→Üst Kat rampalı geçiş modellenir. |
+| v3.0.26 | **Makas nesnesi (prefab):** 1 tıklamada prefab yerleştirme (RailSwitch + 3 port düğümü: Entry/MainExit/DivergingExit), SwitchTool, PreviewSwitchPlace ghost, CompositeCadCommand (tek undo), BoundServoDeviceId. | 1 tıklamada makas+3 port oluşur; Ctrl+Z tek adımda geri alır; TrackTool portlara segment bağlayabilir. |
+| v3.0.27 | **Rampa nesnesi (prefab):** 1 tıklamada prefab yerleştirme (Ramp + 2 port düğümü: Entry/Exit), RampTool, StartZ/EndZ atama, eğim % etiketi, katmanlar arası geçiş doğrulaması. | Zemin→Üst Kat rampalı geçiş modellenir; TrackTool portlara bağlanabilir. |
 | v3.0.28 | **Feature Tree:** hiyerarşik ağaç + çift yönlü seçim senkronu + çift tık zoom-to-entity + göster/gizle/kilit. | Ağaç ↔ tuval senkron kusursuz. |
 | v3.0.29 | Sağ tık **Radyal Menü** (bağlama duyarlı: boşluk/ray/hat/makas farklı komut setleri) + kısayol haritası dokümantasyonu. | Radyal menü Fluent animasyonlu açılır. |
 

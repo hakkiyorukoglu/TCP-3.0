@@ -22,13 +22,14 @@ B "4. TAM KOSUM (Release)" {
 B "5. KIMLIKLI TEST GOVDELERI (T270-T279 SwitchTool)" {
   Get-Content tests/TrainService.Cad.Tests/Tools/T270_SwitchToolTests.cs -EA SilentlyContinue }
 
-B "6. SwitchTool KAYNAK KODU" {
-  Get-Content src/TrainService.Cad/Tools/SwitchTool.cs -EA SilentlyContinue }
+B "6. SwitchTool KAYNAK KODU + SwitchDefaults" {
+  "=== SwitchTool.cs ==="
+  Get-Content src/TrainService.Cad/Tools/SwitchTool.cs -EA SilentlyContinue
+  "`n=== SwitchDefaults.cs ==="
+  Get-Content src/TrainService.Cad/SwitchDefaults.cs -EA SilentlyContinue }
 
-B "7. PreviewSwitch record (ITool.cs) + SetNodeRoleCommand" {
-  Get-Content src/TrainService.Cad/Tools/ITool.cs -EA SilentlyContinue | Select-String "PreviewSwitch" -Context 20,0
-  "---"
-  Get-Content src/TrainService.Cad/UndoRedo/SetNodeRoleCommand.cs -EA SilentlyContinue }
+B "7. PreviewSwitchPlace record (ITool.cs)" {
+  Get-Content src/TrainService.Cad/Tools/ITool.cs -EA SilentlyContinue | Select-String "PreviewSwitchPlace" -Context 20,0 }
 
 B "8. TEST SAYILARI (proje bazinda)" {
   dotnet test TrainService.sln -c Release --nologo | Select-String "Passed|Failed|Total tests" }

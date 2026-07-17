@@ -372,48 +372,20 @@ public class CadViewportControl : ContentControl
                 dc.DrawLine(pen, p1, p2);
             }
         }
-        else if (ToolController?.ActiveTool?.Preview is PreviewSwitch sw)
+        else if (ToolController?.ActiveTool?.Preview is PreviewSwitchPlace sp)
         {
-            // Seçili düğüm (sarı dolgu + kenar)
-            if (sw.NodeId != Guid.Empty && _document.TryGetEntity(sw.NodeId, out var sn) && sn is TrackNode snode)
-            {
-                var sp = Transform.WorldToScreen(snode.Position);
-                dc.DrawEllipse(CadColors.SwitchNodeFill, CadColors.SwitchNodePen, sp, 8, 8);
-            }
+            var entryPt = Transform.WorldToScreen(sp.EntryPos);
+            var mainPt = Transform.WorldToScreen(sp.MainExitPos);
+            var divPt = Transform.WorldToScreen(sp.DivergingExitPos);
 
-            // Main segment (yeşil kalın)
-            if (sw.MainSegmentId is Guid mainId && _document.TryGetEntity(mainId, out var me) && me is TrackSegment mseg &&
-                _document.TryGetEntity(mseg.StartNodeId, out var msn) && msn is TrackNode ms &&
-                _document.TryGetEntity(mseg.EndNodeId, out var men) && men is TrackNode meNode)
-            {
-                dc.DrawLine(CadColors.SwitchMainPen, Transform.WorldToScreen(ms.Position), Transform.WorldToScreen(meNode.Position));
-            }
+            // Y-shaped preview: entry→main (green), entry→diverging (orange)
+            dc.DrawLine(CadColors.SwitchMainPen, entryPt, mainPt);
+            dc.DrawLine(CadColors.SwitchDivergingPen, entryPt, divPt);
 
-            // Diverging segment (turuncu kalın)
-            if (sw.DivergingSegmentId is Guid divId && _document.TryGetEntity(divId, out var de) && de is TrackSegment dseg &&
-                _document.TryGetEntity(dseg.StartNodeId, out var dsn) && dsn is TrackNode ds &&
-                _document.TryGetEntity(dseg.EndNodeId, out var den) && den is TrackNode deNode)
-            {
-                dc.DrawLine(CadColors.SwitchDivergingPen, Transform.WorldToScreen(ds.Position), Transform.WorldToScreen(deNode.Position));
-            }
-
-            // Aday nesne (kesikli yeşil/kırmızı)
-            if (sw.AdayId != Guid.Empty)
-            {
-                if (sw.MachineState == SwitchToolState.Idle && _document.TryGetEntity(sw.AdayId, out var ae) && ae is TrackNode anode)
-                {
-                    var sp2 = Transform.WorldToScreen(anode.Position);
-                    var pen2 = sw.AdayGecerli ? CadColors.SwitchCandidatePen : CadColors.SwitchCandidateInvalidPen;
-                    dc.DrawEllipse(null, pen2, sp2, 6, 6);
-                }
-                else if (sw.MachineState != SwitchToolState.Idle && _document.TryGetEntity(sw.AdayId, out var ase) && ase is TrackSegment aseg2 &&
-                         _document.TryGetEntity(aseg2.StartNodeId, out var asn) && asn is TrackNode asNode &&
-                         _document.TryGetEntity(aseg2.EndNodeId, out var aen) && aen is TrackNode aeNode2)
-                {
-                    var pen3 = sw.AdayGecerli ? CadColors.SwitchCandidatePen : CadColors.SwitchCandidateInvalidPen;
-                    dc.DrawLine(pen3, Transform.WorldToScreen(asNode.Position), Transform.WorldToScreen(aeNode2.Position));
-                }
-            }
+            // 3 ghost port circles
+            dc.DrawEllipse(CadColors.SwitchNodeFill, CadColors.SwitchNodePen, entryPt, 4, 4);
+            dc.DrawEllipse(CadColors.SwitchNodeFill, CadColors.SwitchNodePen, mainPt, 4, 4);
+            dc.DrawEllipse(CadColors.SwitchNodeFill, CadColors.SwitchNodePen, divPt, 4, 4);
         }
 
         // 2. Draw Snap Marker
@@ -521,13 +493,13 @@ public class CadViewportControl : ContentControl
             }
         }
         
-        // Switch/Makas görseli — düğümün üzerine eşkenar dörtgen (diamond)
+        // Switch/Makas prefab görseli — merkezde eşkenar dörtgen (diamond)
         foreach (var entity in _document.Entities)
         {
             if (!_document.IsVisible(entity.Id)) continue;
-            if (entity is RailSwitch rs && _document.TryGetEntity(rs.NodeId, out var se) && se is TrackNode swNode)
+            if (entity is RailSwitch rs)
             {
-                double cx = swNode.Position.X, cy = swNode.Position.Y, s = 7.0;
+                double cx = rs.Position.X, cy = rs.Position.Y, s = 7.0;
                 var diamond = new StreamGeometry();
                 using (var dgc = diamond.Open())
                 {
