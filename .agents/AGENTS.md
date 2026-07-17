@@ -22,7 +22,9 @@ Depoya erişemiyorsan DUR, kullanıcıya bildir — metodolojiyi uydurma.
 ## 2 — İŞ AKIŞI
 1. Roadmap'ten sıradaki sürümü al (sıra atlanmaz, numara uydurulmaz; belirsizse Roadmap.md'ye bak).
 2. Bu dosyayı yeniden oku. 3. Plan yaz → DUR → onay. 4. Onaydan sonra TDD ile kod.
-5. `dotnet run` → DUR → kullanıcı manuel test. 6. "pushla" denmeden push YOK. Her mühürlü sürüm KENDİ commit'i:
+5. `dotnet run` → DUR → kullanıcı manuel test.
+6. **README her push öncesi güncellenir.** `README.md`'nin Sürüm Geçmişi (Changelog) bölümüne bu sürümün detaylı açıklaması eklenir; roadmap kapsamı, test sayıları, yeni tipler/sınıflar ve önemli davranış değişiklikleri belirtilir.
+7. "pushla" denmeden push YOK. Her mühürlü sürüm KENDİ commit'i (README güncellemesi dahil):
    `$git=(gci "$env:LOCALAPPDATA\GitHubDesktop" -Recurse -Filter git.exe -EA 0|select -First 1).FullName; & $git add .; & $git commit -m "feat(v3.0.X): mesaj"; & $git push`
 
 ## 3 — TEST
