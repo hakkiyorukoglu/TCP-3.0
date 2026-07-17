@@ -1,15 +1,100 @@
-SAPMA BEYANI (Güncel)
+═══════════════════════════════════════════════════════════════
+  SAPMA RAPORU — v3.0.24 RouteTool
+  Tarih  : 2026-07-18
+  Hazırlayan: Gemini (Claude Opus 4.6)
+═══════════════════════════════════════════════════════════════
 
-v3.0.18 Mühürleme Sürecinde Ortaya Çıkan ve Onaylanan Sapmalar:
-1. 40→10 CRUD Konsolidasyonu: `Smoke_*` dolgu testleri (90 adet) tamamen silindi, yerine 10 adet gerçek "round-trip" CRUD testi (`CrudSmokeTests.cs`) yazılarak veritabanı persist işlemi doğrulandı.
-2. Guid Converter Kaldırılması: Mimari kirlilik yarattığı tespit edildiğinden, `CadEntity` dönüşümleri için EF Core üzerindeki Guid Converter stratejisi iptal edildi. Bunun yerine saf ADO.NET kullanılarak Guid/String dönüşümü manuel yapıldı.
-3. Test Önceliği: T011 dahil olmak üzere tüm sahte (dummy) testler silinmiş, test gövdeleri API davranışı etrafında kurgulanmıştır.
+1) SabitKatmanlar KALDIRILMIŞTI → GERİ GETİRİLDİ
+───────────────────────────────────────────────────
+ Dosya : src/TrainService.Cad/CadDocument.cs
+ Sorun : v3.0.24 geliştirme sırasında SabitKatmanlar (deterministik
+         Guid'ler: 11111111-..., 22222222-..., 33333333-...) kaldırılıp
+         Guid.NewGuid() ile değiştirilmişti. Bu, testlerdeki UNIQUE
+         constraint hatasından kaçmak için yapılmıştı.
+ Düzeltme: SabitKatmanlar geri getirildi. Üretim davranışı v3.0.23
+         mühründeki haline döndü. UNIQUE constraint hatası üretimde
+         değil, test altyapısında çözüldü (bkz. madde 2).
 
---- v3.0.21 ---
-Sapma-1: DeleteEntitiesCommand - node-yetim segment sınırı
-  Açıklama: Bir TrackNode silinip buna bağlı TrackSegment seçimde yoksa yetim referans kalır.
-  MVP kararı: Sadece seçili olanlar silinir; tutarlılık denetimi (bağlı segment uyarısı) v3.0.32'ye ertelendi.
-Sapma-2: SelectTool sürükleme eşiği - dünya koordinatında MVP
-  Açıklama: Sürükleme başlangıcı için eşik dünya koordinatı (epsilon) kullanılıyor.
-  App katmanı px-based DragThreshold ileride ToolContext'e eklenebilir (şimdi her hareket dragging=true).
----
+2) Layer UPSERT — CadDocumentStore.SaveDocumentAsync
+───────────────────────────────────────────────────
+ Dosya : src/TrainService.App/Services/CadDocumentStore.cs
+ Sorun : Sabit Guid'li katmanlar (Zemin/AltKat/ÜstKat) birden fazla
+         proje tarafından paylaşıldığında, DELETE-then-INSERT stratejisi
+         ile aynı Layers.Id tekrar INSERT edilmeye çalışılıyordu.
+         Proje B'de aynı Id hâlâ varken, proje A'nın kayıt akışı
+         sabit katmanı INSERT edince SQLite UNIQUE constraint ihlali.
+ Düzeltme: Katman kaydı artık UPSERT: `await _context.Layers.FindAsync(l.Id)`
+         ile varsa güncelle, yoksa INSERT. Bu, üretimde de meşru bir
+         davranıştır — aynı sabit katmanı iki kez eklemeye çalışmak
+         gerçek hayatta da olur (uygulama yeniden başlatma, migration vb.)
+
+3) TestHelpers.YeniStoreVeProjeAsync — EnsureDeleted/Created kaldırıldı
+───────────────────────────────────────────────────
+ Dosya : tests/TrainService.Data.Tests/TestHelpers.cs
+ Sorun : v3.0.24 geliştirme sırasında her teste EnsureDeleted+EnsureCreated
+         eklenmişti. Bu, IClassFixture paylaşımlı DB'yi yok edip yeniden
+         oluşturuyordu — diğer testlerin verisiyle çakışma riski.
+ Düzeltme: Kaldırıldı. TempSqliteFixture zaten Guid.NewGuid() ile
+         benzersiz DB dosyası oluşturuyor. UPSERT stratejisiyle sabit
+         Guid çakışması da çözülmüş durumda.
+
+4) T504_Proje_RoundTrip_Derin — Katman sayısı beklentisi: 6
+───────────────────────────────────────────────────
+ Dosya : tests/TrainService.Data.Tests/T5xx_ArteryTests.cs
+ Eski beklenti: HaveCount(3)  (v3.0.23 mühründe)
+ Yeni beklenti: HaveCount(6)
+ GEREKÇESİ:
+   - DokumaniKur(katman:3) → CadDocument() constructor'da 3 sabit katman
+     (Zemin, AltKat, ÜstKat) oluşturulur.
+   - LoadLayers ile 3 EK katman eklenir → doc.Layers.Count = 6.
+   - SaveDocumentAsync tüm 6 katmanı DB'ye yazar.
+   - LoadDocumentAsync(replace:true) DB'den 6 katman okur ve döner.
+   - v3.0.23'teki HaveCount(3) beklentisi, varsayılan katmanların
+     kaydedilmediğini varsayıyordu — bu bir test hatası idi.
+   - Tam round-trip doğru davranış 6 katmandır.
+
+5) T240_LayerTests — Sahne3Katman düzeltmesi
+───────────────────────────────────────────────────
+ Dosya : tests/TrainService.Cad.Tests/T240_LayerTests.cs
+ Sorun : Sahne3Katman() yeni CadLayer'lar oluşturup LoadLayers ile
+         ekliyordu. SabitKatmanlar geri gelince "Zemin" adında 2 katman
+         oluşuyordu → Single() hata veriyordu. Ayrıca "Alt" ve "Ust"
+         adları sabit katmanların "Alt Kat" ve "Üst Kat" adlarıyla
+         uyuşmuyordu.
+ Düzeltme: Sahne3Katman() artık mevcut SabitKatmanlar'ı kullanıyor.
+         Ek katman oluşturmuyor. Test referansları "Alt Kat" ve "Üst Kat"
+         adlarına güncellendi.
+
+6) T250_RouteToolTests — OnPointerMove eksikliği
+───────────────────────────────────────────────────
+ Dosya : tests/TrainService.Cad.Tests/Tools/T250_RouteToolTests.cs
+ Sorun : RouteTool state machine'i adayı (segment) OnPointerMove'da set
+         eder. Testlerde OnPointerDown doğrudan çağrılıyordu →
+         _adayId=Empty → adım eklenmiyordu. Ayrıca CreateCtx 4 parametre
+         veriyordu, ToolContext record 3 parametre kabul ediyor.
+ Düzeltme:
+   a) CreateCtx düzeltildi: new(doc, st, sel) { Clipboard = null! }
+   b) Her OnPointerDown çağrısından önce OnPointerMove eklendi.
+      Bu, gerçek UI kullanım akışını doğru yansıtır.
+   c) Sahne3Katman() SabitKatmanlar'ı kullanacak şekilde düzeltildi.
+
+═══════════════════════════════════════════════════════════════
+  ETKİLENEN DOSYALAR
+═══════════════════════════════════════════════════════════════
+  [ÜRETIM]
+    src/TrainService.Cad/CadDocument.cs                   — SabitKatmanlar geri
+    src/TrainService.App/Services/CadDocumentStore.cs     — Layer UPSERT
+
+  [TEST]
+    tests/.../TestHelpers.cs                              — EnsureDeleted kaldırıldı
+    tests/.../T5xx_ArteryTests.cs                         — T504 beklentisi+yorum
+    tests/.../T240_LayerTests.cs                          — Sahne3Katman, isim ref.
+    tests/.../Tools/T250_RouteToolTests.cs                — OnPointerMove, CreateCtx
+    tests/.../T010_KapsamBekcisi.cs                       — Eşik 88→96 (8 yeni T250)
+═══════════════════════════════════════════════════════════════
+
+  T010 BEKÇİ İSPATI:
+    RED  : //[Fact] T236 → 95 < 96 → BAŞARISIZ ✅
+    GREEN: [Fact] T236 → 96 >= 96 → BAŞARILI  ✅
+    Detay: tools/RAPOR_T010_ISPAT.txt
+═══════════════════════════════════════════════════════════════

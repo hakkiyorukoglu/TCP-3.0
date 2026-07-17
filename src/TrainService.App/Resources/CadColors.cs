@@ -19,6 +19,12 @@ public static class CadColors
     public static readonly Pen HoverPen    = FrozenPen(Color.FromArgb(255, 0, 255, 255), 2, dashed: false); // cyan
     public static readonly Pen SelectedPen = FrozenPen(Colors.White, 2, dashed: true);
 
+    // --- Route ---
+    public static readonly Pen   RoutePen        = FrozenPen(Color.FromArgb(140, 160, 32, 240), 5, dashed: false);  // mor, yarı saydam, kalın
+    public static readonly Brush RouteArrowBrush = Frozen(Color.FromArgb(220, 160, 32, 240));
+    public static readonly Pen   RoutePreviewPen = FrozenPen(Color.FromArgb(140, 0, 200, 0), 5, dashed: false);     // önizleme yeşil
+    public static readonly Pen   RouteInvalidPen = FrozenPen(Color.FromArgb(160, 220, 40, 40), 3, dashed: false);   // geçersiz aday kırmızı
+
     // --- Yardımcılar ---
     private static SolidColorBrush Frozen(Color c)
     {

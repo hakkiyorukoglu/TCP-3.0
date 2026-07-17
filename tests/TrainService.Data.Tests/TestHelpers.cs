@@ -14,14 +14,14 @@ public static class TestHelpers
     {
         var doc = new CadDocument();
         doc.GridSizeMm = gridSize;
-        ((System.Collections.Generic.List<TrainService.Cad.CadLayer>)doc.Layers).Clear();
-
+        var layers = new System.Collections.Generic.List<TrainService.Core.Entities.CadLayer>();
         for (int i = 0; i < katman; i++)
         {
-            var l = new TrainService.Cad.CadLayer { Id = Guid.NewGuid(), Name = $"Layer {i + 1}" };
-            ((System.Collections.Generic.List<TrainService.Cad.CadLayer>)doc.Layers).Add(l);
-            if (i == 0) doc.ActiveLayerId = l.Id;
+            var l = new TrainService.Core.Entities.CadLayer { Id = Guid.NewGuid(), Name = $"Layer {i + 1}", DisplayOrder = i };
+            layers.Add(l);
         }
+        doc.LoadLayers(layers);
+        if (layers.Count > 0) doc.SetActiveLayer(layers[0].Id);
 
         Guid[] nodes = new Guid[node];
         for (int i = 0; i < node; i++)
@@ -107,12 +107,12 @@ public static class TestHelpers
         }
     }
 
-    public static async Task<(CadDocumentStore, Guid)> YeniStoreVeProjeAsync(TempSqliteFixture fx, string ad = "Test Projesi")
+    public static async Task<(CadDocumentStore, Guid)> YeniStoreVeProjeAsync(TempSqliteFixture fx, string projeAdi = "TestProjesi")
     {
-        var p = await YeniProjeAsync(fx, ad);
-        var ctx = fx.CreateContext();
-        var store = new CadDocumentStore(ctx);
-        return (store, p.Id);
+        var db = fx.CreateContext();
+        var store = new CadDocumentStore(db);
+        var pid = Guid.NewGuid();
+        return (store, pid);
     }
 }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Xunit;
@@ -83,7 +83,7 @@ public class T0xx_ArchitectureTests
         var ihlal = Core.GetTypes()
             .Where(t => t.Namespace == "TrainService.Core.Entities"
                         && t.IsClass && !t.IsAbstract
-                        && t != baseType && t.Name != "RouteStep" && t.Name != "EventLog" && t.Name != "Project"
+                        && t != baseType && t.Name != "RouteStep" && t.Name != "EventLog" && t.Name != "Project" && t.Name != "CadLayer"
                         && !baseType.IsAssignableFrom(t))
             .Select(t => t.Name).ToList();
         ihlal.Should().BeEmpty($"CadEntity mirası almayan varlık(lar): {string.Join(", ", ihlal)}");

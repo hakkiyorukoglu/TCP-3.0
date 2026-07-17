@@ -18,6 +18,7 @@ public class CadDocumentStore : ICadDocumentStore
 
     public async Task SaveDocumentAsync(System.Guid projectId, CadDocument document)
     {
+        await _context.Routes.Where(r => r.ProjectId == projectId).ExecuteDeleteAsync();
         await _context.TrackNodes.Where(n => n.ProjectId == projectId).ExecuteDeleteAsync();
         await _context.TrackSegments.Where(s => s.ProjectId == projectId).ExecuteDeleteAsync();
         await _context.Layers.Where(l => l.ProjectId == projectId).ExecuteDeleteAsync();
@@ -36,7 +37,16 @@ public class CadDocumentStore : ICadDocumentStore
 
         foreach (var l in document.Layers)
         {
-            _context.Layers.Add(new Layer { Id = l.Id, ProjectId = projectId, Name = l.Name });
+            var existing = await _context.Layers.FindAsync(l.Id);
+            if (existing != null)
+            {
+                existing.ProjectId = projectId;
+                existing.Name = l.Name;
+            }
+            else
+            {
+                _context.Layers.Add(new Layer { Id = l.Id, ProjectId = projectId, Name = l.Name });
+            }
         }
 
         foreach (var entity in document.Entities)
@@ -71,6 +81,21 @@ public class CadDocumentStore : ICadDocumentStore
                 };
                 _context.TrackSegments.Add(dbSeg);
             }
+            else if (entity is Route route)
+            {
+                var dbRoute = new Route
+                {
+                    Id = route.Id,
+                    ProjectId = projectId,
+                    LayerId = route.LayerId,
+                    Name = route.Name
+                };
+                foreach (var s in route.Steps)
+                {
+                    dbRoute.Steps.Add(new RouteStep(s.SegmentId, s.Direction));
+                }
+                _context.Routes.Add(dbRoute);
+            }
             // İhtiyaç varsa diğer entity'leri de buraya ekleyebiliriz (Ramp vs).
         }
 
@@ -87,11 +112,12 @@ public class CadDocumentStore : ICadDocumentStore
         }
 
         var layers = await _context.Layers.Where(l => l.ProjectId == projectId).ToListAsync();
-        ((System.Collections.Generic.List<CadLayer>)document.Layers).Clear();
+        var cadLayers = new System.Collections.Generic.List<CadLayer>();
         foreach (var l in layers)
         {
-            ((System.Collections.Generic.List<CadLayer>)document.Layers).Add(new CadLayer { Id = l.Id, Name = l.Name });
+            cadLayers.Add(new CadLayer { Id = l.Id, Name = l.Name });
         }
+        document.LoadLayers(cadLayers, replace: true);
 
         var nodes = await _context.TrackNodes.Where(n => n.ProjectId == projectId).ToListAsync();
         foreach (var dbNode in nodes)
@@ -123,6 +149,36 @@ public class CadDocumentStore : ICadDocumentStore
                 LengthMm = dbSeg.LengthMm
             };
             document.RestoreEntity(trackSeg);
+        }
+
+        var routes = await _context.Routes.Include(r => r.Steps).Where(s => s.ProjectId == projectId).ToListAsync();
+        foreach (var dbRoute in routes)
+        {
+            var route = new Route
+            {
+                Id = dbRoute.Id,
+                LayerId = dbRoute.LayerId,
+                Name = dbRoute.Name
+            };
+            foreach (var st in dbRoute.Steps) route.Steps.Add(new RouteStep(st.SegmentId, st.Direction));
+            
+            // CachedBounds Yüklemede Yeniden Hesaplanır
+            double minX = double.MaxValue, minY = double.MaxValue, maxX = double.MinValue, maxY = double.MinValue;
+            foreach (var st in route.Steps)
+            {
+                if (document.TryGetEntity(st.SegmentId, out var e) && e is TrackSegment s &&
+                    document.TryGetEntity(s.StartNodeId, out var na) && na is TrackNode a &&
+                    document.TryGetEntity(s.EndNodeId, out var nb) && nb is TrackNode b)
+                {
+                    minX = System.Math.Min(minX, System.Math.Min(a.Position.X, b.Position.X));
+                    maxX = System.Math.Max(maxX, System.Math.Max(a.Position.X, b.Position.X));
+                    minY = System.Math.Min(minY, System.Math.Min(a.Position.Y, b.Position.Y));
+                    maxY = System.Math.Max(maxY, System.Math.Max(a.Position.Y, b.Position.Y));
+                }
+            }
+            if (minX <= maxX) route.CachedBounds = new TrainService.Core.Geometry.BoundingBox(minX, minY, maxX, maxY);
+            
+            document.RestoreEntity(route);
         }
 
         document.NotifyReloaded();

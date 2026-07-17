@@ -37,6 +37,12 @@
                     <ui:SymbolIcon Symbol="Document24" Foreground="LightGray" Margin="0,0,5,0"/>
                     <TextBlock Text="{Binding ViewModel.DocumentStatusText}" FontFamily="Consolas" FontSize="14" Foreground="LightGray" FontWeight="Bold"/>
                 </StackPanel>
+                
+                <!-- Katman Durumu -->
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <ui:SymbolIcon Symbol="Layer24" Foreground="HotPink" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding ViewModel.ActiveLayerStatusText}" FontFamily="Consolas" FontSize="14" Foreground="HotPink" FontWeight="Bold"/>
+                </StackPanel>
             </StackPanel>
         </Border>
         
@@ -50,6 +56,9 @@
                 <ui:Button Command="{Binding ViewModel.SetToolCommand}" CommandParameter="Track"
                            Icon="ArrowFlowUpRight24" 
                            Appearance="Primary" ToolTip="Ray (T)" Margin="0,0,5,0" />
+                <ui:Button Command="{Binding ViewModel.SetToolCommand}" CommandParameter="Route"
+                           Icon="Directions24" 
+                           Appearance="Primary" ToolTip="Rota (R)" Margin="0,0,5,0" />
                 <ui:Button Command="{Binding ViewModel.SaveCommand}" 
                            Icon="Save24" 
                            Appearance="Secondary" ToolTip="Kaydet (Ctrl+S)" Margin="0,0,5,0" />

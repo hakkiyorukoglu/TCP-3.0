@@ -1,6 +1,6 @@
 using System;
 
-namespace TrainService.Cad;
+namespace TrainService.Core.Entities;
 
 public sealed class CadLayer
 {
@@ -9,4 +9,5 @@ public sealed class CadLayer
     public double ZHeightMm { get; set; }
     public bool IsVisible { get; set; } = true;
     public bool IsLocked { get; set; } = false;
+    public int DisplayOrder { get; init; }
 }

@@ -36,6 +36,14 @@ public sealed class TrackTool : ITool
         Preview = null;
     }
 
+    private TrackNode YeniNode(Vector2D pos, ToolContext ctx)
+    {
+        double z = 0;
+        if (ctx.Document.TryGetLayer(ctx.Document.ActiveLayerId, out var layer))
+            z = layer.ZHeightMm;
+        return new TrackNode { Position = pos, Z = z, LayerId = ctx.Document.ActiveLayerId };
+    }
+
     public void OnPointerMove(SnapResult snapped, ToolContext ctx)
     {
         _cursor = snapped.Point;
@@ -71,11 +79,7 @@ public sealed class TrackTool : ITool
         {
             if (_state == State.Idle)
             {
-                _chainTail = new TrackNode
-                {
-                    Position = snapped.Point,
-                    LayerId = ctx.Document.ActiveLayerId
-                };
+                _chainTail = YeniNode(snapped.Point, ctx);
                 _chainTailIsCommitted = false;
                 _state = State.Chaining;
                 Console.WriteLine($"Info: Ray çizimi başladı: ({snapped.Point.X}, {snapped.Point.Y})");
@@ -89,11 +93,7 @@ public sealed class TrackTool : ITool
                     return;
                 }
 
-                var newNode = new TrackNode
-                {
-                    Position = snapped.Point,
-                    LayerId = ctx.Document.ActiveLayerId
-                };
+                var newNode = YeniNode(snapped.Point, ctx);
 
                 var segment = new TrackSegment
                 {

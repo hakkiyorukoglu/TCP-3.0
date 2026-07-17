@@ -26,6 +26,6 @@ public class T010_KapsamBekcisi
                 return 0;
             });
 
-        cadTests.Should().BeGreaterThanOrEqualTo(79, "Cad.Tests tabanı 79'a çıkarıldı (v3.0.22 - Pano testleri ile birlikte)");
+        cadTests.Should().BeGreaterThanOrEqualTo(96, "Cad.Tests tabanı 96'ya çıkarıldı (v3.0.24 — T250 RouteTool testleri eklendi)");
     }
 }

@@ -32,6 +32,17 @@ public partial class EditorView : Page
                     ViewModel.SetToolCommand.Execute("Track");
                 e.Handled = true;
             }
+            else if (e.Key == Key.R && Keyboard.Modifiers == ModifierKeys.None)
+            {
+                if (ViewModel.SetToolCommand.CanExecute("Route"))
+                    ViewModel.SetToolCommand.Execute("Route");
+                e.Handled = true;
+            }
+            else if (Viewport.ToolController != null)
+            {
+                if (Viewport.ToolController.KeyDown(e.Key))
+                    e.Handled = true;
+            }
         };
 
         // Fare hareket ettikçe Viewport'tan dünya koordinatını alıp doğrudan Label'a yazalım
@@ -66,12 +77,22 @@ public partial class EditorView : Page
             var initialTool = new TrainService.Cad.Tools.SelectTool();
             Viewport.ToolController = new TrainService.App.Controls.CadCanvas.ToolController(ctx, ViewModel.SnapEngine, Viewport.Transform, initialTool) { Clipboard = ViewModel.ClipboardService };
 
+            Viewport.ToolController.LayerStatusChanged += (msg) =>
+            {
+                Dispatcher.Invoke(() => ViewModel.ActiveLayerStatusText = msg);
+            };
+
             ViewModel.ToolChangeRequested += (toolName) =>
             {
                 if (toolName == "Select")
                     Viewport.ToolController.SetTool(new TrainService.Cad.Tools.SelectTool());
                 else if (toolName == "Track")
                     Viewport.ToolController.SetTool(new TrainService.Cad.Tools.TrackTool());
+                else if (toolName == "Route")
+                    Viewport.ToolController.SetTool(new TrainService.Cad.Tools.RouteTool());
+                
+                // Re-attach event because a new ToolController might be created? No, SetTool doesn't create a new controller.
+                // Wait, SetTool just changes the ActiveTool, ToolController is the same.
             };
         };
     }

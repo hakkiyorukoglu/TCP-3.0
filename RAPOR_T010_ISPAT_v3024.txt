@@ -1,0 +1,53 @@
+═══════════════════════════════════════════════════════════════
+  T010 BEKÇİ İSPAT RAPORU — v3.0.24 RouteTool
+  Yöntem: Y12 (//[Fact] ile satır kesme, derleme bozulmaz)
+  Tarih  : 2026-07-17
+═══════════════════════════════════════════════════════════════
+
+1. KASITLI İHLAL: T236 [Fact] yorumlandı
+─────────────────────────────────────────
+Dosya : tests/TrainService.Cad.Tests/T2xx_ClipboardTests.cs
+İşlem : 133. satırdaki `[Fact]` satırı `//[Fact]` yapıldı.
+Sonuç : dotnet build -c Release → 0 Hata (yalnızca xUnit1013 uyarısı).
+
+2. KIRMIZI ÇIKTI (T010 bekçi tetiklendi)
+─────────────────────────────────────────
+Komut: dotnet test tests/TrainService.Architecture.Tests -c Release --filter "T010"
+
+Çıktı:
+[xUnit.net 00:00:00.50]     TrainService.Architecture.Tests.T010_KapsamBekcisi.T010_TestSayisi_TabanAltinaDusemez [FAIL]
+[xUnit.net 00:00:00.50]       Expected cadTests to be greater than or equal to 96 because
+          Cad.Tests tabanı 96'ya çıkarıldı (v3.0.24 — T250 RouteTool testleri eklendi),
+          but found 95 (difference of -1).
+[xUnit.net 00:00:00.50]       Stack Trace:
+[xUnit.net 00:00:00.50]            at FluentAssertions ...
+            at T010_KapsamBekcisi.T010_TestSayisi_TabanAltinaDusemez()
+            ...
+
+Test Çalıştırması Başarısız.
+Toplam test sayısı: 1
+     Başarısız: 1
+
+3. İHLAL GERİ ALINDI: //[Fact] → [Fact] restore
+─────────────────────────────────────────
+Dosya : tests/TrainService.Cad.Tests/T2xx_ClipboardTests.cs
+İşlem : 133. satırdaki `//[Fact]` tekrar `[Fact]` yapıldı.
+
+4. YEŞİL ÇIKTI (T010 bekçi geçti)
+─────────────────────────────────────────
+Komut: dotnet test tests/TrainService.Architecture.Tests -c Release --filter "T010"
+
+Çıktı:
+[xUnit.net 00:00:00.50]   Finished:    TrainService.Architecture.Tests
+  Başarılı TrainService.Architecture.Tests.T010_KapsamBekcisi.T010_TestSayisi_TabanAltinaDusemez
+
+Test Çalıştırması Başarılı.
+Toplam test sayısı: 1
+     Geçti: 1
+
+═══════════════════════════════════════════════════════════════
+  SONUÇ: ✅ T010 bekçisi doğru çalışıyor.
+  - Kırmızı: test sayısı 96 tabanının altına düşünce (95) yakaladı ✅
+  - Yeşil : test sayısı 96'ya dönünce geçti ✅
+  - Derleme: her iki durumda da temiz (0 Hata) ✅
+═══════════════════════════════════════════════════════════════

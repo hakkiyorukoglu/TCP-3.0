@@ -251,6 +251,7 @@ public class CadViewportControl : ContentControl
                 foreach (var id in buf)
                 {
                     if (!_document.TryGetEntity(id, out var ent)) continue;
+                    if (!_document.IsSelectable(id)) continue;
                     double dSq = EntityDistSq(ent, world);
                     if (dSq <= bestSq) { bestSq = dSq; newHover = id; }
                 }
@@ -267,6 +268,56 @@ public class CadViewportControl : ContentControl
     private void OnMouseLeave(object sender, MouseEventArgs e)
     {
         using var dc = _toolVisual.RenderOpen(); // clear snap marker
+    }
+
+    private void CizOk(DrawingContext dc, Point p1, Point p2, TrainService.Core.Enums.TravelDirection dir, double scale)
+    {
+        if (p1 == p2) return;
+        var vec = dir == TrainService.Core.Enums.TravelDirection.Forward ? new Vector(p2.X - p1.X, p2.Y - p1.Y) : new Vector(p1.X - p2.X, p1.Y - p2.Y);
+        vec.Normalize();
+        var mid = new Point((p1.X + p2.X) / 2, (p1.Y + p2.Y) / 2);
+        
+        double s = 10.0 / scale; // ~10px ekran sabit
+        var tip = new Point(mid.X + vec.X * s, mid.Y + vec.Y * s);
+        var baseCenter = new Point(mid.X - vec.X * s, mid.Y - vec.Y * s);
+        var ortho = new Vector(-vec.Y, vec.X);
+        var left = new Point(baseCenter.X + ortho.X * (s * 0.8), baseCenter.Y + ortho.Y * (s * 0.8));
+        var right = new Point(baseCenter.X - ortho.X * (s * 0.8), baseCenter.Y - ortho.Y * (s * 0.8));
+        
+        var sg = new StreamGeometry();
+        using (var sgc = sg.Open())
+        {
+            sgc.BeginFigure(tip, true, true);
+            sgc.LineTo(left, true, false);
+            sgc.LineTo(right, true, false);
+        }
+        sg.Freeze();
+        dc.DrawGeometry(CadColors.RouteArrowBrush, null, sg);
+    }
+
+    private void CizOkEkrana(DrawingContext dc, Point p1, Point p2, TrainService.Core.Enums.TravelDirection dir)
+    {
+        if (p1 == p2) return;
+        var vec = dir == TrainService.Core.Enums.TravelDirection.Forward ? new Vector(p2.X - p1.X, p2.Y - p1.Y) : new Vector(p1.X - p2.X, p1.Y - p2.Y);
+        vec.Normalize();
+        var mid = new Point((p1.X + p2.X) / 2, (p1.Y + p2.Y) / 2);
+        
+        double s = 10.0;
+        var tip = new Point(mid.X + vec.X * s, mid.Y + vec.Y * s);
+        var baseCenter = new Point(mid.X - vec.X * s, mid.Y - vec.Y * s);
+        var ortho = new Vector(-vec.Y, vec.X);
+        var left = new Point(baseCenter.X + ortho.X * (s * 0.8), baseCenter.Y + ortho.Y * (s * 0.8));
+        var right = new Point(baseCenter.X - ortho.X * (s * 0.8), baseCenter.Y - ortho.Y * (s * 0.8));
+        
+        var sg = new StreamGeometry();
+        using (var sgc = sg.Open())
+        {
+            sgc.BeginFigure(tip, true, true);
+            sgc.LineTo(left, true, false);
+            sgc.LineTo(right, true, false);
+        }
+        sg.Freeze();
+        dc.DrawGeometry(CadColors.RouteArrowBrush, null, sg);
     }
 
     private void RenderToolLayer(SnapResult r)
@@ -293,6 +344,31 @@ public class CadViewportControl : ContentControl
             else
             {
                 dc.DrawRectangle(CadColors.WindowFill, CadColors.WindowPen, r2);      // mavi düz
+            }
+        }
+        else if (ToolController?.ActiveTool?.Preview is PreviewRoute route)
+        {
+            foreach (var st in route.Steps)
+            {
+                if (_document != null && _document.TryGetEntity(st.SegmentId, out var se) && se is TrackSegment seg &&
+                    _document.TryGetEntity(seg.StartNodeId, out var ea) && ea is TrackNode a &&
+                    _document.TryGetEntity(seg.EndNodeId, out var eb) && eb is TrackNode b)
+                {
+                    var p1 = Transform.WorldToScreen(a.Position);
+                    var p2 = Transform.WorldToScreen(b.Position);
+                    dc.DrawLine(CadColors.RoutePreviewPen, p1, p2);
+                    CizOkEkrana(dc, p1, p2, st.Direction);
+                }
+            }
+            if (route.AdaySegmentId != Guid.Empty && _document != null &&
+                _document.TryGetEntity(route.AdaySegmentId, out var ase) && ase is TrackSegment aseg &&
+                _document.TryGetEntity(aseg.StartNodeId, out var aea) && aea is TrackNode aa &&
+                _document.TryGetEntity(aseg.EndNodeId, out var aeb) && aeb is TrackNode ab)
+            {
+                var p1 = Transform.WorldToScreen(aa.Position);
+                var p2 = Transform.WorldToScreen(ab.Position);
+                var pen = route.AdayGecerli ? CadColors.RoutePreviewPen : CadColors.RouteInvalidPen;
+                dc.DrawLine(pen, p1, p2);
             }
         }
 
@@ -364,6 +440,7 @@ public class CadViewportControl : ContentControl
         {
             foreach (var entity in _document.Entities)
             {
+                if (!_document.IsVisible(entity.Id)) continue;
                 if (entity is TrackSegment segment)
                 {
                     if (_document.TryGetEntity(segment.StartNodeId, out var sn) && sn is TrackNode startNode &&
@@ -381,6 +458,7 @@ public class CadViewportControl : ContentControl
         // Düğümler — seçili/hover vurgusu uygulanır
         foreach (var entity in _document.Entities)
         {
+            if (!_document.IsVisible(entity.Id)) continue;
             if (entity is TrackNode node)
             {
                 bool isSelected = selectedIds?.Contains(node.Id) ?? false;
@@ -398,6 +476,7 @@ public class CadViewportControl : ContentControl
         // Segmentleri seçim/hover rengiyle çiz (seçiliyse üstüne beyaz çiz)
         foreach (var entity in _document.Entities)
         {
+            if (!_document.IsVisible(entity.Id)) continue;
             if (entity is TrackSegment seg)
             {
                 bool isSelected = selectedIds?.Contains(seg.Id) ?? false;
@@ -411,6 +490,25 @@ public class CadViewportControl : ContentControl
                     dc.DrawLine(vurgPen,
                         new Point(sNode.Position.X, sNode.Position.Y),
                         new Point(eNode.Position.X, eNode.Position.Y));
+                }
+            }
+        }
+        // Rotasyonları ve ok çizimlerini yapalım
+        foreach (var entity in _document.Entities)
+        {
+            if (!_document.IsVisible(entity.Id)) continue;
+            if (entity is Route rota)
+            {
+                foreach (var st in rota.Steps)
+                {
+                    if (!_document.TryGetEntity(st.SegmentId, out var se) || se is not TrackSegment seg) continue;
+                    if (!_document.TryGetEntity(seg.StartNodeId, out var ea) || ea is not TrackNode a) continue;
+                    if (!_document.TryGetEntity(seg.EndNodeId, out var eb) || eb is not TrackNode b) continue;
+                    var p1 = new Point(a.Position.X, a.Position.Y);
+                    var p2 = new Point(b.Position.X, b.Position.Y);
+                    
+                    dc.DrawLine(CadColors.RoutePen, p1, p2);
+                    CizOk(dc, p1, p2, st.Direction, Transform.Scale);
                 }
             }
         }
@@ -431,6 +529,21 @@ public class CadViewportControl : ContentControl
                     _document.TryGetEntity(s.EndNodeId, out var sb) && sb is TrackNode b)
                     return TrainService.Core.Geometry.Vector2DMath.DistanceSquaredToSegment(p, a.Position, b.Position, out _);
                 return double.MaxValue;
+            }
+            case Route r:
+            {
+                double minSq = double.MaxValue;
+                foreach (var step in r.Steps)
+                {
+                    if (_document!.TryGetEntity(step.SegmentId, out var s) && s is TrackSegment seg &&
+                        _document.TryGetEntity(seg.StartNodeId, out var sa) && sa is TrackNode a &&
+                        _document.TryGetEntity(seg.EndNodeId, out var sb) && sb is TrackNode b)
+                    {
+                        double d = TrainService.Core.Geometry.Vector2DMath.DistanceSquaredToSegment(p, a.Position, b.Position, out _);
+                        if (d < minSq) minSq = d;
+                    }
+                }
+                return minSq;
             }
             default: return double.MaxValue;
         }

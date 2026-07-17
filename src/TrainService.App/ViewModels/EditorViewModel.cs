@@ -38,6 +38,9 @@ public partial class EditorViewModel : ObservableObject
     [ObservableProperty]
     private string _documentStatusText = "";
 
+    [ObservableProperty]
+    private string _activeLayerStatusText = "Katman: Zemin";
+
     public Action<string>? ToolChangeRequested;
 
     public EditorViewModel(

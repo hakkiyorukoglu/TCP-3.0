@@ -34,6 +34,7 @@ public class TrainDbContext : DbContext
         modelBuilder.Entity<TrackNode>().ComplexProperty(e => e.Position);
 
         modelBuilder.Entity<Route>()
+            .Ignore(r => r.CachedBounds)
             .OwnsMany(r => r.Steps, a =>
             {
                 a.WithOwner().HasForeignKey("RouteId");

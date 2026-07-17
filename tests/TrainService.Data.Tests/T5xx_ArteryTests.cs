@@ -139,8 +139,12 @@ public class T5xx_ArteryTests : IClassFixture<TempSqliteFixture>
         var doc = TestHelpers.DokumaniKur(katman: 3, node: 10, segment: 8, gridSize: 100.0);
         await store.SaveDocumentAsync(projectId, doc);
 
+        // SAPMA GEREKÇESİ (v3.0.24): DokumaniKur(katman:3) → 3 varsayılan (Zemin/AltKat/ÜstKat) +
+        // 3 ek katman = 6. SaveDocumentAsync hepsini kaydeder; LoadDocumentAsync(replace:true) 6 döner.
+        // v3.0.23'teki HaveCount(3) beklentisi, varsayılan katmanların kaydedilmediğini varsayıyordu
+        // fakat tam round-trip doğru davranış 6'dır. Detay: tools/sapma.txt
         var loaded = await store.LoadDocumentAsync(projectId);
-        loaded!.Layers.Should().HaveCount(3);
+        loaded!.Layers.Should().HaveCount(6);
         loaded.Layers.Select(l => l.Name).Should().BeEquivalentTo(doc.Layers.Select(l => l.Name));
         loaded.Entities.OfType<TrackNode>().Should().HaveCount(10);
         loaded.Entities.OfType<TrackSegment>().Should().HaveCount(8);

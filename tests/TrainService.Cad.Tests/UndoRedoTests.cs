@@ -13,12 +13,12 @@ namespace TrainService.Cad.Tests;
 
 public class UndoRedoTests
 {
-    private class DummyCommand : ICadCommand
+    private class TestCommand : ICadCommand
     {
         public string Description { get; }
         private readonly CadEntity _entity;
         
-        public DummyCommand(string desc, CadEntity entity)
+        public TestCommand(string desc, CadEntity entity)
         {
             Description = desc;
             _entity = entity;
@@ -50,7 +50,7 @@ public class UndoRedoTests
     {
         var doc = new CadDocument();
         var stack = new CommandStack();
-        var cmd = new DummyCommand("T1", new TrackNode());
+        var cmd = new TestCommand("T1", new TrackNode());
 
         stack.Do(cmd, doc);
 
@@ -63,7 +63,7 @@ public class UndoRedoTests
     {
         var doc = new CadDocument();
         var stack = new CommandStack();
-        var cmd = new DummyCommand("T2", new TrackNode());
+        var cmd = new TestCommand("T2", new TrackNode());
 
         int initialCount = doc.Entities.Count; // 0
         
@@ -82,8 +82,8 @@ public class UndoRedoTests
     {
         var doc = new CadDocument();
         var stack = new CommandStack();
-        var cmd1 = new DummyCommand("T3-1", new TrackNode());
-        var cmd2 = new DummyCommand("T3-2", new TrackNode());
+        var cmd1 = new TestCommand("T3-1", new TrackNode());
+        var cmd2 = new TestCommand("T3-2", new TrackNode());
 
         stack.Do(cmd1, doc);
         stack.Undo(doc);
@@ -163,9 +163,9 @@ public class UndoRedoTests
         var doc = new CadDocument();
         var stack = new CommandStack(capacity: 2);
         
-        stack.Do(new DummyCommand("1", new TrackNode()), doc);
-        stack.Do(new DummyCommand("2", new TrackNode()), doc);
-        stack.Do(new DummyCommand("3", new TrackNode()), doc); // 1. düşmeli
+        stack.Do(new TestCommand("1", new TrackNode()), doc);
+        stack.Do(new TestCommand("2", new TrackNode()), doc);
+        stack.Do(new TestCommand("3", new TrackNode()), doc); // 1. düşmeli
 
         // Undo 2 defa çalışabilir
         Assert.True(stack.CanUndo);
@@ -232,7 +232,7 @@ public class UndoRedoTests
         doc.RemoveEntity(entity.Id);
 
         // Act: Entity'yi tekrar eklemeye (veya silmeye) çalışan command
-        var cmd = new DummyCommand("T416", entity);
+        var cmd = new TestCommand("T416", entity);
         var exception = Record.Exception(() => 
         {
             cmd.Execute(doc); // Zaten objenin kendisini doc içine atıyor (Duplicate vb patlamamalı)

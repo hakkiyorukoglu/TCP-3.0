@@ -37,6 +37,8 @@ public sealed class Route : CadEntity
 {
     public string Name { get; set; } = string.Empty;
     public List<RouteStep> Steps { get; } = new();
+    public BoundingBox CachedBounds { get; set; }
+    public override BoundingBox? Bounds => CachedBounds;
 }
 
 public sealed class RailSwitch : CadEntity

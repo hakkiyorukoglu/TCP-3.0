@@ -55,3 +55,13 @@ desktop.ini
 settings.json
 
 designtime_migrations.db
+
+# Stale test artifacts (root-level only)
+/T010_*.txt
+/fail_output.txt
+/pass_output.txt
+/RAPOR_T010_ISPAT.txt
+
+# Tools-level test artifacts
+/tools/T010_*.txt
+/tools/RAPOR_T010_ISPAT.txt

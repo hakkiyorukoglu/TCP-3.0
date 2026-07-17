@@ -61,6 +61,7 @@ public sealed class ToolController
     public bool KeyDown(Key key)
     {
         bool ctrl = Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
+        bool shift = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
         switch (key)
         {
             case Key.Escape: return Send(ToolKey.Escape);
@@ -69,8 +70,39 @@ public sealed class ToolController
             case Key.C when ctrl: return Send(ToolKey.Copy);
             case Key.X when ctrl: return Send(ToolKey.Cut);
             case Key.V when ctrl: return Send(ToolKey.Paste);
+            
+            // --- GEÇİCİ KATMAN TEST TUŞLARI ---
+            case Key.D1 or Key.NumPad1: return ToggleLayer(0, shift); // Zemin
+            case Key.D2 or Key.NumPad2: return ToggleLayer(1, shift); // Alt Kat
+            case Key.D3 or Key.NumPad3: return ToggleLayer(2, shift); // Üst Kat
+            
             default: return false;
         }
+    }
+
+    public Action<string>? LayerStatusChanged;
+
+    private bool ToggleLayer(int displayOrder, bool shift)
+    {
+        var doc = _ctxBase.Document;
+        foreach (var l in doc.Layers)
+        {
+            if (l.DisplayOrder == displayOrder)
+            {
+                if (shift)
+                {
+                    doc.SetLayerLock(l.Id, !l.IsLocked);
+                    LayerStatusChanged?.Invoke($"Katman: {l.Name} - Kilit: {(!l.IsLocked ? "AÇIK" : "KİLİTLİ")}");
+                }
+                else
+                {
+                    doc.SetLayerVisibility(l.Id, !l.IsVisible);
+                    LayerStatusChanged?.Invoke($"Katman: {l.Name} - Görünürlük: {(!l.IsVisible ? "GİZLİ" : "GÖRÜNÜR")}");
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     private bool Send(ToolKey key) { ActiveTool.OnKeyDown(key, CtxWith()); return true; }

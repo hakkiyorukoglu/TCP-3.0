@@ -79,6 +79,7 @@ public sealed class SelectTool : ITool
         foreach (var id in buf)
         {
             if (!ctx.Document.TryGetEntity(id, out var e)) continue;
+            if (!ctx.Document.IsSelectable(id)) continue;
             var eb = EntityBounds(e, ctx.Document);
             if (eb == null) continue;
             bool hit = crossing ? box.IntersectsWith(eb.Value) : box.Contains(eb.Value);
@@ -103,6 +104,7 @@ public sealed class SelectTool : ITool
         foreach (var id in buf)
         {
             if (!ctx.Document.TryGetEntity(id, out var e)) continue;
+            if (!ctx.Document.IsSelectable(id)) continue;
             double dSq = MesafeKaresi(e, _pressWorld, ctx);
             if (dSq <= enYakinSq) { enYakinSq = dSq; enYakin = id; }
         }
