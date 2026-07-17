@@ -56,28 +56,30 @@ public sealed class ToolController
         ActiveTool.OnPointerUp(lastSnap, tb, CtxWith());
     }
 
+    public TrainService.Cad.Clipboard.ClipboardService Clipboard { get; set; } = default!;
+
     public bool KeyDown(Key key)
     {
+        bool ctrl = Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
         switch (key)
         {
-            case Key.Escape:
-                ActiveTool.OnKeyDown(ToolKey.Escape, CtxWith());
-                return true;
-            case Key.Enter:
-                ActiveTool.OnKeyDown(ToolKey.Enter, CtxWith());
-                return true;
-            case Key.Delete:
-                ActiveTool.OnKeyDown(ToolKey.Delete, CtxWith());
-                return true;
-            default:
-                return false;
+            case Key.Escape: return Send(ToolKey.Escape);
+            case Key.Enter:  return Send(ToolKey.Enter);
+            case Key.Delete: return Send(ToolKey.Delete);
+            case Key.C when ctrl: return Send(ToolKey.Copy);
+            case Key.X when ctrl: return Send(ToolKey.Cut);
+            case Key.V when ctrl: return Send(ToolKey.Paste);
+            default: return false;
         }
     }
+
+    private bool Send(ToolKey key) { ActiveTool.OnKeyDown(key, CtxWith()); return true; }
 
     private ToolContext CtxWith() => _ctxBase with
     {
         ModifierAdd = (Keyboard.Modifiers & (ModifierKeys.Shift | ModifierKeys.Control)) != 0,
-        ClickToleranceWorld = SnapEngine.ScreenToleranceToWorld(ClickTolerancePx, _transform.Scale)
+        ClickToleranceWorld = SnapEngine.ScreenToleranceToWorld(ClickTolerancePx, _transform.Scale),
+        Clipboard = Clipboard
     };
 
     private static ToolMouseButton Map(MouseButton button) => button switch

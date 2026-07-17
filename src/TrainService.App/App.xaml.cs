@@ -56,6 +56,7 @@ public partial class App : Application
             services.AddSingleton<TrainService.Cad.CadDocument>();
             services.AddSingleton<TrainService.Cad.UndoRedo.CommandStack>();
             services.AddSingleton<TrainService.Cad.Selection.SelectionService>();
+            services.AddSingleton<TrainService.Cad.Clipboard.ClipboardService>();
             
             // v3.0.19 eklentileri (GridSnapProvider'dan önce eklendi):
             services.AddSingleton<TrainService.Cad.Snapping.ISnapProvider, TrainService.Cad.Snapping.EndpointSnapProvider>();

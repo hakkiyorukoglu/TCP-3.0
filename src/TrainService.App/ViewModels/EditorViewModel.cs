@@ -24,6 +24,7 @@ public partial class EditorViewModel : ObservableObject
     public CommandStack CommandStack { get; }
     public SelectionService SelectionService { get; }
     public TrainService.Cad.Snapping.SnapEngine SnapEngine { get; }
+    public TrainService.Cad.Clipboard.ClipboardService ClipboardService { get; }
 
     [ObservableProperty]
     private string _cursorWorldPosition = "0.0, 0.0 mm";
@@ -44,6 +45,7 @@ public partial class EditorViewModel : ObservableObject
         CommandStack commandStack, 
         SelectionService selectionService,
         TrainService.Cad.Snapping.SnapEngine snapEngine,
+        TrainService.Cad.Clipboard.ClipboardService clipboardService,
         ILogBus logBus,
         ICadDocumentStore store)
     {
@@ -51,6 +53,7 @@ public partial class EditorViewModel : ObservableObject
         CommandStack = commandStack;
         SelectionService = selectionService;
         SnapEngine = snapEngine;
+        ClipboardService = clipboardService;
         _logBus = logBus;
         _store = store;
 

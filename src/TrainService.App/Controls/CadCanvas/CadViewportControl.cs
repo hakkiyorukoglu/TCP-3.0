@@ -174,6 +174,9 @@ public class CadViewportControl : ContentControl
 
     private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {
+        // Klavye odağını viewporte çek — Delete tuşu çalışsın
+        this.Focus();
+
         if (e.MiddleButton == MouseButtonState.Pressed)
         {
             _isPanning = true;

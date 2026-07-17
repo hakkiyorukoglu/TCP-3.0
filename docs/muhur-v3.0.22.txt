@@ -1,0 +1,11 @@
+﻿# SURUM MUHUR RAPORU - v3.0.22
+
+1. Hedef: Pano
+2. Gerceklesen: Kopyalama, yapistirma tamamlandl.
+3. Mimari: T010 kapsam tabani 79 oldu.
+4. TDD Durumu: 7 test yazildi, tumu gecti.
+5. Kullanici Etkisi: Ctrl+C, Ctrl+X ve Ctrl+V kullanilabilir.
+6. Kapsam Disi: Katmanlar.
+7. Geri Alma: Mumkun.
+8. Riskler: Yok.
+9. Sonraki Adim: v3.0.23 Katmanlar.

@@ -62,9 +62,9 @@ public partial class EditorView : Page
             Viewport.AttachSelection(ViewModel.SelectionService);
 
 
-            var ctx = new TrainService.Cad.Tools.ToolContext(ViewModel.Document, ViewModel.CommandStack, ViewModel.SelectionService);
+            var ctx = new TrainService.Cad.Tools.ToolContext(ViewModel.Document, ViewModel.CommandStack, ViewModel.SelectionService) { Clipboard = ViewModel.ClipboardService };
             var initialTool = new TrainService.Cad.Tools.SelectTool();
-            Viewport.ToolController = new TrainService.App.Controls.CadCanvas.ToolController(ctx, ViewModel.SnapEngine, Viewport.Transform, initialTool);
+            Viewport.ToolController = new TrainService.App.Controls.CadCanvas.ToolController(ctx, ViewModel.SnapEngine, Viewport.Transform, initialTool) { Clipboard = ViewModel.ClipboardService };
 
             ViewModel.ToolChangeRequested += (toolName) =>
             {

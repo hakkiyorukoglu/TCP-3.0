@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TrainService.Cad.Selection;
 using TrainService.Cad.Snapping;
 using TrainService.Cad.UndoRedo;
@@ -160,11 +161,45 @@ public sealed class SelectTool : ITool
 
     public void OnKeyDown(ToolKey key, ToolContext ctx)
     {
-        if (key == ToolKey.Delete && ctx.Selection.SelectedIds.Count > 0)
+        switch (key)
         {
-            var ids = new List<Guid>(ctx.Selection.SelectedIds);
-            ctx.Commands.Do(new DeleteEntitiesCommand(ids), ctx.Document);
-            ctx.Selection.Clear();
+            case ToolKey.Delete:
+                if (ctx.Selection.SelectedIds.Count > 0)
+                {
+                    ctx.Commands.Do(new DeleteEntitiesCommand(ctx.Selection.SelectedIds.ToList()), ctx.Document);
+                    ctx.Selection.Clear();
+                }
+                break;
+
+            case ToolKey.Copy:
+                if (ctx.Selection.SelectedIds.Count > 0)
+                    ctx.Clipboard.Set(SeciliEntities(ctx));
+                break;
+
+            case ToolKey.Cut:
+                if (ctx.Selection.SelectedIds.Count > 0)
+                {
+                    ctx.Commands.Do(new CutEntitiesCommand(ctx.Selection.SelectedIds.ToList(), ctx.Clipboard), ctx.Document);
+                    ctx.Selection.Clear();
+                }
+                break;
+
+            case ToolKey.Paste:
+                if (ctx.Clipboard != null && ctx.Clipboard.HasContent)
+                {
+                    var cmd = new PasteEntitiesCommand(ctx.Clipboard.Get());
+                    ctx.Commands.Do(cmd, ctx.Document);
+                    ctx.Selection.Set(cmd.EklenenIds);
+                }
+                break;
         }
+    }
+
+    private static List<CadEntity> SeciliEntities(ToolContext ctx)
+    {
+        var list = new List<CadEntity>();
+        foreach (var id in ctx.Selection.SelectedIds)
+            if (ctx.Document.TryGetEntity(id, out var e)) list.Add(e);
+        return list;
     }
 }
