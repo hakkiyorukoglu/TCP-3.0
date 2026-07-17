@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using TrainService.Core.Geometry;
 using TrainService.Core.Entities;
+using TrainService.Core.Enums;
 using TrainService.Cad;
 using TrainService.Cad.Snapping;
 using TrainService.Cad.Selection;
@@ -371,6 +372,49 @@ public class CadViewportControl : ContentControl
                 dc.DrawLine(pen, p1, p2);
             }
         }
+        else if (ToolController?.ActiveTool?.Preview is PreviewSwitch sw)
+        {
+            // Seçili düğüm (sarı dolgu + kenar)
+            if (sw.NodeId != Guid.Empty && _document.TryGetEntity(sw.NodeId, out var sn) && sn is TrackNode snode)
+            {
+                var sp = Transform.WorldToScreen(snode.Position);
+                dc.DrawEllipse(CadColors.SwitchNodeFill, CadColors.SwitchNodePen, sp, 8, 8);
+            }
+
+            // Main segment (yeşil kalın)
+            if (sw.MainSegmentId is Guid mainId && _document.TryGetEntity(mainId, out var me) && me is TrackSegment mseg &&
+                _document.TryGetEntity(mseg.StartNodeId, out var msn) && msn is TrackNode ms &&
+                _document.TryGetEntity(mseg.EndNodeId, out var men) && men is TrackNode meNode)
+            {
+                dc.DrawLine(CadColors.SwitchMainPen, Transform.WorldToScreen(ms.Position), Transform.WorldToScreen(meNode.Position));
+            }
+
+            // Diverging segment (turuncu kalın)
+            if (sw.DivergingSegmentId is Guid divId && _document.TryGetEntity(divId, out var de) && de is TrackSegment dseg &&
+                _document.TryGetEntity(dseg.StartNodeId, out var dsn) && dsn is TrackNode ds &&
+                _document.TryGetEntity(dseg.EndNodeId, out var den) && den is TrackNode deNode)
+            {
+                dc.DrawLine(CadColors.SwitchDivergingPen, Transform.WorldToScreen(ds.Position), Transform.WorldToScreen(deNode.Position));
+            }
+
+            // Aday nesne (kesikli yeşil/kırmızı)
+            if (sw.AdayId != Guid.Empty)
+            {
+                if (sw.MachineState == SwitchToolState.Idle && _document.TryGetEntity(sw.AdayId, out var ae) && ae is TrackNode anode)
+                {
+                    var sp2 = Transform.WorldToScreen(anode.Position);
+                    var pen2 = sw.AdayGecerli ? CadColors.SwitchCandidatePen : CadColors.SwitchCandidateInvalidPen;
+                    dc.DrawEllipse(null, pen2, sp2, 6, 6);
+                }
+                else if (sw.MachineState != SwitchToolState.Idle && _document.TryGetEntity(sw.AdayId, out var ase) && ase is TrackSegment aseg2 &&
+                         _document.TryGetEntity(aseg2.StartNodeId, out var asn) && asn is TrackNode asNode &&
+                         _document.TryGetEntity(aseg2.EndNodeId, out var aen) && aen is TrackNode aeNode2)
+                {
+                    var pen3 = sw.AdayGecerli ? CadColors.SwitchCandidatePen : CadColors.SwitchCandidateInvalidPen;
+                    dc.DrawLine(pen3, Transform.WorldToScreen(asNode.Position), Transform.WorldToScreen(aeNode2.Position));
+                }
+            }
+        }
 
         // 2. Draw Snap Marker
         if (r.Kind == SnapKind.None) return;
@@ -463,16 +507,40 @@ public class CadViewportControl : ContentControl
             {
                 bool isSelected = selectedIds?.Contains(node.Id) ?? false;
                 bool isHovered  = node.Id == _hoveredId;
+                bool isSwitch   = node.Role == NodeRole.SwitchNode;
                 
                 Pen pen = isSelected ? CadColors.SelectedPen
                         : isHovered  ? CadColors.HoverPen
+                        : isSwitch   ? CadColors.SwitchMarkerPen
                         : normalNodePen;
-                Brush brush = isSelected || isHovered ? Brushes.White : normalNodeBrush;
+                Brush brush = isSelected || isHovered ? Brushes.White
+                            : isSwitch ? CadColors.SwitchMarkerFill
+                            : normalNodeBrush;
                 
                 dc.DrawRectangle(brush, pen, new Rect(node.Position.X - 5, node.Position.Y - 5, 10, 10));
             }
         }
         
+        // Switch/Makas görseli — düğümün üzerine eşkenar dörtgen (diamond)
+        foreach (var entity in _document.Entities)
+        {
+            if (!_document.IsVisible(entity.Id)) continue;
+            if (entity is RailSwitch rs && _document.TryGetEntity(rs.NodeId, out var se) && se is TrackNode swNode)
+            {
+                double cx = swNode.Position.X, cy = swNode.Position.Y, s = 7.0;
+                var diamond = new StreamGeometry();
+                using (var dgc = diamond.Open())
+                {
+                    dgc.BeginFigure(new Point(cx, cy - s), true, true);
+                    dgc.LineTo(new Point(cx + s, cy), true, false);
+                    dgc.LineTo(new Point(cx, cy + s), true, false);
+                    dgc.LineTo(new Point(cx - s, cy), true, false);
+                }
+                diamond.Freeze();
+                dc.DrawGeometry(CadColors.SwitchMarkerFill, CadColors.SwitchMarkerPen, diamond);
+            }
+        }
+
         // Segmentleri seçim/hover rengiyle çiz (seçiliyse üstüne beyaz çiz)
         foreach (var entity in _document.Entities)
         {

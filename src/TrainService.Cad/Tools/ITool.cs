@@ -38,3 +38,14 @@ public sealed record PreviewHybrid(
     System.Guid AdaySegmentId,
     bool AdayGecerli
 ) : PreviewShape;
+
+public enum SwitchToolState { Idle, NodeSelected, MainSelected, DivergingSelected }
+
+public sealed record PreviewSwitch(
+    System.Guid NodeId,
+    System.Guid? MainSegmentId,
+    System.Guid? DivergingSegmentId,
+    System.Guid AdayId,
+    bool AdayGecerli,
+    SwitchToolState MachineState
+) : PreviewShape;

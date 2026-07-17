@@ -137,5 +137,88 @@ Detay : İlk yazılan testlerdeki assertion hataları düzeltildi:
   - T269: step sayısı 3 → 2 (3 tık = 2 segment = 2 step)
 
 ═══════════════════════════════════════════════════════════════
+ SAPMA RAPORU — v3.0.26 SwitchTool
+ Tarih  : 2026-07-18
+ Hazırlayan: DeepSeek Reasoner
+═══════════════════════════════════════════════════════════════
+
+14) SwitchTool — 4 durumlu state machine (Idle→NodeSelected→MainSelected→DivergingSelected)
+───────────────────────────────────────────────────
+Dosya : src/TrainService.Cad/Tools/SwitchTool.cs (yeni)
+Sorun : İlk implementasyonda RailSwitch entity'si DomainEntities.cs'de zaten
+        vardı (NodeId, MainSegmentId, DivergingSegmentId, State). SwitchTool
+        bunu kullanarak 3 tıkla makas oluşturuyor: (1) düğüm seç → Endpoint snap,
+        (2) ana hat segmenti seç → OnSegment snap, (3) sapak segmenti seç →
+        otomatik commit. Her aşamada PreviewSwitch record'u ile önizleme.
+Düzeltme/Detay:
+  - ITool.cs'e PreviewSwitch record'u ve SwitchToolState enum'u eklendi.
+  - SetNodeRoleCommand: TrackNode.Role'u SwitchNode'a çeviren yeni command.
+    Execute'da eski role kaydedilir, Undo'da geri yüklenir.
+  - CompositeCadCommand: AddEntityCommand (RailSwitch) + SetNodeRoleCommand
+    tek undo adımında gruplanır.
+  - Koruma mekanizmaları:
+    a) Bayat entity: _committed flag + guard — commit sonrası tüm tıklar
+       reddedilir (ToolDeactivated zaten Activate'de resetler).
+    b) Aynı segment: Main ve Diverging aynı olamaz (segId != _mainSegId).
+    c) Az bağlantılı düğüm: TrackNode'un ConnectedSegments sayısı < 2 ise red.
+    d) Zaten SwitchNode: TrackNode.Role == SwitchNode ise red.
+  - Deactivate/Activate reset: Tool değişince state tamamen sıfırlanır.
+  - Escape: Her aşamada Idle'a döner, hiçbir entity eklenmez.
+
+15) T010 eşik güncellemesi: 106 → 116
+───────────────────────────────────────────────────
+Dosya : tests/TrainService.Architecture.Tests/T010_KapsamBekcisi.cs
+Gerekçe: v3.0.26 — T270 SwitchTool testleri eklendi (+10 test)
+        Cad.Tests: 106 → 116
+
+16) Yeni dosyalar (v3.0.26)
+───────────────────────────────────────────────────
+  [ÜRETIM]
+    src/TrainService.Cad/Tools/SwitchTool.cs           — Yeni (SwitchTool)
+    src/TrainService.Cad/UndoRedo/SetNodeRoleCommand.cs — Yeni (command)
+    src/TrainService.Cad/Tools/ITool.cs                 — Genişletildi (PreviewSwitch)
+
+  [TEST]
+    tests/TrainService.Cad.Tests/Tools/T270_SwitchToolTests.cs — Yeni (10 test)
+
+17) Geçici UI kısayolu — SwitchTool butonu + F8
+───────────────────────────────────────────────────
+Dosya : src/TrainService.App/Views/Pages/EditorView.xaml + EditorView.xaml.cs
+Gerekçe : Manuel test için SwitchTool'a erişim gerekliydi. Plan kapsamında
+          olmamasına rağmen (Bölüm 1 — WPF katmanına dokunmak yasak), test
+          edilebilirlik için geçici eklendi. v3.0.27'de kaldırılabilir veya
+          kalıcı hale getirilebilir.
+Değişiklikler:
+  - EditorView.xaml: Toolbar'a "Switch" butonu (CommandParameter="Switch",
+    Icon=BranchFork24, ToolTip="Makas (F8)")
+  - EditorView.xaml.cs PreviewKeyDown: Key.F8 → SetTool("Switch")
+  - EditorView.xaml.cs ToolChangeRequested: "Switch" → new SwitchTool()
+
+18) PreviewSwitch render eksikti — CadViewportControl.RenderToolLayer
+───────────────────────────────────────────────────
+Dosya  : src/TrainService.App/Controls/CadCanvas/CadViewportControl.cs
+         src/TrainService.App/Resources/CadColors.cs
+Sorun  : Plan PreviewSwitch rendering'ini kapsamıyordu (WPF katmanı
+         planda YOK'tu). Kullanıcı SwitchTool kullanırken hiçbir görsel
+         geri bildirim alamıyordu — ne seçili düğüm, ne aday segment.
+Düzeltme: CadColors'a 6 yeni renk eklendi (SwitchNodeFill, SwitchNodePen,
+         SwitchMainPen, SwitchDivergingPen, SwitchCandidatePen,
+         SwitchCandidateInvalidPen). CadViewportControl.RenderToolLayer'e
+         PreviewSwitch else-if bloğu eklendi. 4 aşamalı görsel döngü:
+         Idle→aday düğüm, NodeSelected→seçili düğüm+aday segment,
+         MainSelected→+Main segment, DivergingSelected→+Diverging.
+
+19) RailSwitch model render eksikti — RenderModelBake
+───────────────────────────────────────────────────
+Dosya  : src/TrainService.App/Controls/CadCanvas/CadViewportControl.cs
+Sorun  : RailSwitch entity'leri hiç render edilmiyordu. TrackNode'lar
+         Role=SwitchNode olsa bile sarı dikdörtgen olarak görünüyordu.
+         Kullanıcı "makas nesnesi oluştu" görmüyordu.
+Düzeltme: TrackNode render'ında node.Role == NodeRole.SwitchNode kontrolü
+         eklendi → magenta dolgulu kare ile SwitchNode düğümleri ayırt
+         ediliyor. RenderModelBake'e RailSwitch döngüsü eklendi → düğüm
+         üzerine eşkenar dörtgen (diamond) çiziliyor.
+
+═══════════════════════════════════════════════════════════════
  SAPMA RAPORU — SON
 ═══════════════════════════════════════════════════════════════

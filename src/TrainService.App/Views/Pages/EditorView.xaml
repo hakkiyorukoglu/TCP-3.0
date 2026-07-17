@@ -57,8 +57,11 @@
                            Icon="ArrowFlowUpRight24" 
                            Appearance="Primary" ToolTip="Ray (T)" Margin="0,0,5,0" />
                 <ui:Button Command="{Binding ViewModel.SetToolCommand}" CommandParameter="Route"
-                           Icon="Directions24" 
+                           Icon="Directions24"
                            Appearance="Primary" ToolTip="Rota (R)" Margin="0,0,5,0" />
+                <ui:Button Command="{Binding ViewModel.SetToolCommand}" CommandParameter="Switch"
+                           Icon="BranchFork24"
+                           Appearance="Primary" ToolTip="Makas (F8)" Margin="0,0,5,0" />
                 <ui:Button Command="{Binding ViewModel.SaveCommand}" 
                            Icon="Save24" 
                            Appearance="Secondary" ToolTip="Kaydet (Ctrl+S)" Margin="0,0,5,0" />

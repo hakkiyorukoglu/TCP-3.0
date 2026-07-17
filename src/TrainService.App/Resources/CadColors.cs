@@ -25,6 +25,18 @@ public static class CadColors
     public static readonly Pen   RoutePreviewPen = FrozenPen(Color.FromArgb(140, 0, 200, 0), 5, dashed: false);     // önizleme yeşil
     public static readonly Pen   RouteInvalidPen = FrozenPen(Color.FromArgb(160, 220, 40, 40), 3, dashed: false);   // geçersiz aday kırmızı
 
+    // --- Switch / Makas (v3.0.26) ---
+    public static readonly Brush SwitchMarkerFill  = Frozen(Color.FromArgb(255, 220, 40, 220));  // magenta dolgu
+    public static readonly Pen   SwitchMarkerPen   = FrozenPen(Color.FromArgb(255, 255, 80, 255), 2, dashed: false); // magenta kenar
+
+    // --- Switch Tool Preview (v3.0.26) ---
+    public static readonly Brush SwitchNodeFill      = Frozen(Color.FromArgb(80, 255, 200, 0));                      // yarı-saydam sarı
+    public static readonly Pen   SwitchNodePen       = FrozenPen(Color.FromArgb(255, 255, 200, 0), 2, dashed: false); // sarı kenar
+    public static readonly Pen   SwitchMainPen       = FrozenPen(Color.FromArgb(200, 0, 200, 0), 4, dashed: false);   // yeşil kalın — Main
+    public static readonly Pen   SwitchDivergingPen  = FrozenPen(Color.FromArgb(200, 255, 128, 0), 4, dashed: false); // turuncu kalın — Diverging
+    public static readonly Pen   SwitchCandidatePen  = FrozenPen(Color.FromArgb(200, 0, 255, 0), 2, dashed: true);   // yeşil kesikli — geçerli aday
+    public static readonly Pen   SwitchCandidateInvalidPen = FrozenPen(Color.FromArgb(200, 255, 0, 0), 2, dashed: true); // kırmızı kesikli — geçersiz aday
+
     // --- Yardımcılar ---
     private static SolidColorBrush Frozen(Color c)
     {

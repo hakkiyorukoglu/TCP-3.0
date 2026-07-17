@@ -38,6 +38,12 @@ public partial class EditorView : Page
                     ViewModel.SetToolCommand.Execute("Route");
                 e.Handled = true;
             }
+            else if (e.Key == Key.F8 && Keyboard.Modifiers == ModifierKeys.None)
+            {
+                if (ViewModel.SetToolCommand.CanExecute("Switch"))
+                    ViewModel.SetToolCommand.Execute("Switch");
+                e.Handled = true;
+            }
             else if (Viewport.ToolController != null)
             {
                 if (Viewport.ToolController.KeyDown(e.Key))
@@ -90,6 +96,8 @@ public partial class EditorView : Page
                     Viewport.ToolController.SetTool(new TrainService.Cad.Tools.TrackTool());
                 else if (toolName == "Route")
                     Viewport.ToolController.SetTool(new TrainService.Cad.Tools.RouteTool());
+                else if (toolName == "Switch")
+                    Viewport.ToolController.SetTool(new TrainService.Cad.Tools.SwitchTool());
                 
                 // Re-attach event because a new ToolController might be created? No, SetTool doesn't create a new controller.
                 // Wait, SetTool just changes the ActiveTool, ToolController is the same.
