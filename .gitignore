@@ -65,3 +65,5 @@ designtime_migrations.db
 # Tools-level test artifacts
 /tools/T010_*.txt
 /tools/RAPOR_T010_ISPAT.txt
+"test-output.txt"  
+"tests/TestResults/"  
