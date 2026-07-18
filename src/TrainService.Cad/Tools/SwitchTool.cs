@@ -9,7 +9,7 @@ using TrainService.Core.Geometry;
 namespace TrainService.Cad.Tools;
 
 /// <summary>
-/// SwitchTool — 1 tıkla prefab Switch yerleştirme aracı.
+/// SwitchTool — 1 tıkla prefab RailSwitch yerleştirme aracı.
 /// Her sol tık, bulunulan pozisyona bir RailSwitch + 3 TrackNode (Entry/MainExit/DivergingExit)
 /// oluşturur. Tümü tek CompositeCadCommand ile undo/redo yapılır.
 /// Escape: preview'i gizler. Activate/Deactivate: preview sıfırlanır.
@@ -45,7 +45,7 @@ public sealed class SwitchTool : ITool
         double rot = 0;
         var activeLayer = ctx.Document.ActiveLayerId;
 
-        // 1. Üç TrackNode oluştur (önce node'lar, sonra switch — undo sırası önemli)
+        // 1. Üç TrackNode oluştur
         var entryNode = new TrackNode
         {
             Position = SwitchDefaults.EntryOffset(rot) + pos,
@@ -53,14 +53,14 @@ public sealed class SwitchTool : ITool
             Role = NodeRole.Plain,
             LayerId = activeLayer
         };
-        var mainNode = new TrackNode
+        var mainExitNode = new TrackNode
         {
             Position = SwitchDefaults.MainExitOffset(rot) + pos,
             Z = 0,
             Role = NodeRole.Plain,
             LayerId = activeLayer
         };
-        var divNode = new TrackNode
+        var divergingExitNode = new TrackNode
         {
             Position = SwitchDefaults.DivergingExitOffset(rot) + pos,
             Z = 0,
@@ -74,18 +74,18 @@ public sealed class SwitchTool : ITool
             Position = pos,
             RotationDeg = rot,
             EntryNodeId = entryNode.Id,
-            MainExitNodeId = mainNode.Id,
-            DivergingExitNodeId = divNode.Id,
+            MainExitNodeId = mainExitNode.Id,
+            DivergingExitNodeId = divergingExitNode.Id,
             State = SwitchState.Main,
             LayerId = activeLayer
         };
 
-        // 3. CompositeCadCommand — tek undo adımı
+        // 3. CompositeCadCommand — tek undo adımı (4 entity)
         var cmds = new List<ICadCommand>
         {
             new AddEntityCommand(entryNode),
-            new AddEntityCommand(mainNode),
-            new AddEntityCommand(divNode),
+            new AddEntityCommand(mainExitNode),
+            new AddEntityCommand(divergingExitNode),
             new AddEntityCommand(railSwitch)
         };
         var composite = new CompositeCadCommand("Makas Yerleştir", cmds);

@@ -325,3 +325,4 @@ Gerekçe: v3.0.26 — T280 TrackGraphSwitchTests (+7) + T280 RampToolTests (+9)
 
 ---
 28 | v3.0.26 roadmap revise | RampTool | Roadmap hy.md de v3.0.26 tanimi SwitchTool dan RampTool a guncellendi; eski v3.0.27 Rampa icerigi v3.0.26 ya tasindi, SwitchTool v3.0.27 ye kaydirildi.
+29 | v3.0.27 SwitchTool | 1-click prefab | SwitchTool.cs ve SwitchDefaults.cs yeni olusturuldu; 9 test (T296-T304) eklendi; T010 esik 125->134; tum testler yesil (134/134); M1-M7 manuel test basarili. Sapma yok, planla birebir uyumlu.

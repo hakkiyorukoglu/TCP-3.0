@@ -47,12 +47,19 @@ dotnet run --project src/TrainService.App/TrainService.App.csproj
 
 ## 📝 Sürüm Geçmişi (Changelog)
 
-- **v3.0.26 REVIZE**: `SwitchTool` (Makas Prefab Yerleştirme) — segment-based tasarım tamamen kaldırıldı, **prefab object** modeline geçildi. Makas artık tek tıkla editöre yerleşen bir nesnedir:
-  - **Prefab model**: `RailSwitch` entity'si `Position`/`RotationDeg` ile konumlanır ve kendine ait 3 port `TrackNode`'u (Entry, MainExit, DivergingExit) barındırır. `TrackTool` bu portlara segment bağlar.
-  - **Tek tık yerleştirme**: `SwitchTool` tek durumlu (Idle) makinedir. Her tık: (a) snap noktasında 3 port pozisyonu hesaplar (`SwitchDefaults` geometrisi: 80mm uzunluk, 25° sapma açısı), (b) 3 `TrackNode` + 1 `RailSwitch` oluşturur, (c) `CompositeCadCommand` ile tek Ctrl+Z'de gruplar.
-  - **`PreviewSwitchPlace`**: Y-şekilli önizleme — Entry-MainExit arası yeşil çizgi, Entry-DivergingExit arası turuncu çizgi, 3 ghost daire.
-  - **Eski kod tamamen silindi**: `SetNodeRoleCommand.cs`, eski `SwitchTool.cs` (segment-based), `PreviewSwitch`, `SwitchToolState` enum. Port TrackNode'ları `Plain` rolündedir.
-  - **10 test (T270-T279)**: Prefab yerleştirme, port pozisyonları, entity alanları, composite undo, reentrant placement. 116/116 Cad.Tests yeşil. (Data.Tests'te `RailSwitch.Position` Vector2D mapping hatası önceden bilinen ve bu sürüm kapsamı dışındaki EF Core yapılandırma eksikliğidir.)
+- **v3.0.27**: `SwitchTool` (Makas Prefab Yerleştirme) — 1 tıkla prefab RailSwitch yerleştirme aracı.
+  - **`SwitchDefaults.cs`**: Geometri sabitleri (LengthMm=80, DivergingAngleDeg=30°) ve 3 port offset hesaplamaları (Entry/MainExit/DivergingExit).
+  - **`SwitchTool.cs`**: RampTool deseninde 1-click prefab — OnPointerMove'da `PreviewSwitchPlace` (Y-şekilli ghost), OnPointerDown'da 3 `TrackNode` + 1 `RailSwitch` oluşturur, `CompositeCadCommand` ile tek Ctrl+Z.
+  - **9 test (T296-T304)**: Preview, entity sayısı, port pozisyonları (30° diverging açısı doğrulaması), RailSwitch properties (State=Main, 3 farklı port ID), tek undo, Escape gizleme, sağ tık yoksayma, selection. 134/134 Cad.Tests yeşil.
+  - **M1-M7 manuel test**: F8/toolbar seçimi, Y-şekilli ghost, sol tık+entity oluşumu, segment bağlama, Ctrl+Z/Y, Escape — tümü başarılı.
+
+- **v3.0.26**: `RampTool` (Rampa Prefab Yerleştirme) — 1 tıkla prefab Ramp (yokuş) yerleştirme aracı.
+  - **`RampDefaults.cs`**: Geometri sabitleri (LengthMm=100, MaxGradePercent=15, DefaultStartZ=0, DefaultEndZ=350).
+  - **`RampTool.cs`**: 1-click prefab — 2 `TrackNode` (Entry/Exit) + 1 `Ramp` oluşturur, `CompositeCadCommand` ile tek Ctrl+Z.
+  - **`RailSwitch` entity altyapısı**: DomainEntities'e eklendi (Position/RotationDeg/3 port ID/State/BoundServoDeviceId). `TrackGraph` switch metodları (Build overload, IsSwitchPort, GetSwitchState, GetSwitchForPort) tamamlandı.
+  - **Render altyapısı**: `CadColors` (SwitchMarkerFill/Pen, SwitchMainPen, SwitchDivergingPen), `CadViewportControl` (PreviewSwitchPlace Y-şekilli ghost, RailSwitch diamond marker, SwitchNode highlight) — SwitchTool için hazır.
+  - **UI bağlantısı**: EditorView.xaml (BranchFork24 toolbar butonu + F8 shortcut) ve EditorView.xaml.cs (SwitchTool() instantiation) — SwitchTool.cs olmadan derlenemezdi, artık v3.0.27'de eklendi.
+  - **9 test (T287-T295)**: RampTool davranışı. 125/125 Cad.Tests.
 
 - **v3.0.25**: `HybridTool` (Eşzamanlı Ray+Hat) tam implementasyonu tamamlandı. TrackTool ve RouteTool davranışlarını birleştiren hibrit araç: sol tık ile segment üstünde chaining başlatır, her tık bir `TrackNode` + `TrackSegment` + `RouteStep` üretir. `PreviewHybrid` record'u ile hem çizgi (From/To/SegmentGecerli) hem rota (Steps/AdaySegmentId/AdayGecerli) önizlemesi tek seferde render edilir. Commit anında tüm oluşturulan entity'ler tek `CompositeCadCommand` içinde sarılır — tek Ctrl+Z ile geri alınır. Bayat graf koruması (`_tiklananSegmentIds` ile doc entity varlık denetimi), segmente komşu olmayan aday reddi, Escape ile iptal. 10 test (T260-T269) ile kapsama alındı; 187/187 tüm çözüm yeşil.
 
