@@ -46,3 +46,10 @@ public sealed record PreviewSwitchPlace(
     Vector2D MainExitPos,
     Vector2D DivergingExitPos
 ) : PreviewShape;
+
+public sealed record PreviewRampPlace(
+    Vector2D Position,
+    double RotationDeg,
+    Vector2D EntryPos,
+    Vector2D ExitPos
+) : PreviewShape;

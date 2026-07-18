@@ -21,6 +21,10 @@ public sealed class TrackGraph
     public IReadOnlyDictionary<Guid, TrackNode> Nodes => _nodes;
     public IReadOnlyDictionary<Guid, TrackSegment> Segments => _segments;
 
+    private readonly Dictionary<Guid, RailSwitch> _switches = new();
+    // Port düğüm Id -> ait olduğu RailSwitch Id
+    private readonly Dictionary<Guid, Guid> _switchPorts = new();
+
     private TrackGraph() { }
 
     /// <summary>Düğüm ve segmentlerden graf kurar. O(N+M). Tekrar çağrılırsa yeni graf döner (immutable kullanım).</summary>
@@ -42,6 +46,49 @@ public sealed class TrackGraph
         }
         return g;
     }
+
+    /// <summary>Düğüm, segment ve switch'lerden graf kurar. Switch port düğümleri switchPorts sözlüğüne kaydedilir.</summary>
+    public static TrackGraph Build(IEnumerable<TrackNode> nodes, IEnumerable<TrackSegment> segments, IEnumerable<RailSwitch> switches)
+    {
+        var g = Build(nodes, segments);
+        foreach (var sw in switches)
+        {
+            g._switches[sw.Id] = sw;
+            g._switchPorts[sw.EntryNodeId] = sw.Id;
+            g._switchPorts[sw.MainExitNodeId] = sw.Id;
+            g._switchPorts[sw.DivergingExitNodeId] = sw.Id;
+        }
+        return g;
+    }
+
+    /// <summary>Bu düğüm bir switch'in portu mu?</summary>
+    public bool IsSwitchPort(Guid nodeId) => _switchPorts.ContainsKey(nodeId);
+
+    /// <summary>
+    /// Bu porta ait switch State'ini döndürür. Port değilse null.
+    /// - Entry port: switch'in o anki State'ini yansıtır (Main/Diverging).
+    /// - MainExit port: her zaman SwitchState.Main döner.
+    /// - DivergingExit port: her zaman SwitchState.Diverging döner.
+    /// </summary>
+    public SwitchState? GetSwitchState(Guid nodeId)
+    {
+        if (!_switchPorts.TryGetValue(nodeId, out var swId)) return null;
+        if (!_switches.TryGetValue(swId, out var sw)) return null;
+        if (nodeId == sw.EntryNodeId) return sw.State;
+        if (nodeId == sw.MainExitNodeId) return SwitchState.Main;
+        if (nodeId == sw.DivergingExitNodeId) return SwitchState.Diverging;
+        return null;
+    }
+
+    /// <summary>Bu porta ait RailSwitch entity'sini döndürür. Port değilse veya switch yoksa null.</summary>
+    public RailSwitch? GetSwitchForPort(Guid nodeId)
+    {
+        if (!_switchPorts.TryGetValue(nodeId, out var swId)) return null;
+        return _switches.TryGetValue(swId, out var sw) ? sw : null;
+    }
+
+    /// <summary>Tüm switch'lerin salt-okunur görünümü.</summary>
+    public IReadOnlyDictionary<Guid, RailSwitch> Switches => _switches;
 
     /// <summary>Bir düğüme bağlı segmentlerin Id'leri. Düğüm yoksa BOŞ (exception değil).</summary>
     public IReadOnlyList<Guid> GetAdjacentSegments(Guid nodeId)

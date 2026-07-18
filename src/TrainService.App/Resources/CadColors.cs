@@ -34,6 +34,16 @@ public static class CadColors
     public static readonly Pen   SwitchNodePen       = FrozenPen(Color.FromArgb(255, 255, 200, 0), 2, dashed: false); // sarı kenar
     public static readonly Pen   SwitchMainPen       = FrozenPen(Color.FromArgb(200, 0, 200, 0), 4, dashed: false);   // yeşil kalın — Main
     public static readonly Pen   SwitchDivergingPen  = FrozenPen(Color.FromArgb(200, 255, 128, 0), 4, dashed: false); // turuncu kalın — Diverging
+
+    // --- Ramp (v3.0.26-fix) ---
+    public static readonly Brush RampMarkerFill  = Frozen(Color.FromArgb(255, 255, 140, 0));  // turuncu dolgu
+    public static readonly Pen   RampMarkerPen   = FrozenPen(Color.FromArgb(255, 255, 180, 60), 2, dashed: false); // turuncu kenar
+
+    // --- Ramp Tool Preview (v3.0.26-fix) ---
+    public static readonly Brush RampNodeFill      = Frozen(Color.FromArgb(80, 255, 180, 60));                      // yarı-saydam turuncu
+    public static readonly Pen   RampNodePen       = FrozenPen(Color.FromArgb(255, 255, 180, 60), 2, dashed: false); // turuncu kenar
+    public static readonly Pen   RampLinePen       = FrozenPen(Color.FromArgb(200, 255, 140, 0), 4, dashed: false);  // turuncu kalın — ramp hattı
+
     // --- Yardımcılar ---
     private static SolidColorBrush Frozen(Color c)
     {

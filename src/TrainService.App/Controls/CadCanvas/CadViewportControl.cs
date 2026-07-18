@@ -387,6 +387,18 @@ public class CadViewportControl : ContentControl
             dc.DrawEllipse(CadColors.SwitchNodeFill, CadColors.SwitchNodePen, mainPt, 4, 4);
             dc.DrawEllipse(CadColors.SwitchNodeFill, CadColors.SwitchNodePen, divPt, 4, 4);
         }
+        else if (ToolController?.ActiveTool?.Preview is PreviewRampPlace rp)
+        {
+            var entryPt = Transform.WorldToScreen(rp.EntryPos);
+            var exitPt = Transform.WorldToScreen(rp.ExitPos);
+
+            // Line preview: entry→exit (orange)
+            dc.DrawLine(CadColors.RampLinePen, entryPt, exitPt);
+
+            // 2 ghost port circles
+            dc.DrawEllipse(CadColors.RampNodeFill, CadColors.RampNodePen, entryPt, 4, 4);
+            dc.DrawEllipse(CadColors.RampNodeFill, CadColors.RampNodePen, exitPt, 4, 4);
+        }
 
         // 2. Draw Snap Marker
         if (r.Kind == SnapKind.None) return;
@@ -510,6 +522,19 @@ public class CadViewportControl : ContentControl
                 }
                 diamond.Freeze();
                 dc.DrawGeometry(CadColors.SwitchMarkerFill, CadColors.SwitchMarkerPen, diamond);
+            }
+        }
+
+        // Ramp prefab görseli — merkezde yatay dikdörtgen
+        foreach (var entity in _document.Entities)
+        {
+            if (!_document.IsVisible(entity.Id)) continue;
+            if (entity is Ramp rmp)
+            {
+                double cx = rmp.Position.X, cy = rmp.Position.Y;
+                double halfW = 10.0, halfH = 5.0;
+                var rect = new Rect(cx - halfW, cy - halfH, halfW * 2, halfH * 2);
+                dc.DrawRectangle(CadColors.RampMarkerFill, CadColors.RampMarkerPen, rect);
             }
         }
 

@@ -1,8 +1,8 @@
 $ErrorActionPreference = "Continue"
 $out = Join-Path ([Environment]::GetFolderPath("Desktop")) "RAPOR_MUHUR_v3026.txt"
-"=== v3.0.26 MUHUR RAPORU (SwitchTool) - $($(Get-Date -Format 'yyyy-MM-dd HH:mm')) ===" | Out-File $out -Encoding utf8
+"=== v3.0.26 MUHUR RAPORU (SwitchTool + RampTool) - $($(Get-Date -Format 'yyyy-MM-dd HH:mm')) ===" | Out-File $out -Encoding utf8
 function B($t,$s){ "
- ########## $t ##########"|Out-File $out -Append -Encoding utf8; & $s 2>&1|Out-File $out -Append -Encoding utf8 }
+########## $t ##########"|Out-File $out -Append -Encoding utf8; & $s 2>&1|Out-File $out -Append -Encoding utf8 }
 
 B "1. DOLGU TARAMASI (beklenen: 0 eslesme)" {
   Get-ChildItem -Recurse tests -Include *.cs | Select-String -Pattern "Assert\.True\(true\)","Assert\.Equal\(1,\s*1\)","dummy1\s*\+\s*dummy2","Assert\.Equal\(3,"
@@ -19,22 +19,25 @@ B "3. BEKCI ISPATI: T010 kapsam (YESIL beklenir)" {
 B "4. TAM KOSUM (Release)" {
   dotnet test TrainService.sln -c Release --logger "console;verbosity=normal" --nologo }
 
-B "5. KIMLIKLI TEST GOVDELERI (T270-T279 SwitchTool)" {
-  Get-Content tests/TrainService.Cad.Tests/Tools/T270_SwitchToolTests.cs -EA SilentlyContinue }
+B "5. KIMLIKLI TEST GOVDELERI (T280-T286 TrackGraphSwitch)" {
+  Get-Content tests/TrainService.Core.Tests/T280_TrackGraphSwitchTests.cs -EA SilentlyContinue }
 
-B "6. SwitchTool KAYNAK KODU + SwitchDefaults" {
-  "=== SwitchTool.cs ==="
-  Get-Content src/TrainService.Cad/Tools/SwitchTool.cs -EA SilentlyContinue
-  "`n=== SwitchDefaults.cs ==="
-  Get-Content src/TrainService.Cad/SwitchDefaults.cs -EA SilentlyContinue }
+B "6. KIMLIKLI TEST GOVDELERI (T287-T295 RampTool)" {
+  Get-Content tests/TrainService.Cad.Tests/Tools/T280_RampToolTests.cs -EA SilentlyContinue }
 
-B "7. PreviewSwitchPlace record (ITool.cs)" {
-  Get-Content src/TrainService.Cad/Tools/ITool.cs -EA SilentlyContinue | Select-String "PreviewSwitchPlace" -Context 20,0 }
+B "7. TrackGraph KAYNAK KODU (switch metodlari)" {
+  Get-Content src/TrainService.Core/Topology/TrackGraph.cs -EA SilentlyContinue }
 
-B "8. TEST SAYILARI (proje bazinda)" {
+B "8. RampTool KAYNAK KODU" {
+  Get-Content src/TrainService.Cad/Tools/RampTool.cs -EA SilentlyContinue }
+
+B "9. RampDefaults KAYNAK KODU" {
+  Get-Content src/TrainService.Cad/RampDefaults.cs -EA SilentlyContinue }
+
+B "10. TEST SAYILARI (proje bazinda)" {
   dotnet test TrainService.sln -c Release --nologo | Select-String "Passed|Failed|Total tests" }
 
-B "9. SAPMA BEYANI (v3.0.26)" {
+B "11. SAPMA BEYANI (v3.0.26)" {
   Get-Content tools/sapma.txt -EA SilentlyContinue | Select-String "v3.0.26" -Context 0,20 }
 
 "

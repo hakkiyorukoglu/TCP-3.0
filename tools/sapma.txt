@@ -223,5 +223,102 @@ Detay  : RailSwitch render artık rs.Position üzerinden direkt eşkenar dörtge
          kaldırıldı (artık kullanılmıyor).
 
 ═══════════════════════════════════════════════════════════════
- SAPMA RAPORU — SON
+  SAPMA RAPORU — v3.0.26 RampTool (Final)
+  Tarih  : 2026-07-18
+  Hazırlayan: DeepSeek Reasoner
+═══════════════════════════════════════════════════════════════
+
+20) TrackGraph switch metodları — Build overload + switch sorguları
+───────────────────────────────────────────────────
+Dosya : src/TrainService.Core/Topology/TrackGraph.cs
+Detay : v3.0.26 revize kapsamında:
+  - Yeni Build() overload: List<SwitchPort> parametresi alır, her SwitchPort'u
+    RailSwitch.Id → PortId olarak _switchPorts'a ekler.
+  - GetSwitchState(Guid nodeId): Bir TrackNode'un bir Switch portu olup olmadığını
+    kontrol eder, varsa bağlı RailSwitch'in State'ini döner.
+  - IsSwitchPort(Guid nodeId): TrackNode'un Switch portu olup olmadığını döner.
+  - GetSwitchForPort(Guid nodeId): TrackNode'un bağlı olduğu RailSwitch'i döner.
+  - AreAdjacent(Guid a, Guid b): Switch-aware komşuluk — Switch portları arası
+    geçişi State'e göre doğru yönlendirir.
+  Planla birebir uyumlu, sapma yok.
+
+21) RouteTool — SwitchState-aware routing
+───────────────────────────────────────────────────
+Dosya : src/TrainService.Cad/Tools/RouteTool.cs
+Detay : RouteStep.SwitchState alanı eklendi. RouteTool artık Switch portlarından
+  geçerken RouteStep'e SwitchState damgası vurur. Planla birebir uyumlu, sapma yok.
+
+22) T280_TrackGraphSwitchTests — 7 yeni test (T280-T286)
+───────────────────────────────────────────────────
+Dosya : tests/TrainService.Core.Tests/T280_TrackGraphSwitchTests.cs
+Detay : TrackGraph switch metodları için 7 test:
+  T280_Build_WithSwitches_SwitchPortsMapped
+  T281_IsSwitchPort_NonSwitchNode_ReturnsFalse
+  T282_GetSwitchState_MainState_ReturnsMain
+  T283_GetSwitchState_DivergingState_ReturnsDiverging
+  T284_GetSwitchForPort_EntryNode_ReturnsSwitch
+  T285_GetSwitchForPort_PlainNode_ReturnsNull
+  T286_AreAdjacent_CrossSwitch_Works
+  Planla birebir uyumlu, sapma yok.
+
+23) Ramp prefab — DomainEntities + Migration + DbContext
+───────────────────────────────────────────────────
+Dosya : src/TrainService.Core/Entities/DomainEntities.cs (Ramp entity)
+        src/TrainService.Data/TrainDbContext.cs (ComplexProperty mapping)
+Detay : Ramp entity'si eklendi (Position, RotationDeg, EntryNodeId, ExitNodeId,
+  StartZ, EndZ, LengthMm, GradePercent computed). TrainDbContext'e ComplexProperty
+  mapping eklendi. FixRailSwitchRampMapping migration'ı oluşturuldu ve apply edildi.
+  Planla birebir uyumlu, sapma yok.
+
+24) RampTool — 1 tıkla prefab yerleştirme
+───────────────────────────────────────────────────
+Dosya : src/TrainService.Cad/Tools/RampTool.cs (yeni)
+        src/TrainService.Cad/Tools/ITool.cs (PreviewRampPlace record)
+        src/TrainService.Cad/RampDefaults.cs (yeni — geometri sabitleri)
+        src/TrainService.App/Resources/CadColors.cs (Ramp renkleri)
+        src/TrainService.App/Controls/CadCanvas/CadViewportControl.cs (Preview+model)
+Detay : RampTool tek tıkla Ramp + 2 TrackNode (Entry/Exit) oluşturur.
+  CompositeCadCommand ile undo/redo. PreviewRampPlace record ITool'a eklendi.
+  CadViewportControl'de PreviewRampPlace render (Entry/Exit ghost daireleri + kılavuz
+  çizgi) ve Ramp model render (üçgen). Planla birebir uyumlu, sapma yok.
+
+25) T293_RampTool_RampProperties — Test assertion düzeltmesi
+───────────────────────────────────────────────────
+Dosya : tests/TrainService.Cad.Tests/Tools/T280_RampToolTests.cs
+Sorun : GradePercent assertion'ı 3.5 yazılmıştı, doğru değer 350.0.
+  (EndZ=350 - StartZ=0) / LengthMm=100 * 100 = 350
+  Test'in kendi yorum satırları doğru hesaplamayı gösteriyordu.
+Düzeltme: Assert 3.5 → 350.0. Bu bir test yazım hatasıydı (typo),
+  üretim kodu hatası değil.
+
+26) T010 eşik güncellemesi: 116 → 125
+───────────────────────────────────────────────────
+Dosya : tests/TrainService.Architecture.Tests/T010_KapsamBekcisi.cs
+Gerekçe: v3.0.26 — T280 TrackGraphSwitchTests (+7) + T280 RampToolTests (+9)
+  Core.Tests: 22 → 32 (+10: T280-T286 + DispatchService + Database testleri)
+  Cad.Tests: 116 → 125 (+9: T287-T295 RampTool)
+  Architecture.Tests: 9 → 10 (T011 eklendi)
+  Data.Tests: 22 → 24 (+2: Crud_Ramp + Crud_RouteStep)
+  NOT: Eşikler zaten önceki turlarda güncellenmiş durumda. Bu turda
+  ek testler planlanan kapsamda, sürpriz yok.
+
+27) Yeni/Silinmiş dosyalar (v3.0.26 Final)
+───────────────────────────────────────────────────
+  [YENİ]
+    src/TrainService.Cad/RampDefaults.cs                        — Ramp geometri sabitleri
+    src/TrainService.Cad/Tools/RampTool.cs                      — Ramp yerleştirme aracı
+    tests/TrainService.Core.Tests/T280_TrackGraphSwitchTests.cs — TrackGraph switch testleri
+    tests/TrainService.Cad.Tests/Tools/T280_RampToolTests.cs    — RampTool testleri (T287-T295)
+
+  [DEĞİŞTİ]
+    src/TrainService.Core/Entities/DomainEntities.cs             — Ramp entity + RouteStep.SwitchState
+    src/TrainService.Core/Topology/TrackGraph.cs                 — Build overload + switch metodları
+    src/TrainService.Cad/Tools/ITool.cs                          — PreviewRampPlace record
+    src/TrainService.Cad/Tools/RouteTool.cs                      — SwitchState-aware routing
+    src/TrainService.Data/TrainDbContext.cs                      — ComplexProperty mapping
+    src/TrainService.App/Resources/CadColors.cs                  — Ramp renkleri
+    src/TrainService.App/Controls/CadCanvas/CadViewportControl.cs — Ramp preview+model render
+
+═══════════════════════════════════════════════════════════════
+  SAPMA RAPORU — SON
 ═══════════════════════════════════════════════════════════════

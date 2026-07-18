@@ -32,6 +32,8 @@ public class TrainDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TrackNode>().ComplexProperty(e => e.Position);
+        modelBuilder.Entity<RailSwitch>().ComplexProperty(e => e.Position);
+        modelBuilder.Entity<Ramp>().ComplexProperty(e => e.Position);
 
         modelBuilder.Entity<Route>()
             .Ignore(r => r.CachedBounds)

@@ -31,7 +31,7 @@ public sealed class TrackSegment : CadEntity
     public double LengthMm { get; set; }
 }
 
-public sealed record RouteStep(Guid SegmentId, TravelDirection Direction);
+public sealed record RouteStep(Guid SegmentId, TravelDirection Direction, SwitchState? SwitchState = null);
 
 public sealed class Route : CadEntity
 {
@@ -55,6 +55,10 @@ public sealed class RailSwitch : CadEntity
 public sealed class Ramp : CadEntity
 {
     public Guid SegmentId { get; set; }
+    public Vector2D Position { get; set; }
+    public double RotationDeg { get; set; }
+    public Guid EntryNodeId { get; set; }
+    public Guid ExitNodeId { get; set; }
     public double StartZ { get; set; }
     public double EndZ { get; set; }
     public double LengthMm { get; set; }

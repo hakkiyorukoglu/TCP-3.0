@@ -27,7 +27,8 @@ public sealed class RouteTool : ITool
         Preview = null;
         // Graf hızlı-yol için kurulur (K3); commit'te güncel dokümana karşı yeniden doğrulanır.
         _graf = TrackGraph.Build(ctx.Document.Entities.OfType<TrackNode>(),
-                                 ctx.Document.Entities.OfType<TrackSegment>());
+                                 ctx.Document.Entities.OfType<TrackSegment>(),
+                                 ctx.Document.Entities.OfType<RailSwitch>());
     }
 
     public void Deactivate(ToolContext ctx)
@@ -89,8 +90,14 @@ public sealed class RouteTool : ITool
                 _adimlar[0] = duzeltilmis;
             }
             // Yeni adımın GİRİŞİ ortak düğüm: StartNode girişse Forward, EndNode girişse Backward.
+            // Ortak düğüm bir switch portu mu? → SwitchState ata
+            SwitchState? swState = null;
+            if (_graf!.IsSwitchPort(ortak))
+                swState = _graf.GetSwitchState(ortak);
+
             _adimlar.Add(new RouteStep(seg.Id,
-                seg.StartNodeId == ortak ? TravelDirection.Forward : TravelDirection.Backward));
+                seg.StartNodeId == ortak ? TravelDirection.Forward : TravelDirection.Backward,
+                swState));
         }
         Preview = new PreviewRoute(_adimlar, Guid.Empty, false);
     }
@@ -118,7 +125,8 @@ public sealed class RouteTool : ITool
         if (_adimlar.Count == 0) return; // K5: boş rota yok
         // ★ K3/DÜZELTME 3: GÜNCEL dokümana karşı doğrula (bayat graf koruması):
         var guncelGraf = TrackGraph.Build(ctx.Document.Entities.OfType<TrackNode>(),
-                                          ctx.Document.Entities.OfType<TrackSegment>());
+                                          ctx.Document.Entities.OfType<TrackSegment>(),
+                                          ctx.Document.Entities.OfType<RailSwitch>());
         var rota = new Route { LayerId = ctx.Document.ActiveLayerId };
         rota.Steps.AddRange(_adimlar);
         if (!guncelGraf.ValidateRoute(rota))
