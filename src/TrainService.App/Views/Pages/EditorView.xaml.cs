@@ -92,6 +92,7 @@ public partial class EditorView : Page
             var ctx = new TrainService.Cad.Tools.ToolContext(ViewModel.Document, ViewModel.CommandStack, ViewModel.SelectionService) { Clipboard = ViewModel.ClipboardService };
             var initialTool = new TrainService.Cad.Tools.SelectTool();
             Viewport.ToolController = new TrainService.App.Controls.CadCanvas.ToolController(ctx, ViewModel.SnapEngine, Viewport.Transform, initialTool) { Clipboard = ViewModel.ClipboardService };
+            Viewport.CommandStack = ViewModel.CommandStack;
 
             Viewport.ToolController.LayerStatusChanged += (msg) =>
             {

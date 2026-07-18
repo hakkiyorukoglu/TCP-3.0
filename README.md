@@ -47,6 +47,13 @@ dotnet run --project src/TrainService.App/TrainService.App.csproj
 
 ## 📝 Sürüm Geçmişi (Changelog)
 
+- **v3.0.29**: `RadialMenu` (Sağ Tık Radyal Menü) — Bağlama duyarlı dairesel menü.
+  - **`RadialMenuItem.cs`**: Immutable record — Label, IconGlyph, Command (Action), IsEnabled.
+  - **`RadialMenuControl.xaml/cs`**: WPF Popup + Canvas tabanlı dairesel menü — 8 dilim (45°), hover vurgulama, tıkla komut çalıştırma. Menü yarıçapı 120px, iç boşluk 30px.
+  - **`CadViewportControl.cs`**: `BuildRadialMenuItems()` — hit-test ile entity tespiti, entity varsa (Seç/Yakınlaştır/Sil/türe özel), yoksa (Seç Pencere/Ray Çiz/Rota Çiz/Makas Yerleştir). `OnMouseDown` sağ tık yakalama. `CommandStack` property ile silme işlemi.
+  - **`EditorView.xaml.cs`**: `Viewport.CommandStack = ViewModel.CommandStack` bağlantısı.
+  - **10 test (T320-T329)**: RadialMenuItem varsayılanları, IsEnabled, Command çalıştırma, çoklu öğe, boş liste, null Command, record eşitliği, farklı ikonlar, sıralı çalıştırma, devre dışı komut çağrılmama. 234/234 tüm çözüm yeşil (Cad.Tests 144, App.Tests 10).
+
 - **v3.0.28**: `FeatureTree` (Öğe Ağacı Paneli) — CAD belgesindeki tüm entity'leri hiyerarşik ağaç görünümünde listeleyen sol panel.
   - **`FeatureTreeItem.cs`**: INotifyPropertyChanged model — Name, Icon, EntityId, EntityType, IsVisible, IsLocked, IsSelected, IsExpanded, Children (ObservableCollection), Parent, DoubleClickCommand.
   - **`FeatureTreeViewModel.cs`**: MVVM ViewModel — CadDocument + SelectionService bağımlılığı, çift yönlü seçim senkronizasyonu (tuval↔ağaç), ZoomToEntity event, RelayCommand<T> (WPF bağımlılığı yok).

@@ -8,13 +8,12 @@ namespace TrainService.Architecture.Tests;
 
 public class T010_KapsamBekcisi
 {
-    [Fact]
-    public void T010_TestSayisi_TabanAltinaDusemez()
+    private static int CountTests(string assemblyName)
     {
-        int cadTests = Assembly.Load("TrainService.Cad.Tests")
+        return Assembly.Load(assemblyName)
             .GetTypes()
             .SelectMany(t => t.GetMethods())
-            .Sum(m => 
+            .Sum(m =>
             {
                 var attrs = m.GetCustomAttributes();
                 if (attrs.Any(a => a.GetType().Name == "FactAttribute")) return 1;
@@ -25,7 +24,15 @@ public class T010_KapsamBekcisi
                 }
                 return 0;
             });
+    }
 
-        cadTests.Should().BeGreaterThanOrEqualTo(144, "Cad.Tests tabanı 144'e çıkarıldı (v3.0.28 — T310 FeatureTree testleri eklendi)");
+    [Fact]
+    public void T010_TestSayisi_TabanAltinaDusemez()
+    {
+        int cadTests = CountTests("TrainService.Cad.Tests");
+        int appTests = CountTests("TrainService.App.Tests");
+
+        cadTests.Should().BeGreaterThanOrEqualTo(144, "Cad.Tests tabanı 144 (v3.0.28 — T310 FeatureTree testleri)");
+        appTests.Should().BeGreaterThanOrEqualTo(10, "App.Tests tabanı 10 (v3.0.29 — T320 RadialMenu testleri)");
     }
 }

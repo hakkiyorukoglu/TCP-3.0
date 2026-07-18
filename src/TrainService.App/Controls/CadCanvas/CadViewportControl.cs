@@ -14,6 +14,7 @@ using TrainService.Cad.Snapping;
 using TrainService.Cad.Selection;
 using TrainService.Cad.Tools;
 using TrainService.App.Resources;
+using TrainService.App.Controls.RadialMenu;
 
 namespace TrainService.App.Controls.CadCanvas;
 
@@ -27,6 +28,7 @@ public class CadViewportControl : ContentControl
     private readonly DrawingVisual _toolVisual;
     
     public ToolController? ToolController { get; set; }
+    public TrainService.Cad.UndoRedo.CommandStack? CommandStack { get; set; }
     
     public ViewportTransform Transform { get; } = new ViewportTransform();
     
@@ -43,6 +45,7 @@ public class CadViewportControl : ContentControl
     private CadDocument? _document;
     private SelectionService? _selectionService;
     private Guid _hoveredId = Guid.Empty;
+    private readonly RadialMenuControl _radialMenu = new();
 
     public void AttachSelection(SelectionService sel)
     {
@@ -184,6 +187,14 @@ public class CadViewportControl : ContentControl
             _isPanning = true;
             _lastMousePos = e.GetPosition(this);
             this.CaptureMouse();
+        }
+        else if (e.RightButton == MouseButtonState.Pressed)
+        {
+            // Sağ tık → bağlama duyarlı radyal menü
+            var screenPos = this.PointToScreen(e.GetPosition(this));
+            var items = BuildRadialMenuItems(e.GetPosition(this));
+            _radialMenu.ShowAt(screenPos, items);
+            e.Handled = true;
         }
         else if (ToolController != null && _lastSnap != null)
         {
@@ -668,6 +679,109 @@ public class CadViewportControl : ContentControl
         
         var yEndScreen = Transform.WorldToScreen(new Vector2D(0, 1000));
         dc.DrawLine(originPenY, originScreen, yEndScreen);
+    }
+
+    /// <summary>
+    /// Builds context-sensitive radial menu items based on what is under the cursor.
+    /// </summary>
+    private IReadOnlyList<RadialMenuItem> BuildRadialMenuItems(Point screenPos)
+    {
+        var items = new List<RadialMenuItem>(8);
+
+        // Hit-test: find entity under cursor
+        Guid hitId = Guid.Empty;
+        string? hitType = null;
+        if (_document != null)
+        {
+            var world = Transform.ScreenToWorld(screenPos);
+            var tolWorld = SnapEngine.ScreenToleranceToWorld(8.0, Transform.Scale);
+            var box = BoundingBox.FromPoint(world, tolWorld);
+            var buf = new List<Guid>(16);
+            _document.QueryRegion(box, buf);
+            double bestSq = tolWorld * tolWorld;
+            foreach (var id in buf)
+            {
+                if (!_document.TryGetEntity(id, out var ent)) continue;
+                if (!_document.IsSelectable(id)) continue;
+                double dSq = EntityDistSq(ent, world);
+                if (dSq <= bestSq) { bestSq = dSq; hitId = id; hitType = ent.GetType().Name; }
+            }
+        }
+
+        if (hitId != Guid.Empty && hitType != null)
+        {
+            // Entity context menu
+            items.Add(new RadialMenuItem("Seç", "🔍", () =>
+            {
+                if (_selectionService != null)
+                {
+                    _selectionService.Clear();
+                    _selectionService.Add(hitId);
+                }
+            }));
+
+            items.Add(new RadialMenuItem("Yakınlaştır", "🔎", () =>
+            {
+                if (_document != null)
+                    ZoomToEntity(hitId, _document);
+            }));
+
+            items.Add(new RadialMenuItem("Sil", "🗑️", () =>
+            {
+                if (_document != null && CommandStack != null)
+                {
+                    var cmd = new TrainService.Cad.UndoRedo.DeleteEntitiesCommand(new[] { hitId });
+                    CommandStack.Do(cmd, _document);
+                    RenderModelBake();
+                    RequestRender();
+                }
+            }));
+
+            // Entity-type specific items
+            if (hitType == nameof(TrackNode))
+            {
+                items.Add(new RadialMenuItem("Düğüm Özellikleri", "⚙️", () =>
+                {
+                    // Placeholder — v3.0.30+ özellik paneli
+                }));
+            }
+            else if (hitType == nameof(TrackSegment))
+            {
+                items.Add(new RadialMenuItem("Ray Özellikleri", "📏", () =>
+                {
+                    // Placeholder — v3.0.30+ özellik paneli
+                }));
+            }
+        }
+        else
+        {
+            // Empty space context menu
+            items.Add(new RadialMenuItem("Seç (Pencere)", "🔲", () =>
+            {
+                if (ToolController != null)
+                    ToolController.SetTool(new SelectTool());
+            }));
+
+            items.Add(new RadialMenuItem("Ray Çiz", "📐", () =>
+            {
+                if (ToolController != null)
+                    ToolController.SetTool(new TrackTool());
+            }));
+
+            items.Add(new RadialMenuItem("Rota Çiz", "🗺️", () =>
+            {
+                if (ToolController != null)
+                    ToolController.SetTool(new RouteTool());
+            }));
+
+            items.Add(new RadialMenuItem("Makas Yerleştir", "🔀", () =>
+            {
+                if (ToolController != null)
+                    ToolController.SetTool(new SwitchTool());
+            }));
+        }
+
+        return items;
     }
 
     /// <summary>
