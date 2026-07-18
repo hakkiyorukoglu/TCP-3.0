@@ -322,3 +322,6 @@ Gerekçe: v3.0.26 — T280 TrackGraphSwitchTests (+7) + T280 RampToolTests (+9)
 ═══════════════════════════════════════════════════════════════
   SAPMA RAPORU — SON
 ═══════════════════════════════════════════════════════════════
+
+---
+28 | v3.0.26 roadmap revise | RampTool | Roadmap hy.md de v3.0.26 tanimi SwitchTool dan RampTool a guncellendi; eski v3.0.27 Rampa icerigi v3.0.26 ya tasindi, SwitchTool v3.0.27 ye kaydirildi.
