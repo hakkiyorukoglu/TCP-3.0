@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -667,5 +668,93 @@ public class CadViewportControl : ContentControl
         
         var yEndScreen = Transform.WorldToScreen(new Vector2D(0, 1000));
         dc.DrawLine(originPenY, originScreen, yEndScreen);
+    }
+
+    /// <summary>
+    /// Feature Tree'den cift tiklandiginda entity'e zoom yapar.
+    /// Entity'nin bounding box'ini viewport'a sigdirir.
+    /// </summary>
+    public void ZoomToEntity(Guid entityId, CadDocument doc)
+    {
+        if (!doc.TryGetEntity(entityId, out var entity)) return;
+
+        // Entity tipine gore bounding box hesapla
+        var (center, halfSize) = GetEntityBounds(entity, doc);
+        if (halfSize < 1) halfSize = 50; // minimum zoom seviyesi
+
+        // Viewport boyutlari
+        double vpWidth = ActualWidth;
+        double vpHeight = ActualHeight;
+        if (vpWidth < 1 || vpHeight < 1) return;
+
+        // Entity'i viewport'un %80'ine sigdiracak scale'i hesapla
+        double margin = 0.8;
+        double scaleX = (vpWidth * margin) / (2 * halfSize);
+        double scaleY = (vpHeight * margin) / (2 * halfSize);
+        double newScale = Math.Min(scaleX, scaleY);
+        newScale = Math.Clamp(newScale, 0.01, 100.0);
+
+        // Viewport merkezini entity merkezine hizala
+        double screenCenterX = vpWidth / 2.0;
+        double screenCenterY = vpHeight / 2.0;
+        Transform.PanOffset = new Vector2D(
+            center.X - screenCenterX / newScale,
+            center.Y - screenCenterY / newScale
+        );
+        Transform.Scale = newScale;
+
+        RenderModelBake();
+        RequestRender();
+    }
+
+    private (Vector2D center, double halfSize) GetEntityBounds(CadEntity entity, CadDocument doc)
+    {
+        if (entity is TrackNode node)
+        {
+            return (node.Position, 50);
+        }
+        else if (entity is TrackSegment seg)
+        {
+            if (doc.TryGetEntity(seg.StartNodeId, out var sa) && sa is TrackNode a &&
+                doc.TryGetEntity(seg.EndNodeId, out var sb) && sb is TrackNode b)
+            {
+                var c = new Vector2D((a.Position.X + b.Position.X) / 2, (a.Position.Y + b.Position.Y) / 2);
+                double half = Math.Max(Math.Abs(b.Position.X - a.Position.X), Math.Abs(b.Position.Y - a.Position.Y)) / 2 + 50;
+                return (c, half);
+            }
+            return (default(Vector2D), 100);
+        }
+        else if (entity is Route route)
+        {
+            double minX = double.MaxValue, minY = double.MaxValue;
+            double maxX = double.MinValue, maxY = double.MinValue;
+            bool hasAny = false;
+            foreach (var step in route.Steps)
+            {
+                if (doc.TryGetEntity(step.SegmentId, out var se) && se is TrackSegment rs &&
+                    doc.TryGetEntity(rs.StartNodeId, out var ra) && ra is TrackNode rna &&
+                    doc.TryGetEntity(rs.EndNodeId, out var rb) && rb is TrackNode rnb)
+                {
+                    minX = Math.Min(minX, Math.Min(rna.Position.X, rnb.Position.X));
+                    minY = Math.Min(minY, Math.Min(rna.Position.Y, rnb.Position.Y));
+                    maxX = Math.Max(maxX, Math.Max(rna.Position.X, rnb.Position.X));
+                    maxY = Math.Max(maxY, Math.Max(rna.Position.Y, rnb.Position.Y));
+                    hasAny = true;
+                }
+            }
+            if (!hasAny) return (default(Vector2D), 100);
+            var c = new Vector2D((minX + maxX) / 2, (minY + maxY) / 2);
+            double half = Math.Max(maxX - minX, maxY - minY) / 2 + 50;
+            return (c, half);
+        }
+        else if (entity is RailSwitch sw)
+        {
+            return (sw.Position, 100);
+        }
+        else if (entity is Ramp ramp)
+        {
+            return (ramp.Position, 100);
+        }
+        return (default(Vector2D), 100);
     }
 }

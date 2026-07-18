@@ -1,0 +1,53 @@
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using TrainService.Cad.FeatureTree;
+
+namespace TrainService.App.Controls.FeatureTree;
+
+/// <summary>
+/// Feature Tree kontrolü — sol panelde hiyerarşik ağaç görünümü.
+/// Çift tık → ZoomToEntity, seçim → SelectionService senkronizasyonu.
+/// </summary>
+public partial class FeatureTreeControl : UserControl
+{
+    private FeatureTreeViewModel? _viewModel;
+
+    public FeatureTreeControl()
+    {
+        InitializeComponent();
+    }
+
+    /// <summary>
+    /// ViewModel'i bağlar ve ağaç seçim olaylarını dinler.
+    /// </summary>
+    public void AttachViewModel(FeatureTreeViewModel viewModel)
+    {
+        _viewModel = viewModel;
+        DataContext = viewModel;
+    }
+
+    private void OnTreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    {
+        if (_viewModel == null) return;
+
+        if (e.NewValue is FeatureTreeItem item && item.EntityId.HasValue)
+        {
+            _viewModel.OnTreeSelectionChanged(item.EntityId.Value);
+        }
+        else
+        {
+            _viewModel.OnTreeSelectionChanged(null);
+        }
+    }
+
+    private void OnTreeViewDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (_viewModel == null) return;
+
+        if (FeatureTreeView.SelectedItem is FeatureTreeItem item && item.EntityId.HasValue)
+        {
+            _viewModel.ZoomToEntityCommand.Execute(item.EntityId);
+        }
+    }
+}

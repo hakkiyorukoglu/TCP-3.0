@@ -47,6 +47,15 @@ dotnet run --project src/TrainService.App/TrainService.App.csproj
 
 ## 📝 Sürüm Geçmişi (Changelog)
 
+- **v3.0.28**: `FeatureTree` (Öğe Ağacı Paneli) — CAD belgesindeki tüm entity'leri hiyerarşik ağaç görünümünde listeleyen sol panel.
+  - **`FeatureTreeItem.cs`**: INotifyPropertyChanged model — Name, Icon, EntityId, EntityType, IsVisible, IsLocked, IsSelected, IsExpanded, Children (ObservableCollection), Parent, DoubleClickCommand.
+  - **`FeatureTreeViewModel.cs`**: MVVM ViewModel — CadDocument + SelectionService bağımlılığı, çift yönlü seçim senkronizasyonu (tuval↔ağaç), ZoomToEntity event, RelayCommand<T> (WPF bağımlılığı yok).
+  - **`CadDocument.FeatureTree.cs`**: Partial class extension — `BuildFeatureTree()` 5 grup üretir: Katmanlar (3 katman), Raylar (TrackSegment), Hatlar (Route), Makaslar (RailSwitch), Rampalar (Ramp).
+  - **`FeatureTreeControl.xaml/cs`**: WPF TreeView — HierarchicalDataTemplate ile grup→alt öğe hiyerarşisi, göster/gizle simgesi, kilit simgesi, seçim vurgulama (DeepSkyBlue), çift tıkla ZoomToEntity.
+  - **`EditorView.xaml/cs`**: Sol panel (250px) + sağ viewport layout, FeatureTreeControl entegrasyonu.
+  - **`CadViewportControl.cs`**: `ZoomToEntity(Guid, CadDocument)` — entity bounding box hesaplama, viewport %80'ine sığdırma, PanOffset+Scale güncelleme.
+  - **12 test (T310-T319c)**: FeatureTreeItem varsayılanları, PropertyChanged, çocuk hiyerarşisi, 5 grup varlığı, her gruptaki entity sayıları, çift yönlü seçim senkronizasyonu, doküman değişikliğinde yeniden oluşturma. 144/144 Cad.Tests yeşil.
+
 - **v3.0.27**: `SwitchTool` (Makas Prefab Yerleştirme) — 1 tıkla prefab RailSwitch yerleştirme aracı.
   - **`SwitchDefaults.cs`**: Geometri sabitleri (LengthMm=80, DivergingAngleDeg=30°) ve 3 port offset hesaplamaları (Entry/MainExit/DivergingExit).
   - **`SwitchTool.cs`**: RampTool deseninde 1-click prefab — OnPointerMove'da `PreviewSwitchPlace` (Y-şekilli ghost), OnPointerDown'da 3 `TrackNode` + 1 `RailSwitch` oluşturur, `CompositeCadCommand` ile tek Ctrl+Z.

@@ -26,6 +26,6 @@ public class T010_KapsamBekcisi
                 return 0;
             });
 
-        cadTests.Should().BeGreaterThanOrEqualTo(134, "Cad.Tests tabanı 134'e çıkarıldı (v3.0.27 — T280 SwitchTool testleri eklendi)");
+        cadTests.Should().BeGreaterThanOrEqualTo(144, "Cad.Tests tabanı 144'e çıkarıldı (v3.0.28 — T310 FeatureTree testleri eklendi)");
     }
 }

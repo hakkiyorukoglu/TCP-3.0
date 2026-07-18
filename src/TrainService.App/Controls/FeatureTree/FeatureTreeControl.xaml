@@ -1,0 +1,57 @@
+<UserControl x:Class="TrainService.App.Controls.FeatureTree.FeatureTreeControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ft="clr-namespace:TrainService.Cad.FeatureTree;assembly=TrainService.Cad">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+    <Grid>
+        <TreeView x:Name="FeatureTreeView"
+                  ItemsSource="{Binding Roots}"
+                  Background="#1E1E1E"
+                  BorderThickness="0"
+                  Foreground="White"
+                  FontFamily="Segoe UI"
+                  FontSize="13"
+                  SelectedItemChanged="OnTreeViewSelectedItemChanged"
+                  MouseDoubleClick="OnTreeViewDoubleClick">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type ft:FeatureTreeItem}"
+                                          ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <!-- İkon -->
+                        <TextBlock Text="{Binding Icon}" 
+                                   Margin="0,0,4,0" 
+                                   VerticalAlignment="Center"
+                                   FontSize="14"/>
+                        
+                        <!-- İsim -->
+                        <TextBlock Text="{Binding Name}" 
+                                   VerticalAlignment="Center"
+                                   FontSize="13">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                            <Setter Property="Foreground" Value="DeepSkyBlue"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        
+                        <!-- Kilit simgesi -->
+                        <TextBlock Text="🔒" 
+                                   Visibility="{Binding IsLocked, Converter={StaticResource BoolToVis}}"
+                                   Margin="4,0,0,0"
+                                   VerticalAlignment="Center"
+                                   FontSize="11"
+                                   ToolTip="Kilitli"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</UserControl>

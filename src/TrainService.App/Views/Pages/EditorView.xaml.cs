@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Controls.Primitives;
 using TrainService.App.ViewModels;
+using TrainService.Cad.FeatureTree;
 
 namespace TrainService.App.Views.Pages;
 
@@ -78,6 +79,15 @@ public partial class EditorView : Page
             Viewport.AttachDocument(ViewModel.Document);
             Viewport.AttachSelection(ViewModel.SelectionService);
 
+            // Feature Tree ViewModel oluştur ve bağla
+            var featureTreeVm = new FeatureTreeViewModel(ViewModel.Document, ViewModel.SelectionService);
+            FeatureTreeCtrl.AttachViewModel(featureTreeVm);
+
+            // ZoomToEntity olayını Viewport'a bağla
+            featureTreeVm.ZoomRequested += (_, entityId) =>
+            {
+                Viewport.ZoomToEntity(entityId, ViewModel.Document);
+            };
 
             var ctx = new TrainService.Cad.Tools.ToolContext(ViewModel.Document, ViewModel.CommandStack, ViewModel.SelectionService) { Clipboard = ViewModel.ClipboardService };
             var initialTool = new TrainService.Cad.Tools.SelectTool();
@@ -98,9 +108,6 @@ public partial class EditorView : Page
                     Viewport.ToolController.SetTool(new TrainService.Cad.Tools.RouteTool());
                 else if (toolName == "Switch")
                     Viewport.ToolController.SetTool(new TrainService.Cad.Tools.SwitchTool());
-                
-                // Re-attach event because a new ToolController might be created? No, SetTool doesn't create a new controller.
-                // Wait, SetTool just changes the ActiveTool, ToolController is the same.
             };
         };
     }

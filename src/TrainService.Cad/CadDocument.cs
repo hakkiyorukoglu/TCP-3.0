@@ -19,7 +19,7 @@ public enum DocumentChangeKind
 
 public sealed record DocumentChangedEventArgs(DocumentChangeKind Kind, Guid? EntityId, TrainService.Core.Geometry.BoundingBox? DirtyRegion = null);
 
-public sealed class CadDocument
+public sealed partial class CadDocument
 {
     private readonly Dictionary<Guid, CadEntity> _entities = new();
     private readonly Dictionary<Guid, CadLayer> _layers = new();
