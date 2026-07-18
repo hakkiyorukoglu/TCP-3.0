@@ -3,102 +3,101 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       xmlns:controls="clr-namespace:TrainService.App.Controls"
+      xmlns:ribbon="clr-namespace:TrainService.App.Controls.Ribbon"
       xmlns:cad="clr-namespace:TrainService.App.Controls.CadCanvas"
       xmlns:ft="clr-namespace:TrainService.App.Controls.FeatureTree"
       Title="Editor">
-      
+
     <Page.InputBindings>
+        <!-- History -->
         <KeyBinding Key="Z" Modifiers="Control" Command="{Binding ViewModel.UndoCommand}" />
         <KeyBinding Key="Y" Modifiers="Control" Command="{Binding ViewModel.RedoCommand}" />
+        <!-- Save -->
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding ViewModel.SaveCommand}" />
+        <!-- Tools -->
         <KeyBinding Key="F9" Command="{Binding ViewModel.ToggleSnapCommand}" />
+        <!-- Zoom -->
+        <KeyBinding Key="Z" Command="{Binding ViewModel.ZoomExtentsCommand}" />
+        <KeyBinding Key="W" Command="{Binding ViewModel.ZoomWindowCommand}" />
+        <!-- Clipboard -->
+        <KeyBinding Key="C" Modifiers="Control" Command="{Binding ViewModel.CopyCommand}" />
+        <KeyBinding Key="X" Modifiers="Control" Command="{Binding ViewModel.CutCommand}" />
+        <KeyBinding Key="V" Modifiers="Control" Command="{Binding ViewModel.PasteCommand}" />
+        <!-- Delete via Del key is handled in PreviewKeyDown -->
     </Page.InputBindings>
-    
+
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <!-- Sol Panel: Feature Tree -->
-        <Border Grid.Column="0" Background="#1E1E1E" BorderBrush="#333333" BorderThickness="0,0,1,0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                
-                <!-- Başlık -->
-                <Border Grid.Row="0" Padding="8,6" Background="#252525" BorderBrush="#333333" BorderThickness="0,0,0,1">
-                    <TextBlock Text="Öğe Ağacı" FontWeight="Bold" Foreground="#CCCCCC" FontSize="13"/>
+        <!-- Ribbon -->
+        <ribbon:RibbonControl Grid.Row="0"
+                               x:Name="RibbonCtrl"
+                               Tabs="{Binding ViewModel.RibbonTabs}"
+                               QuickAccessItems="{Binding ViewModel.RibbonQuickAccess}"
+                               ViewModel="{Binding ViewModel}"/>
+
+        <!-- Content Area -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Sol Panel: Feature Tree -->
+            <Border Grid.Column="0" Background="#1E1E1E" BorderBrush="#333333" BorderThickness="0,0,1,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Başlık -->
+                    <Border Grid.Row="0" Padding="8,6" Background="#252525" BorderBrush="#333333" BorderThickness="0,0,0,1">
+                        <TextBlock Text="Öğe Ağacı" FontWeight="Bold" Foreground="#CCCCCC" FontSize="13"/>
+                    </Border>
+
+                    <!-- Feature Tree Control -->
+                    <ft:FeatureTreeControl x:Name="FeatureTreeCtrl" Grid.Row="1"/>
+                </Grid>
+            </Border>
+
+            <!-- Sağ Panel: Viewport -->
+            <Grid Grid.Column="1">
+                <cad:CadViewportControl x:Name="Viewport"/>
+
+                <!-- Yüzen Koordinat ve FPS Paneli (Sol Üst Z-Index en üstte) -->
+                <Border Panel.ZIndex="999" HorizontalAlignment="Left" VerticalAlignment="Top"
+                        Margin="10" Padding="10"
+                        Background="#EE1E1E1E" CornerRadius="6"
+                        BorderBrush="#55FFFFFF" BorderThickness="1" IsHitTestVisible="False">
+                    <StackPanel Orientation="Vertical">
+                        <!-- Koordinat -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                            <ui:SymbolIcon Symbol="TargetArrow24" Foreground="DeepSkyBlue" Margin="0,0,5,0"/>
+                            <TextBlock x:Name="LblCoordinates" Text="X: 0.0 Y: 0.0 mm" FontFamily="Consolas" FontSize="14" Foreground="White" FontWeight="Bold"/>
+                            <TextBlock x:Name="LblSnapStatus" Text="{Binding ViewModel.SnapStatusText}" FontFamily="Consolas" FontSize="14" Foreground="Yellow" FontWeight="Bold" Visibility="Visible"/>
+                        </StackPanel>
+
+                        <!-- Durum Çubuğu ve FPS -->
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Video24" Foreground="LimeGreen" Margin="0,0,5,0"/>
+                            <TextBlock x:Name="LblFps" Text="FPS: 0" FontFamily="Consolas" FontSize="14" Foreground="LimeGreen" FontWeight="Bold" Margin="0,0,15,0"/>
+
+                            <ui:SymbolIcon Symbol="Document24" Foreground="LightGray" Margin="0,0,5,0"/>
+                            <TextBlock Text="{Binding ViewModel.DocumentStatusText}" FontFamily="Consolas" FontSize="14" Foreground="LightGray" FontWeight="Bold"/>
+                        </StackPanel>
+
+                        <!-- Katman Durumu -->
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <ui:SymbolIcon Symbol="Layer24" Foreground="HotPink" Margin="0,0,5,0"/>
+                            <TextBlock Text="{Binding ViewModel.ActiveLayerStatusText}" FontFamily="Consolas" FontSize="14" Foreground="HotPink" FontWeight="Bold"/>
+                        </StackPanel>
+                    </StackPanel>
                 </Border>
-                
-                <!-- Feature Tree Control -->
-                <ft:FeatureTreeControl x:Name="FeatureTreeCtrl" Grid.Row="1"/>
             </Grid>
-        </Border>
-
-        <!-- Sağ Panel: Viewport -->
-        <Grid Grid.Column="1">
-            <cad:CadViewportControl x:Name="Viewport"/>
-            
-            <!-- Yüzen Koordinat ve FPS Paneli (Sol Üst Z-Index en üstte) -->
-            <Border Panel.ZIndex="999" HorizontalAlignment="Left" VerticalAlignment="Top" 
-                    Margin="10" Padding="10" 
-                    Background="#EE1E1E1E" CornerRadius="6" 
-                    BorderBrush="#55FFFFFF" BorderThickness="1" IsHitTestVisible="False">
-                <StackPanel Orientation="Vertical">
-                    <!-- Koordinat -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                        <ui:SymbolIcon Symbol="TargetArrow24" Foreground="DeepSkyBlue" Margin="0,0,5,0"/>
-                        <TextBlock x:Name="LblCoordinates" Text="X: 0.0 Y: 0.0 mm" FontFamily="Consolas" FontSize="14" Foreground="White" FontWeight="Bold"/>
-                        <TextBlock x:Name="LblSnapStatus" Text="{Binding ViewModel.SnapStatusText}" FontFamily="Consolas" FontSize="14" Foreground="Yellow" FontWeight="Bold" Visibility="Visible"/>
-                    </StackPanel>
-                    
-                    <!-- Durum Çubuğu ve FPS -->
-                    <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon Symbol="Video24" Foreground="LimeGreen" Margin="0,0,5,0"/>
-                        <TextBlock x:Name="LblFps" Text="FPS: 0" FontFamily="Consolas" FontSize="14" Foreground="LimeGreen" FontWeight="Bold" Margin="0,0,15,0"/>
-                        
-                        <ui:SymbolIcon Symbol="Document24" Foreground="LightGray" Margin="0,0,5,0"/>
-                        <TextBlock Text="{Binding ViewModel.DocumentStatusText}" FontFamily="Consolas" FontSize="14" Foreground="LightGray" FontWeight="Bold"/>
-                    </StackPanel>
-                    
-                    <!-- Katman Durumu -->
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <ui:SymbolIcon Symbol="Layer24" Foreground="HotPink" Margin="0,0,5,0"/>
-                        <TextBlock Text="{Binding ViewModel.ActiveLayerStatusText}" FontFamily="Consolas" FontSize="14" Foreground="HotPink" FontWeight="Bold"/>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-            
-            <!-- Toolbar -->
-            <Border Panel.ZIndex="1000" HorizontalAlignment="Right" VerticalAlignment="Top" 
-                    Margin="10" Padding="5" Background="#EE1E1E1E" CornerRadius="6">
-                <StackPanel Orientation="Horizontal">
-                    <ui:Button Command="{Binding ViewModel.SetToolCommand}" CommandParameter="Select"
-                               Icon="SelectObject24" 
-                               Appearance="Primary" ToolTip="Seç (S)" Margin="0,0,5,0" />
-                    <ui:Button Command="{Binding ViewModel.SetToolCommand}" CommandParameter="Track"
-                               Icon="ArrowFlowUpRight24" 
-                               Appearance="Primary" ToolTip="Ray (T)" Margin="0,0,5,0" />
-                    <ui:Button Command="{Binding ViewModel.SetToolCommand}" CommandParameter="Route"
-                               Icon="Directions24"
-                               Appearance="Primary" ToolTip="Rota (R)" Margin="0,0,5,0" />
-                    <ui:Button Command="{Binding ViewModel.SetToolCommand}" CommandParameter="Switch"
-                               Icon="BranchFork24"
-                               Appearance="Primary" ToolTip="Makas (F8)" Margin="0,0,5,0" />
-                    <ui:Button Command="{Binding ViewModel.SaveCommand}" 
-                               Icon="Save24" 
-                               Appearance="Secondary" ToolTip="Kaydet (Ctrl+S)" Margin="0,0,5,0" />
-                    <ui:Button Command="{Binding ViewModel.UndoCommand}" 
-                               Icon="ArrowUndo24" 
-                               Appearance="Secondary" ToolTip="Geri Al (Ctrl+Z)" Margin="0,0,5,0" />
-                    <ui:Button Command="{Binding ViewModel.RedoCommand}" 
-                               Icon="ArrowRedo24" 
-                               Appearance="Secondary" ToolTip="Yeniden Yap (Ctrl+Y)" />
-                </StackPanel>
-            </Border>
         </Grid>
     </Grid>
 </Page>

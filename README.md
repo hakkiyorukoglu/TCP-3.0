@@ -47,6 +47,24 @@ dotnet run --project src/TrainService.App/TrainService.App.csproj
 
 ## 📝 Sürüm Geçmişi (Changelog)
 
+- **v3.0.29.2**: `DocumentTabs` (Sekmeli Çoklu Belge — Arka Uç) — Her sekme izole `CadDocument` + `CommandStack` + `SelectionService` seti barındırır.
+  - **`EditorTabModel.cs`**: Sekme başına izole veri seti — `ProjectId`, `DisplayName`, `IsDirty`, `CadDocument`, `CommandStack`, `SelectionService`, `SnapEngine`, `ClipboardService`.
+  - **`DocumentTabsViewModel.cs`**: Sekme yöneticisi — `AddTab`, `CloseTab` (kirli kontrolü), `RenameTab`, `ActiveTab` değişimi. Son sekme kapanınca otomatik yeni boş sekme.
+  - **8 test (T340–T347)**: Izole set oluşturma, doküman izolasyonu (A→B veri kaçağı yok), undo yığını izolasyonu, kirli bayrak, yeniden adlandırma, son sekme kapatma, kirli sekme vazgeç, aktif sekme değişimi. 272/272 tüm çözüm yeşil.
+
+- **v3.0.29.1-fix**: Kritik Bug Düzeltmeleri — Paste/RestoreEntity/Clipboard/ProjectId.
+  - **`PasteEntitiesCommand`**: Panodan yapıştırma artık `CommandStack` üzerinden undo/redo'lu. ID remap + referans çözümleme + +20mm offset.
+  - **`CadDocument.RestoreEntity`**: `IsDirty=true` + `Changed` event fırlatma (AddEntity ile tutarlı).
+  - **`ClipboardService.Klonla`**: `RailSwitch`, `Ramp`, `Route` klonlama desteği eklendi.
+  - **`EditorViewModel`**: `ProjectId` constructor parametresi (default `Guid.NewGuid()`), `Guid.Empty` sabit kullanımı kaldırıldı.
+  - **9 test (T336–T344)**: Paste undo/redo, IsDirty, RestoreEntity event, Clipboard yeni entity türleri, SaveLoad ProjectId. 272/272 tüm çözüm yeşil.
+
+- **v3.0.29.1**: `Ribbon` (Şerit Arayüzü) — Alphacam/WPF tarzı şerit.
+  - **`RibbonDefinitions.cs`**: 4 sekme (Ana Sayfa, Ekle, Görünüm, Katman) + Hızlı Erişim (Kaydet, Geri Al, Yenile, Yaklaştır). Her sekme grupları butonlar, açılır listeler, onay kutuları içerir.
+  - **`RibbonControl.xaml/cs`**: WPF şerit kontrolü — TabItem başlıkları, gruplar arası dikey ayırıcı, aktif sekme vurgusu (turuncu alt çizgi), hover efektleri. MVVM `RelayCommand<T>` ile bağlantı.
+  - **`EditorView.xaml`**: Ribbon `Grid.Row="0"` olarak entegre, eski `ui:TitleBar` yerine şeritli düzen.
+  - **6 test (T330–T335)**: Sekme sayısı, ilk sekme adı, RibbonQuickAccess varlığı, buton sayısı, buton ikonları, sekme başlıkları. 41/41 App.Tests yeşil.
+
 - **v3.0.29**: `RadialMenu` (Sağ Tık Radyal Menü) — Bağlama duyarlı dairesel menü.
   - **`RadialMenuItem.cs`**: Immutable record — Label, IconGlyph, Command (Action), IsEnabled.
   - **`RadialMenuControl.xaml/cs`**: WPF Popup + Canvas tabanlı dairesel menü — 8 dilim (45°), hover vurgulama, tıkla komut çalıştırma. Menü yarıçapı 120px, iç boşluk 30px.

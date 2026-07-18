@@ -16,6 +16,20 @@ public sealed class ClipboardService
     public IReadOnlyList<CadEntity> Get() => _icerik.Select(Klonla).ToList();
     public void Clear() => _icerik = Array.Empty<CadEntity>();
 
+    private static Route KlonlaRoute(Route rt)
+    {
+        var clone = new Route
+        {
+            Id = rt.Id,
+            Name = rt.Name,
+            CachedBounds = rt.CachedBounds,
+            LayerId = rt.LayerId
+        };
+        foreach (var step in rt.Steps)
+            clone.Steps.Add(step with { });
+        return clone;
+    }
+
     private static CadEntity Klonla(CadEntity e) => e switch
     {
         TrackNode n => new TrackNode {
@@ -23,6 +37,16 @@ public sealed class ClipboardService
         TrackSegment s => new TrackSegment {
             Id = s.Id, StartNodeId = s.StartNodeId, EndNodeId = s.EndNodeId,
             LengthMm = s.LengthMm, LayerId = s.LayerId },
+        RailSwitch sw => new RailSwitch {
+            Id = sw.Id, Position = sw.Position, RotationDeg = sw.RotationDeg,
+            EntryNodeId = sw.EntryNodeId, MainExitNodeId = sw.MainExitNodeId,
+            DivergingExitNodeId = sw.DivergingExitNodeId, State = sw.State,
+            BoundServoDeviceId = sw.BoundServoDeviceId, LayerId = sw.LayerId },
+        Ramp r => new Ramp {
+            Id = r.Id, SegmentId = r.SegmentId, Position = r.Position, RotationDeg = r.RotationDeg,
+            EntryNodeId = r.EntryNodeId, ExitNodeId = r.ExitNodeId,
+            StartZ = r.StartZ, EndZ = r.EndZ, LengthMm = r.LengthMm, LayerId = r.LayerId },
+        Route rt => KlonlaRoute(rt),
         _ => throw new NotSupportedException($"Panoya kopyalanamayan tip: {e.GetType().Name}")
     };
 }

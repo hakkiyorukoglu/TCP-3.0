@@ -163,6 +163,8 @@ public sealed partial class CadDocument
         _entities[e.Id] = e;
         var b = GetBounds(e);
         if (b != null) _spatial.Add(e.Id, b.Value);
+        IsDirty = true;
+        Changed?.Invoke(this, new DocumentChangedEventArgs(DocumentChangeKind.Added, e.Id, b));
     }
 
     private BoundingBox? GetBounds(CadEntity e)

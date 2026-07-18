@@ -1,3 +1,4 @@
+
 # Restoran Otonom Tren Servis Otomasyonu ve Simülasyonu (TCP)
 ## v3.0.0 Mimari Tasarım Dokümanı ve Sıfırdan Uygulama Yol Haritası
 
@@ -513,117 +514,319 @@ Sonuç: rampa çıkarken doğal yavaşlama, inişte hız artışı, engelde mesa
 
 ---
 
-# BÖLÜM 7 — SIFIRDAN UYGULAMA YOL HARİTASI (MİKRO-SÜRÜMLER)
 
-**Kurallar:**
-1. Her sürüm **tek bir mikro-istek** büyüklüğündedir, tek başına derlenir ve çalışır durumda bırakır.
-2. Ana arterler (Faz 0–2) tamamlanmadan hiçbir görsel/fonksiyonel özellik fazına geçilmez.
-3. Hiçbir sürüm önceki sürümün public API'sini kırmaz; sadece ekler.
-4. Simülasyon (Faz H) ve fizik testleri **en sondadır**; ondan önceki her faz simülasyonsuz, gerçek anlamıyla kullanılabilir bir ürün bırakır.
 
-## FAZ 0 — Temel İskelet ve Ana Arterler I (Solution + Log Otobüsü)
 
-| Sürüm | Mikro-İstek | Kabul Kriteri |
+
+
+
+
+
+
+# TrainService (TCP) — YOL HARİTASI (Roadmap)
+## Sürüm: 2026-07-18 · FAZ D kapanışı sonrası tam güncelleme
+
+> **BU DOSYAYI OKUYAN MODEL İÇİN — ÖNCE OKU:**
+> 1. Bu roadmap `AGENTS.md`'ye TABİDİR (aynı klasörde). Çelişkide AGENTS.md kazanır.
+> 2. Sıra ATLANMAZ, numara UYDURULMAZ. Sıradaki sürüm = `(MÜHÜRLENDİ)` işareti OLMAYAN ilk satır.
+> 3. Her sürüm için akış: PLAN yaz → DUR → kullanıcı onayı → TDD (önce test, KIRMIZI gör) → kod →
+>    `dotnet run` → DUR → kullanıcı manuel turu → mühür raporu (SABİT tools/muhur.ps1) → kullanıcı
+>    "pushla" derse commit+push. Bir oturumda TEK sürüm.
+> 4. Mühürlü davranışlar SÖKÜLMEZ (Y5): F9=snap, Esc=İPTAL, Enter/sağ-tık=COMMIT, SabitKatmanlar
+>    (11111111/22222222/33333333), IsVisible/IsSelectable tek-kaynak, CadColors merkezî renk.
+> 5. Bekçi ispatı SADECE `//[Fact]` yöntemi (Y12). Test sorunu TESTTE çözülür, üretim sökülmez (Y13).
+> 6. 🔍 işaretli sürümlerde mühre EK olarak geriye-dönük denetim raporu üretilir
+>    (VERSIYON_KONTROL_DENETIMI.txt — önceki 🔍'den bu yana tüm sürümler).
+> 7. Ara-numara kuralı: v3.0.29.1–v3.0.29.7 GERÇEK sürümlerdir (FAZ D2). v3.0.30+ numaraları eski
+>    belgelerle uyum için DEĞİŞTİRİLMEMİŞTİR.
+
+═══════════════════════════════════════════════════════════════════
+# BÖLÜM 0 — MÜHÜRLÜ GEÇMİŞ (v3.0.0 → v3.0.29) — DOKUNULMAZ
+═══════════════════════════════════════════════════════════════════
+| Aralık | İçerik | Durum |
 |---|---|---|
-| **v3.0.0** | Solution + 7 proje + tests klasörü (Bölüm 1 yapısı birebir), Directory.Build.props (net8.0, nullable enable), NuGet sabitleri (Wpf.Ui, CommunityToolkit.Mvvm, MQTTnet, EFCore.Sqlite, Scriban). Simulation projesi **boş iskelet** olarak dahil. | `dotnet build` temiz; boş pencere açılır. |
-| v3.0.1 | Generic Host + DI: `App.xaml.cs` içinde `IHost`; tüm servisler arayüz üzerinden kayıt. | Servisler ctor-injection ile çözülüyor. |
-| v3.0.2 | Shell: Wpf.Ui `NavigationView`, Dark Mica + Fluent tema, 6 boş sayfa (Home, Editor, Electronics, Kitchen, Info, Settings) ve navigasyon. | 6 sayfa arası gezinme çalışır, Mica aktif. |
-| v3.0.3 | **A5 — ILogBus + TerminalPanel:** halkalı tampon (max 2000), Info/Warn/Error/Success renkleri, tüm sayfaların altına dock'lu 4 satırlık kalıcı panel; InfoView = aynı otobüsün tam ekran görünümü + filtre. | Her sayfada terminal görünür; test logları renkli akar. |
+| v3.0.0–v3.0.9 | İskelet, DI, LogBus, MQTT broker, SQLite şema, CRUD, Dark Mica kabuk | (MÜHÜRLENDİ) |
+| v3.0.10–v3.0.19 | CadCanvas, pan/zoom, grid, TrackTool, undo/redo, Ctrl+S ilişkisel kayıt, SnapEngine, SpatialHash | (MÜHÜRLENDİ) |
+| v3.0.20 | TrackGraph (komşuluk, AreAdjacent, blok temeli) | (MÜHÜRLENDİ) |
+| v3.0.21 | SelectTool + Marquee (mavi window / yeşil crossing), hover, CadColors | (MÜHÜRLENDİ) |
+| v3.0.22 | Pano Ctrl+C/X/V (derin kopya, +20 ofset, GUID haritası) | (MÜHÜRLENDİ) |
+| v3.0.23 | Katmanlar (SabitKatmanlar, gizle/kilit, güvenlik ağı) | (MÜHÜRLENDİ) |
+| v3.0.24 | RouteTool (yön okları, bayat-graf reddi, Route kalıcılığı) | (MÜHÜRLENDİ) |
+| v3.0.25 | HybridTool (tek harekette Track+Route, tek undo) | (MÜHÜRLENDİ) |
+| v3.0.26 | RampTool 1-tık prefab (Entry/Exit, RampDefaults 100mm/%15) | (MÜHÜRLENDİ) |
+| v3.0.27 | SwitchTool 1-tık prefab (3 port, BoundServoDeviceId) | (MÜHÜRLENDİ) |
+| v3.0.28 | Feature Tree (çift yönlü seçim senkronu, çift-tık zoom, gizle/kilit) | (MÜHÜRLENDİ) |
+| v3.0.29 | Radyal Menü (bağlam duyarlı, SADECE Idle'da açılır) + Ramp/RailSwitch store round-trip (T560/T561) | (MÜHÜRLENDİ) |
 
-## FAZ A — Ana Arterler II (Domain Modelleri + SQLite)
+Mevcut test tabanı (blok mühür anı): **246 test** — Cad 146, Core 32, Data 26, Messaging 16, App 15, Arch 10, Sim 1.
+Migration listesi (hepsi applied): InitialSchema, AddElectronicsSchema, RemoveCadProjectJson, AddMissingTables, FixRailSwitchRampMapping.
 
-| Sürüm | Mikro-İstek | Kabul Kriteri |
-|---|---|---|
-| v3.0.4 | **A2 + A3:** `Core/Geometry` (Vector2D/3D, BoundingBox), tüm Entity sınıfları (Bölüm 2.2), enum'lar ve **Topic Contract** (sabitler + payload record'ları). Bu sürümle sözleşme **dondurulur**. | Core.Tests: geometri birim testleri yeşil. |
-| v3.0.5 | **A4:** `TrainDbContext` + Bölüm 4.3'teki **tüm tablolar** tek migration'da (`InitialSchema`), WAL modu, SQLite yolu SettingsView modelinde. | DB dosyası oluşur; tüm tablolar mevcut. |
-| v3.0.6 | Repository katmanı: `IProjectRepository`, `IScenarioRepository`, `IStateRepository` + CRUD; `EventLogs`'a ILogBus aynası (halkalı temizlik). | Örnek proje kaydet/yükle round-trip testi yeşil. |
-| v3.0.7 | SettingsView (gerçek): tema seçimi, DB yolu, MQTT portu; ayarlar `settings.json` + anında uygulanma. | Ayar değişimi kalıcı. |
+═══════════════════════════════════════════════════════════════════
+# FAZ D2 — EDİTÖR ARAYÜZ CİLASI (YENİ) · v3.0.29.1 → v3.0.29.7
+═══════════════════════════════════════════════════════════════════
+**Fazın amacı:** Backend'i tamamlanan editörün üstüne Alphacam sınıfı kullanım kolaylıkları giydirmek.
+Bu fazda ÇEKİRDEK MANTIK DEĞİŞMEZ — yalnızca App katmanı (XAML/ViewModel) genişler; Cad/Core'a dokunuş
+sadece komutları dışarı açan ince arayüzlerle sınırlıdır. Görsel/backend ayrımı kararı gereği bu faz,
+"görsel roadmap"in çekirdeğe bitişik ilk yarısıdır.
 
-## FAZ B — Ana Arterler III (Gömülü MQTT + Cihaz Kaydı)
-
-| Sürüm | Mikro-İstek | Kabul Kriteri |
-|---|---|---|
-| v3.0.8 | `EmbeddedBrokerService` (IHostedService) + loopback `MqttHub`; broker başlat/durdur logları terminale. | Harici MQTT Explorer ile bağlanılıp mesaj görülür. |
-| v3.0.9 | `DeviceRegistry`: LWT + retained status ile online/offline; `restaurant/log/#` aboneliği → cihaz logları terminale. | Sahte istemci bağlan/kop → durum değişimi loglanır. |
-| v3.0.10 | `PingService` (ICMP, 5 sn) + cihaz IP listesi; ping sonuçları DeviceRegistry ile birleşik `DeviceHealth` durumu. | Health durumu (Yeşil/Sarı/Kırmızı) event olarak yayınlanır. |
-| v3.0.11 | Komut hattı: `restaurant/commands` yayıncısı + `ack` akış servisi (`DispatchService`) — henüz UI'sız, test istemcisiyle uçtan uca. | Komut → sahte istasyon → ACK round-trip logda. |
-
-## FAZ C — ElectronicsView (Node-Based Ağ Şeması)
-
-| Sürüm | Mikro-İstek | Kabul Kriteri |
-|---|---|---|
-| v3.0.12 | Ağ modeli CRUD: switch/port/cihaz tanımlama formları (DB'ye). | Port dağılımı (1=PC, 2-4=ESP32, 5=Cascade) kaydedilir. |
-| v3.0.13 | Node-based şema tuvali: switch kutuları, port soketleri, cihaz düğümleri, bağlantı hatları; cascade alt-switch çizimi. | Şema hiyerarşiyi görsel çizer. |
-| v3.0.14 | Canlı durum bağlama: `DeviceHealth` → port LED renkleri + son görülme zamanı tooltip. | Cihaz kopunca LED gerçek zamanlı kırmızıya döner. |
-
-## FAZ D — CAD Editörü (Çekirdek → Araçlar → Ağaç)
-
-| Sürüm | Mikro-İstek | Kabul Kriteri |
-|---|---|---|
-| v3.0.15 | `CadViewportControl`: DrawingVisual render, pan (orta tuş), zoom-to-cursor, mm ızgara + eksen; durum çubuğunda dünya koordinatı. | 10.000 çizgi ile 60 fps pan/zoom. |
-| v3.0.16 | `CadDocument` + `CommandStack` (Undo/Redo altyapısı) + `SelectionService`. | Ctrl+Z/Y boş komutlarla çalışır. |
-| v3.0.17 | **SnapEngine v1:** GridSnap + görsel snap işaretçisi. | İmleç ızgaraya yapışır. |
-| v3.0.18 | **TrackTool:** tıkla-tıkla ray çizimi (`AddNode/AddSegmentCommand`), Esc ile bitir. | Ray çizilir, undo edilir, DB'ye kaydedilir (Ctrl+S). |
-| v3.0.19 | **SnapEngine v2:** EndpointSnap + OnSegmentSnap + spatial hash; öncelik zinciri. | Uç noktaya "mıknatıs" hissi; segment üstü projeksiyon doğru. |
-| v3.0.20 | `TrackGraph` (Topology): komşuluk, `AreAdjacent`, düğüm birleşimi; segment bölme (`SplitSegmentCommand`). | Topoloji birim testleri yeşil (ana arter — simülasyonun temeli). |
-| v3.0.21 | **SelectTool + Marquee:** tek seçim, kutu seçim (L→R içeren / R→L kesişen), Delete. | Çoklu seçim + toplu silme undo'lu. |
-| v3.0.22 | **Pano:** Ctrl+C/X/V (deep clone, ofsetli yapıştırma, snap ile birleşme). | Kopyalanan ray ağı bağımsız ID'lerle yapışır. |
-| v3.0.23 | **Katmanlar:** Zemin/Alt Kat/Üst Kat (ZHeight), aktif katman seçimi, görünürlük/kilit; çizim aktif katmana yazılır. | Katman gizle → nesneler görünmez, seçilemez. |
-| v3.0.24 | **RouteTool (Hat):** sadece segment-üstü kabul, komşuluk doğrulama (TrackGraph), yön okları render. | Boş alana hat çizilemez; ok yönleri doğru. |
-| v3.0.25 | **HybridTool (Eşzamanlı):** tek harekette Track+Route, tek undo adımı (CompositeCommand). | Hibrit çizim tek Ctrl+Z ile geri alınır. |
-| v3.0.26 | **RampTool (Rampa prefab):** 1 tıklamada prefab yerleştirme (Ramp + 2 TrackNode: Entry/Exit), RampTool, PreviewRampPlace ghost, CompositeCadCommand (tek undo), RampDefaults geometri sabitleri (LengthMm=100, MaxGradePercent=15), TrackGraph switch metodları (Build overload, GetSwitchState, IsSwitchPort, GetSwitchForPort, AreAdjacent), RouteTool SwitchState-aware routing (RouteStep.SwitchState). | Zemin→Üst Kat rampalı geçiş modellenir; Ctrl+Z tek adımda geri alır; TrackTool portlara segment bağlayabilir; rota makas yönünü doğru seçer. |
-| v3.0.27 | **SwitchTool (Makas prefab):** 1 tıklamada prefab yerleştirme (RailSwitch + 3 port düğümü: Entry/MainExit/DivergingExit), SwitchTool, PreviewSwitchPlace ghost, CompositeCadCommand (tek undo), BoundServoDeviceId. | 1 tıklamada makas+3 port oluşur; Ctrl+Z tek adımda geri alır; TrackTool portlara segment bağlayabilir. |
-| v3.0.28 | **Feature Tree:** hiyerarşik ağaç + çift yönlü seçim senkronu + çift tık zoom-to-entity + göster/gizle/kilit. | Ağaç ↔ tuval senkron kusursuz. |
-| v3.0.29 | Sağ tık **Radyal Menü** (bağlama duyarlı: boşluk/ray/hat/makas farklı komut setleri) + kısayol haritası dokümantasyonu. | Radyal menü Fluent animasyonlu açılır. |
-
-## FAZ E — Donanım-Ray Eşleme (Rubber-Band Binding)
-
-| Sürüm | Mikro-İstek | Kabul Kriteri |
-|---|---|---|
-| v3.0.30 | `HardwareEndpoint` üretimi: ElectronicsView cihazlarından RFID/Servo uçları; EditorView kenar rafında yüzen çipler + elastik Bézier çizgileri (Adorner). | Uçlar listelenir, çizgiler sürüklemede uzar. |
-| v3.0.31 | **BindTool:** sürükle-bırak, hedef doğrulama (RFID→segment/ankraj, Servo→makas), geçersizde kırmızı + geri yaylanma; `BindHardwareCommand` + `HardwareBindings` kaydı (SegmentId + OffsetMm). | Bağlama undo'lu; Feature Tree'de ✔ görünür. |
-| v3.0.32 | Tutarlılık denetçisi: bağsız makas/istasyon, çift bağlanmış RFID vb. için uyarı listesi (HomeView kartı + terminal Warn). | Eksik binding'ler raporlanır. |
-
-## FAZ F — Firmware Üretimi ve OTA
-
-| Sürüm | Mikro-İstek | Kabul Kriteri |
-|---|---|---|
-| v3.0.33 | `firmware/` PlatformIO workspace + `common/NonBlockingTask.h` + istasyon/tren durum makinesi çekirdekleri (Bölüm 5.2) — elle derlenebilir referans. | `pio run` iki ortamda da derler. |
-| v3.0.34 | `FirmwareGenerator`: Scriban şablonları + DB (Devices, Bindings) → `config.h`/`main.cpp` üretimi; BindingHash. | Üretilen kod derlenebilir ve cihaz-özgü. |
-| v3.0.35 | `BuildService`: pio CLI Process sarmalayıcı, canlı derleme logu terminale, SemaphoreSlim kuyruk. | Tek tık "Derle" → bin + SHA256. |
-| v3.0.36 | `OtaUploader` + `Verify`: espota upload, ilerleme %, reboot sonrası sürüm doğrulama; ElectronicsView'da cihaz başına "Güncelle" butonu + güncel değil ⚠ rozeti. | Uçtan uca tek tık OTA (gerçek/loopback test). |
-
-## FAZ G — Senaryolar, Mutfak ve State Recovery
-
-| Sürüm | Mikro-İstek | Kabul Kriteri |
-|---|---|---|
-| v3.0.37 | Senaryo CRUD: adım listesi (tren, hedef masa, bekleme, öncelik) DB'ye. | Senaryolar kaydedilir/düzenlenir. |
-| v3.0.38 | **KitchenView:** masa kartları, sipariş kuyruğu, tek tık senaryo başlat/duraklat; komutlar `DispatchService` üzerinden yayınlanır. | Mutfaktan "Tren 1 → Masa 5" akışı gerçek cihazla çalışır. |
-| v3.0.39 | **HomeView (Dashboard):** sistem özeti, aktif senaryo, cihaz sağlık ızgarası, **E-Stop** (QoS2 retained + tüm komut hatlarını kilitler). | E-Stop < 100 ms'de tüm cihazlara ulaşır ve UI kilitlenir. |
-| v3.0.40 | **State Recovery (tam):** debounced TrainStates/SwitchStates yazımı, açılışta auto-load + makas senkron yayını + "kaldığı yerden devam" raporu. | Uygulama öldürülüp açıldığında durum birebir döner. |
-| v3.0.41 | **BlockSignalController (gerçek mod):** `PartitionIntoBlocks` + komut öncesi blok rezervasyonu; ihlalde komut reddi + Warn. | İki tren aynı bloğa asla yönlendirilmez. |
-
-## FAZ H — SİMÜLASYON MOTORU (FINAL STAGE)
-
-| Sürüm | Mikro-İstek | Kabul Kriteri |
-|---|---|---|
-| v3.0.42 | `SimulationLoop`: dedicated thread, sabit Δt=1/120, accumulator, SimClock (TimeScale/Pause/Step); çift tamponlu snapshot köprüsü. | UI hiç kasmadan boş dünya 120 Hz tick loglar. |
-| v3.0.43 | `ArcLengthPath`: Route → kümülatif uzunluk tablosu, `Sample(s)` (pozisyon/tanjant/Z/eğim); birim testleri. | s-taraması pürüzsüz örnekler döner. |
-| v3.0.44 | **TrainDynamics:** ivme/fren/sürtünme/rampa denklemleri (Bölüm 6.3) + hedef hız profili; tren görseli 2-bojeli yönelimle tuvalde interpolasyonlu akar. | Rampada gözle görülür yavaşlama; hareket 60 fps pürüzsüz. |
-| v3.0.45 | **VirtualStationEsp32 / VirtualTrainController:** C++ durum makinesi eşleniği, gömülü broker'a gerçek istemci olarak bağlanır; RFID geçiş olayları s-konumundan üretilir; yapay LAN gecikmesi. | Simüle "Tren 1 → Masa 5" akışı, gerçek akışla aynı MQTT trafiğini üretir (terminalden birebir izlenir). |
-| v3.0.46 | Lazer engel simülasyonu (öndeki trene s-mesafesi) + `BlockSignalController` sim entegrasyonu: fren mesafesi hesaplı blok durması. | Çok trenli çakışma senaryosu güvenle durur. |
-| v3.0.47 | Senaryo oynatıcı entegrasyonu: KitchenView senaryoları simülasyon dünyasında uçtan uca koşar (Digital Twin tamam). | Aynı senaryo gerçek + sanal modda aynı davranır. |
-| v3.0.48 | **Sertleştirme ve test finali:** Simulation.Tests (fizik determinizmi, fren mesafesi, blok ihlali imkânsızlığı), yük testi (5 tren/50 istasyon), 24 saat soak koşusu, performans profili. | Tüm test paketi yeşil → **v3.1.0 Release**. |
+**UI test kimlik bloğu:** T330–T399 (App.Tests + Cad.Tests FeatureTree/ViewModel testleri).
+**İkon standardı (tüm faz):** Birincil = Wpf.Ui `SymbolIcon` (Fluent System Icons — pakette hazır,
+ek bağımlılık YOK). Eksik sembol olursa ikincil = `Material.Icons.WPF` (MIT lisans) NuGet paketi;
+üçüncül = `MahApps.Metro.IconPacks.Modern` (MIT). Yeni paket eklemek plan onayı gerektirir; PNG/asset
+dosyası eklenmez, yalnızca font/vektör ikon kullanılır (DPI bağımsızlığı).
 
 ---
+## v3.0.29.1 — Üst Ribbon: Sekmeli Komut Şeridi + Quick Access
+**Amaç:** Alphacam'deki sekmeli üst şerit düzeni: tüm araçlar ikonlu butonlarla üstte, kısayol
+ipuçları tooltip'te ("ScreenTip'te kısayol göster" davranışı).
+**İçerik:**
+- Üst bölge iki katman: (1) **Quick Access mini-bar** (pencere başlığı hizasında): Kaydet(Ctrl+S),
+  Geri Al(Ctrl+Z), Yinele(Ctrl+Y) — her zaman görünür. (2) **Sekmeli şerit**: `Giriş` · `Çizim` ·
+  `Düzen` · `Görünüm` sekmeleri.
+- `Giriş`: Seç(S), Taşı-yakında, Sil(Del), Kopyala/Kes/Yapıştır, katman ComboBox + göz/kilit (mevcut).
+- `Çizim`: Ray(T), Hat(R), Hibrit(H), Rampa, Makas — mevcut SetTool komutlarına bağlanır; aktif araç
+  butonu vurgulu (toggle görünümü, tek doğruluk kaynağı EditorViewModel.ActiveToolName).
+- `Düzen`: Undo/Redo, Delete, SplitSegment, (ilerisi için boş grup — Fillet/Trim YOK, bkz. YOK listesi).
+- `Görünüm`: Zoom Extents, Zoom Window, Grid ayarı, Snap toggle (F9 ile aynı komut), tema.
+- Her buton: SymbolIcon + başlık + ToolTip'te "İşlev (Kısayol)" formatı.
+- Şerit tanımı VERİ-SÜRÜMLÜ: `RibbonDefinition.cs` içinde komut listesi (id, ikon, kısayol, grup) —
+  XAML bu listeden ItemsControl ile üretilir. (Alphacam'in "toolbar customize" temeli; kullanıcı
+  özelleştirmesi BU sürümde YOK, sadece veri yapısı hazırlanır.)
+**YOK:** Kullanıcı toolbar özelleştirme UI'ı (ileride), Fillet/Trim/Offset gibi geometrik komutlar
+(çekirdek desteklemiyor — eklemek Y11 kapsam taşması), ribbon collapse animasyonları.
+**Kabul:** Tüm mevcut araçlara şeritten erişilir; aktif araç vurgulanır; tooltip'lerde kısayol görünür;
+klavye kısayolları AYNEN çalışmaya devam eder (S/T/R/H/F9/Esc/Enter/Del/Ctrl+C-X-V-Z-Y-S).
+**Test:** T330–T335 (ViewModel: SetTool eşlemesi, ActiveToolName senkronu, RibbonDefinition bütünlüğü —
+her komutun geçerli ikon+kısayol+handler'ı var; kısayol çakışma taraması testi).
 
-# BÖLÜM 8 — RİSKLER VE MİMARİ KARAR KAYITLARI (ADR ÖZETİ)
+---
+## v3.0.29.2 — Sekmeli Çoklu Belge (Üstte Sayfalar)
+**Amaç:** Alphacam/tarayıcı tarzı: üstte SAYFA sekmeleri; birden çok proje/çizim aynı anda açık.
+**İçerik:**
+- `DocumentTabsViewModel`: açık belgeler listesi (her biri kendi `CadDocument` + `CommandStack` +
+  `SelectionService` + ToolController seti — İZOLE; sekmeler arası hiçbir paylaşım yok).
+- Sekme şeridi (şeridin altı, tuvalin üstü): sekme başlığı = proje adı; ★ kirli (kaydedilmemiş) işareti;
+  X kapat butonu; çift-tık = yeniden adlandır (DB'ye Project.Name yazılır); sürükle-bırak = yeniden sırala.
+- `+` butonu: yeni boş proje (yeni ProjectId, SabitKatmanlar seed'i standart akışla).
+- Kapatırken kirliyse Wpf.Ui MessageBox: Kaydet / Kaydetme / Vazgeç.
+- Ctrl+Tab = sonraki sekme, Ctrl+W = sekme kapat (kaydet uyarılı).
+- Ctrl+S yalnız AKTİF sekmeyi kaydeder (mevcut CadDocumentStore, ProjectId'siyle — kod değişmez, çağrı bağlanır).
+**YOK:** Sekmeyi ayrı pencereye koparma, split-view, belgeler arası kopyala-yapıştır (pano zaten
+in-process tek — bu doğal ÇALIŞIR ve çalışması KABUL, engellenmez), oturum geri yükleme (son açık sekmeler).
+**Kabul:** İki proje açıkken çizimler, undo yığınları ve seçimler birbirine KARIŞMAZ (en kritik kriter);
+kirli sekme kapatılırken uyarı çıkar; yeniden adlandırma DB'ye yansır ve yeniden açılışta korunur.
+**Test:** T340–T347 (izolasyon: sekme-A'da çizim sekme-B'nin CommandStack'ine düşmez; kirli bayrak;
+rename persist; kapat-uyarı akışı ViewModel testi; Ctrl+Tab döngüsü).
 
-1. **ACK penceresi (fiziksel gerçek):** Makas onayı RFID okumasından sonra geldiği için, sahada RFID okuyucu ile makas arasındaki ray mesafesi `v_tren · (t_okuma + t_roundtrip + t_servo)` değerinden uzun olmalıdır. Editöre ileride bu mesafeyi doğrulayan bir kural eklenebilir (mevcut binding modeli — SegmentId+OffsetMm — bunu zaten destekler; arter kırılmaz).
-2. **Neden MQTTnet gömülü broker:** Harici broker kurulumu (Mosquitto) saha kurulumunu zorlaştırır; MQTTnet in-process, LWT/QoS2/retained tam destekler.
-3. **Neden PlatformIO-CLI (Arduino-CLI yerine):** Ortam tanımı `platformio.ini`'de deterministik; kütüphane sürümleri kilitlenebilir → "her makinede aynı bin" garantisi. Arduino-CLI, `BuildService` arayüzü sayesinde alternatif implementasyon olarak eklenebilir.
-4. **Neden DrawingVisual (Shapes değil):** Binlerce segmentte WPF Shape nesneleri layout maliyetiyle çöker; DrawingVisual + spatial hash endüstriyel CAD hissinin ön koşuludur.
-5. **Neden s-parametrizasyonu:** 2D serbest fizik (x,y kuvvetleri) raylı sistemde gereksiz ve gürültülüdür; tren raydan çıkamaz → tek serbestlik derecesi `s`. Pürüzsüzlük, determinizm ve blok matematiği bedavaya gelir.
-6. **Şema evrimi:** Yeni ihtiyaçlar (ör. çift makas, döner tabla) yeni tablo/kolon **ekleyerek** karşılanır; `SchemaVersion` alanı proje dosyası uyumluluğunu yönetir.
+---
+## v3.0.29.3 — Feature Tree Kolaylıkları (Katman Ağacı v2)
+**Amaç:** v3.0.28 ağacını Alphacam "Project Manager" konforuna çıkarmak.
+**İçerik:**
+- **Arama/filtre kutusu** (ağacın üstü): ada + türe göre canlı süzme; eşleşen düğümün ataları otomatik açılır.
+- **Tür grupları:** Katman düğümü altında ikinci seviye: Raylar / Hatlar / Makaslar / Rampalar
+  (sayaçlarıyla: "Makaslar (3)").
+- **Toplu göz/kilit:** grup ve katman düğümlerinde göz+kilit ikonları → altındaki TÜM öğelere uygular
+  (mevcut SetLayerVisibility/SetLayerLock + entity bazlı IsVisible tek-kaynağı ÜZERİNDEN — yeni
+  görünürlük yolu AÇILMAZ).
+- **Solo/İzole:** sağ-tık → "Yalnız bunu göster" (diğer katmanlar gizlenir; tekrar seçilince geri).
+  İzole durumu bir UI durumudur, belgeye YAZILMAZ.
+- **Sağ-tık ağaç menüsü:** Yeniden adlandır (katman/rota), Sil (undo'lu, mevcut DeleteEntitiesCommand),
+  Zoom (çift-tık ile aynı), Solo, Tümünü Göster.
+- **Sürükle-bırak katman değiştirme:** entity düğümünü başka katman düğümüne bırak →
+  `ChangeLayerCommand` (YENİ, ICadCommand, undo'lu — Cad katmanına eklenen TEK sınıf).
+**YOK:** Ağaçtan çoklu-sürükleme, katman ekleme/silme (3 sabit katman kararı korunur), tür grubu
+altında yeniden sıralama.
+**Kabul:** Arama 200+ nesnede takılmadan süzer (canlı); solo→geri tam döner; sürükle-bırak katman
+değişimi Ctrl+Z ile geri alınır; toplu göz/kilit tuval render'ına ANINDA yansır.
+**Test:** T350–T357 (filtre eşleşme+ata-açma; grup sayaçları; ChangeLayerCommand execute/undo; solo
+durum makinesi; toplu görünürlük → IsVisible sonuçları).
 
-> **Sonraki adım önerisi:** v3.0.0 mikro-isteği ile başlayın: "Bölüm 1'deki solution iskeletini, Directory.Build.props ve boş 6 sayfa navigasyonuyla oluştur." Her sürümün kabul kriteri, bir sonraki isteğe geçiş kapısıdır.
+---
+## v3.0.29.4 — Radyal Menü v2 (Görsel + İşlev Genişlemesi)
+**Amaç:** v3.0.29 radyalini Alphacam/oyun-motoru kalitesine çıkarmak: ikonlu dilimler, alt halka,
+son-komut tekrarı.
+**İçerik:**
+- Dilimlerde SymbolIcon + etiket; hover'da dilim büyür (Fluent animasyon, 120ms).
+- **Alt-halka (submenu):** "Çizim ▸" dilimi → ikinci halka (Ray/Hat/Hibrit/Rampa/Makas). Tek seviye
+  derinlik SINIRI (iki halkadan fazlası YOK).
+- **Merkez buton = son komut:** son çalıştırılan radyal komutu merkezde ikonuyla; tıkla → tekrar
+  (Alphacam'de sağ-tık-tekrar alışkanlığının karşılığı).
+- Bağlam setleri genişler: boşluk / segment / rota / makas / rampa / ÇOKLU-SEÇİM (yeni: Sil, Kopyala,
+  Katman değiştir▸) / Feature Tree üstü (ağaç sağ-tık menüsüyle AYNI komut kaynağı — komut tanımı tek yerde).
+- Klavye: radyal açıkken ok tuşları dilim gezdirir, Enter seçer, Esc kapatır (Esc=iptal ilkesi burada da).
+- MÜHÜRLÜ KURAL KORUNUR: radyal SADECE araç Idle iken açılır; araç meşgulken sağ-tık = zincir bitir/commit.
+**YOK:** Serbest özelleştirilebilir dilimler, ikiden derin halkalar, radyalden metin girişi.
+**Kabul:** Idle-dışı açılmama davranışı REGRESYONsuz; alt-halka ve merkez-tekrar çalışır; tüm dilim
+komutları ribbon'daki eşdeğerleriyle AYNI handler'ı kullanır (çift mantık yok).
+**Test:** T360–T366 (bağlam→dilim seti seçimi; son-komut kaydı/tekrarı; Idle guard regresyon; klavye
+gezinme durum makinesi; çoklu-seçim seti).
+
+---
+## v3.0.29.5 — Görünüm Kolaylıkları + Durum Çubuğu
+**Amaç:** Alphacam'in Z=Zoom All refleksi ve profesyonel CAD durum çubuğu.
+**İçerik:**
+- **Zoom Extents** (tüm çizimi kadrajla — kısayol `Z`, Alphacam birebir) ve **Zoom Window**
+  (W ile pencere çiz-yaklaş; Esc iptal). Her ikisi Görünüm şeridinde ikonlu.
+- **Snap toolbar'ı** (durum çubuğunda toggle grubu): Endpoint / OnSegment / Grid snap AYRI AYRI
+  açılıp kapanır (SnapEngine'e üç bayrak; F9 = üçünü birden aç/kapa — F9 davranışı DEĞİŞMEZ,
+  "hepsi kapalı↔son kombinasyon" olarak çalışır).
+- **Durum çubuğu** (pencere altı): imleç dünya koordinatı (X: Y: mm, AwayFromZero yuvarlak),
+  aktif katman adı, aktif araç, snap durum LED'leri, zoom yüzdesi, seçili nesne sayısı.
+- Orta-tuş çift-tık = Zoom Extents (CAD refleksi).
+**YOK:** Mini-harita, kaydedilmiş görünümler (named views), 3D/izometrik görünüm.
+**Kabul:** Z her durumda tüm çizimi kadrajlar (boş belgede no-op, sıfıra bölme guard'lı — AGENTS 7);
+snap bayrakları teker teker çalışır ve F9 eski davranışını bozmaz; koordinat göstergesi
+MouseMove'da TAHSISSIZ güncellenir (hot-path — string.Format değil, önbellekli StringBuilder/binding).
+**Test:** T370–T376 (Zoom Extents matematiği: bounds→transform; boş belge guard; snap bayrak
+kombinasyonları SnapEngine testi; F9 toggle regresyon; koordinat yuvarlama AwayFromZero).
+
+---
+## v3.0.29.6 — Seçim Filtreleri + Hızlı Seçim Komutları
+**Amaç:** Kalabalık çizimde Alphacam tarzı hedefli seçim.
+**İçerik:**
+- **Seçim filtresi** (durum çubuğunda açılır): Tümü / Sadece Ray / Sadece Hat / Sadece Makas /
+  Sadece Rampa / Sadece Düğüm. Aktifken tık VE marquee yalnız o türü seçer (SelectTool'a tür
+  yüklemi enjekte edilir — SelectTool İMZASI değişmez, ToolContext'e `SelectionTypeFilter` eklenir).
+- **Ctrl+A** = filtreye uyan görünür+kilitsiz HERŞEYİ seç.
+- **Benzerlerini Seç** (sağ-tık/radyal, seçiliyken): aynı türden tümünü seç.
+- **Seçimi Tersine Çevir** (Ctrl+Shift+I).
+- Filtre aktifken durum çubuğunda uyarı rozeti (yanlışlıkla "niye seçemiyorum" karışıklığına karşı).
+**YOK:** Kaydedilmiş seçim setleri, özellik-bazlı sorgu (uzunluğa göre vb.).
+**Kabul:** Filtre marquee'nin window/crossing matematiğini DEĞİŞTİRMEZ (yalnız sonucu süzer);
+Ctrl+A gizli/kilitliyi ASLA seçmez (IsSelectable tek-kaynak); tersine çevirme filtreye saygılıdır.
+**Test:** T380–T386 (filtreli tık/marquee; Ctrl+A gizli-hariç; benzer-seç; tersine çevir; rozet durumu).
+
+---
+## v3.0.29.7 — Kısayol Haritası + F1 Yardım Kaplaması + 🔍 D2 DENETİMİ
+**Amaç:** Fazı belgeleyip mühürlemek: tüm kısayollar tek kaynakta, F1'de görsel yardım.
+**İçerik:**
+- **`ShortcutMap.cs` TEK KAYNAK:** tüm kısayollar (tuş, komut id, açıklama, bağlam) burada;
+  ribbon tooltip'leri, radyal etiketleri ve F1 ekranı BU haritadan beslenir (üç ayrı liste YASAK).
+  Çakışma denetimi testle kilitlenir.
+- **F1 = Kısayol Kaplaması:** yarı saydam tam-ekran panel; kategorilere ayrılmış kısayol kartları
+  (Araçlar / Düzenleme / Görünüm / Seçim / Sistem); arama kutusu; Esc/F1 kapatır.
+- Kısayol tablosunun NİHAİ hali (mühürlü davranışlar + Alphacam eklentileri):
+  `S` Seç · `T` Ray · `R` Hat · `H` Hibrit · `Z` Zoom Extents · `W` Zoom Window · `Del` Sil ·
+  `F9` Snap (tümü) · `F1` Yardım · `Esc` İPTAL · `Enter/SağTık` COMMIT · `Ctrl+C/X/V` Pano ·
+  `Ctrl+Z/Y` Undo/Redo · `Ctrl+S` Kaydet · `Ctrl+A` Tümünü Seç · `Ctrl+Shift+I` Seçimi Çevir ·
+  `Ctrl+Tab` Sekme Değiştir · `Ctrl+W` Sekme Kapat.
+  (NOT: Alphacam'in M=Move/F=Fillet/X=Explode/E=Extend/T=Trim harfleri BİLİNÇLİ ALINMADI — karşılık
+  gelen çekirdek komutlar yok; T zaten Ray aracımız. Bu not, gelecekteki modellerin "Alphacam'de
+  vardı" diye kapsam taşırmasını önlemek içindir.)
+- **🔍 D2 DENETİM DURAĞI:** v3.0.29.1–.29.7 geriye-dönük denetim → `VERSIYON_KONTROL_DENETIMI.txt`:
+  D-serisi döküm (araç kaynakları D1 tarzı, gövdeler, tam koşum, T010+T011 kırmızı-yeşil, yapısal
+  taramalar: inline renk 0, hot-path LINQ 0, ShortcutMap çakışma 0, Idle-guard yerinde) + kullanıcı
+  BLOK manuel turu (aşağıdaki M listesi).
+**Kabul/Manuel (D2 blok turu):** M1 şeritten her araca eriş + tooltip kısayolları; M2 iki sekmede
+izole çizim + kirli-kapat uyarısı; M3 ağaçta ara/solo/sürükle-katman-değiştir + Ctrl+Z; M4 radyal
+alt-halka + merkez-tekrar + çizim ortasında AÇILMAMA; M5 Z/W zoom + snap toggle'ları + durum çubuğu
+koordinatı; M6 filtreli seçim + Ctrl+A; M7 F1 kaplaması + arama; M8 REGRESYON: F9, Esc/Enter,
+katman gizle/kilit, kopyala-yapıştır, rota okları, makas/rampa yerleştirme, Ctrl+S round-trip.
+**Test:** T390–T394 (ShortcutMap çakışma+bütünlük; F1 panel ViewModel; tooltip-harita eşleşmesi).
+
+═══════════════════════════════════════════════════════════════════
+# FAZ E — DONANIM EŞLEME · v3.0.30 → v3.0.32
+═══════════════════════════════════════════════════════════════════
+## v3.0.30 — HardwareEndpoint Üretimi (Yüzen İpler)
+**Amaç:** ElectronicsView'da tanımlı cihazlardan (RFID/Servo) editör kenarında bağlanmayı bekleyen
+uçlar üretmek. **İçerik:** `HardwareEndpoint` modeli (DeviceId, Tür, bağlı-mı); EditorView sağ kenar
+rafında yüzen ip listesi (Feature Tree "Donanım" grubuyla senkron); her uçtan kaynağına yarı saydam
+elastik Bézier (Adorner katmanı; render hot-path kuralları geçerli — Freeze'li geometri, tahsissiz
+güncelleme); cihaz LED durumu (Yeşil/Sarı/Kırmızı/Gri — PingService+DeviceRegistry mevcut altyapısından).
+Ribbon `Görünüm`e "Donanım Rafı" toggle'ı; radyal boşluk setine "Donanım Rafını Aç". **Kabul:** Cihaz
+tek yerde tanımlanır her yerde referanslanır; raf toggle'ı durum çubuğuna işlenir; ipler sürüklemede
+uzar (bağlama YAPMAZ — o v3.0.31). **Test:** T400–T406.
+
+## v3.0.31 — BindTool (Sürükle-Bağla)
+**Amaç:** Ucu hedefe sürükleyip bırakarak donanım-geometri bağı kurmak. **İçerik:** hedef doğrulama
+(RFID→segment/ankraj noktası +OffsetMm; Servo→makas); geçersiz hedefte kırmızı vurgu + geri yaylanma
+animasyonu; `BindHardwareCommand` (undo'lu) + `HardwareBindings` tablosuna kayıt (mevcut şema; şema
+yetmezse DUR-sor, Y8); bağlanan uç raftan düşer, Feature Tree'de cihaz⚡ rozeti; makasın
+BoundServoDeviceId'si bu akışla dolar. Esc=sürüklemeyi iptal (ilke korunur). **Kabul:** bağ undo ile
+çözülür; yanlış tür hedefe bağlanamaz; Ctrl+S sonrası kapat-aç bağları geri getirir (round-trip test).
+**Test:** T410–T417 (+Data round-trip T562).
+
+## v3.0.32 — Tutarlılık Denetçisi
+**Amaç:** Sahaya çıkmadan önce eksik/çelişkili kurulum uyarıları. **İçerik:** kural motoru (saf Core,
+WPF'siz): bağsız makas (servo yok), bağsız istasyon RFID'i, çift-bağlı cihaz, yetim rota adımı
+(v3.0.24'te ertelenen borç BURADA kapanır), boş katmanda kilit, port'suz segment ucu. Sonuçlar:
+HomeView kartı + terminale Warn (LogBus) + Feature Tree'de ⚠ rozeti + durum çubuğu sayacı; karta
+tıkla → ilgili nesneye zoom. Denetçi Ctrl+S öncesi otomatik + ribbon `Giriş`te "Denetle" butonu.
+**Kabul:** her kural için en az bir pozitif+negatif test; uyarı nesneye zoom götürür; denetçi 500
+nesnede <100ms (performans testi). **Test:** T420–T428.
+
+═══════════════════════════════════════════════════════════════════
+# FAZ F — FIRMWARE & OTA · v3.0.33 → v3.0.36
+═══════════════════════════════════════════════════════════════════
+## v3.0.33 — PlatformIO Çatısı + Referans Firmware
+`firmware/` workspace; `common/NonBlockingTask.h`; istasyon+tren durum makinesi çekirdekleri (C++,
+elle derlenebilir referans; `pio run` iki ortamda derler). UI dokunuşu yok. **Test:** T430–T433
+(host-side: üretilen dosya varlığı/derlenebilirlik sarmalayıcı testleri).
+## v3.0.34 — FirmwareGenerator 🔍
+Scriban şablonları + DB (Devices, Bindings) → cihaz-özgü `config.h`/`main.cpp`; BindingHash (üretilen
+kod hangi bağ setinden çıktı — değişince "güncel değil"). ElectronicsView cihaz kartında "Kod Üret".
+**🔍 DENETİM:** v3.0.30–.34 (FAZ E+F yarısı) geriye-dönük denetim raporu. **Test:** T434–T439.
+## v3.0.35 — BuildService
+pio CLI Process sarmalayıcı; canlı derleme logu terminal paneline (LogBus kanalı); SemaphoreSlim tek
+kuyruk; çıktı bin + SHA256. Cihaz kartında "Derle" + ilerleme. **Test:** T440–T445 (sahte-pio ile
+process/kuyruk/hash testleri — gerçek altyapı ilkesine loopback istisnası sapmaya yazılır).
+## v3.0.36 — OtaUploader + Verify
+espota upload, ilerleme %, reboot sonrası sürüm doğrulama (MQTT heartbeat'ten BindingHash karşılaştır);
+cihaz başına "Güncelle" + "güncel değil" rozeti. Uçtan uca tek tık OTA (loopback test). **Test:** T446–T452.
+
+═══════════════════════════════════════════════════════════════════
+# FAZ G — OPERASYON · v3.0.37 → v3.0.41
+═══════════════════════════════════════════════════════════════════
+## v3.0.37 — Senaryo CRUD
+Adım listesi (tren, hedef masa/istasyon, bekleme sn, öncelik) DB'ye; senaryo düzenleyici sayfası
+(sekmeli belge sistemine "Senaryo" sekme türü olarak eklenir — v3.0.29.2 altyapısı yeniden kullanılır).
+**Test:** T460–T466 (+CRUD round-trip).
+## v3.0.38 — KitchenView 🔍
+Masa kartları, sipariş kuyruğu, tek tık senaryo başlat/duraklat; `DispatchService` üzerinden MQTT
+komut yayını. **🔍 DENETİM:** v3.0.35–.38. **Test:** T470–T476.
+## v3.0.39 — HomeView Dashboard + E-Stop
+Sistem özeti, aktif senaryo, cihaz sağlık ızgarası; **E-Stop**: QoS2 retained + tüm komut hatları
+kilitlenir + UI kilit bandı; <100ms hedefi ölçümle kanıtlanır. E-Stop durum çubuğunda ve HER sayfada
+erişilebilir (global komut). **Test:** T480–T487.
+## v3.0.40 — State Recovery
+Uygulama/broker yeniden başlarsa: retained mesajlar + DB'den son bilinen durum; yarım senaryo devam/iptal
+diyaloğu. **Test:** T488–T493.
+## v3.0.41 — BlockSignalController
+TrackGraph bloklarına sinyal ataması; bir blokta tek tren kuralının KOMUT tarafı (donanım sinyali +
+yazılım kilidi); ihlalde otomatik durdurma + Warn. Editörde blok sınırlarını göster toggle'ı (Görünüm).
+**Test:** T494–T499.
+
+═══════════════════════════════════════════════════════════════════
+# FAZ H — SİMÜLASYON · v3.0.42 → v3.0.48 → v3.1.0
+═══════════════════════════════════════════════════════════════════
+## v3.0.42 — SimulationLoop 🔍
+Sabit Δt (accumulator) çekirdek döngü (Simulation projesi NİHAYET dolar — T006 iskelet bekçisi bu
+sürümde bilinçli güncellenir, kullanıcı onaylı, sapmaya yazılır). Oynat/Duraklat/Hız (1×/4×/10×)
+ribbon `Görünüm`e. **🔍 DENETİM:** v3.0.39–.42. **Test:** T500–T507 (determinizm: aynı tohum+adım
+sayısı → birebir aynı durum).
+## v3.0.43 — ArcLengthPath
+s-parametrizasyonu: rota → toplam uzunluk + s→(x,y,z) örnekleyici; segment geçişleri TrackGraph
+komşuluğundan; rampa Z interpolasyonu. **Test:** T508–T514.
+## v3.0.44 — TrainDynamics
+İvme/fren/sürtünme/rampa eğim etkisi; hız limitleri; durma mesafesi hesabı (blok sinyal entegrasyonu
+için). **Test:** T515–T522 (fizik sınır durumları: sıfır uzunluk, tam eğim, ani dur).
+## v3.0.45 — Virtual ESP32/Train
+C++ durum makinesinin C# eşleniği; MQTT üzerinde GERÇEK cihazla AYNI sözleşme (A3 arteri) — DispatchService
+farkı BİLMEZ. Sanal tren editör tuvalinde hareketli işaretçi olarak render (hot-path kuralları).
+**Test:** T523–T530 (sözleşme eşdeğerlik testleri: aynı komut→aynı telemetri şeması).
+## v3.0.46 — Lazer Engel + Güvenlik Simülasyonu 🔍
+Sanal lazer bariyer; engel algılanınca tren durur, senaryo bekler; E-Stop simülasyonda da çalışır.
+**🔍 DENETİM:** v3.0.43–.46. **Test:** T531–T536.
+## v3.0.47 — Senaryo Oynatıcı (Uçtan Uca Sanal)
+KitchenView senaryosu TAMAMEN sanal filoyla koşar: çoklu tren, blok kilitleri, istasyon bekleme;
+çakışma-sız kanıt testi (iki tren aynı bloğa asla giremez — property-tabanlı test). **Test:** T537–T544.
+## v3.0.48 — Sertleştirme + Kapanış Denetimi
+Tüm FAZ H performans/stres (10 tren × 10× hız × 30 dk sızıntı testi), belge güncellemeleri, teknik
+borç listesi kapanış kararları (FA lisansı dahil), TAM geriye-dönük denetim (v3.0.42–.48) → **v3.1.0
+ETİKETİ** (kullanıcı onayıyla tag+push). **Test:** T545–T552.
+
+═══════════════════════════════════════════════════════════════════
+# EK — 🔍 DENETİM DURAKLARI ÖZETİ
+═══════════════════════════════════════════════════════════════════
+v3.0.29.7 (FAZ D2) · v3.0.34 · v3.0.38 · v3.0.42 · v3.0.46 · v3.0.48 (final).
+Her durakta: D-serisi ham döküm + T010/T011 kırmızı-yeşil + kullanıcı blok manuel turu zorunludur.

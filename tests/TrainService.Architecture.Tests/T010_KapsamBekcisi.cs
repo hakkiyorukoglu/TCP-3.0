@@ -31,8 +31,10 @@ public class T010_KapsamBekcisi
     {
         int cadTests = CountTests("TrainService.Cad.Tests");
         int appTests = CountTests("TrainService.App.Tests");
+        int dataTests = CountTests("TrainService.Data.Tests");
 
         cadTests.Should().BeGreaterThanOrEqualTo(144, "Cad.Tests tabanı 144 (v3.0.28 — T310 FeatureTree testleri)");
         appTests.Should().BeGreaterThanOrEqualTo(10, "App.Tests tabanı 10 (v3.0.29 — T320 RadialMenu testleri)");
+        dataTests.Should().BeGreaterThanOrEqualTo(26, "Data.Tests tabanı 26 (v3.0.29 — T560/T561 round-trip testleri)");
     }
 }

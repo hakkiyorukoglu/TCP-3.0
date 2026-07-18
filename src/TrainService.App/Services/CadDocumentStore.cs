@@ -22,6 +22,8 @@ public class CadDocumentStore : ICadDocumentStore
         await _context.TrackNodes.Where(n => n.ProjectId == projectId).ExecuteDeleteAsync();
         await _context.TrackSegments.Where(s => s.ProjectId == projectId).ExecuteDeleteAsync();
         await _context.Layers.Where(l => l.ProjectId == projectId).ExecuteDeleteAsync();
+        await _context.Ramps.Where(r => r.ProjectId == projectId).ExecuteDeleteAsync();
+        await _context.Switches.Where(s => s.ProjectId == projectId).ExecuteDeleteAsync();
         _context.ChangeTracker.Clear();
 
         var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
@@ -96,7 +98,41 @@ public class CadDocumentStore : ICadDocumentStore
                 }
                 _context.Routes.Add(dbRoute);
             }
-            // İhtiyaç varsa diğer entity'leri de buraya ekleyebiliriz (Ramp vs).
+            else if (entity is RailSwitch sw)
+            {
+                var dbSw = new RailSwitch
+                {
+                    Id = sw.Id,
+                    ProjectId = projectId,
+                    LayerId = sw.LayerId,
+                    Position = new TrainService.Core.Geometry.Vector2D(sw.Position.X, sw.Position.Y),
+                    RotationDeg = sw.RotationDeg,
+                    EntryNodeId = sw.EntryNodeId,
+                    MainExitNodeId = sw.MainExitNodeId,
+                    DivergingExitNodeId = sw.DivergingExitNodeId,
+                    State = sw.State,
+                    BoundServoDeviceId = sw.BoundServoDeviceId
+                };
+                _context.Switches.Add(dbSw);
+            }
+            else if (entity is Ramp rmp)
+            {
+                var dbRmp = new Ramp
+                {
+                    Id = rmp.Id,
+                    ProjectId = projectId,
+                    LayerId = rmp.LayerId,
+                    SegmentId = rmp.SegmentId,
+                    Position = new TrainService.Core.Geometry.Vector2D(rmp.Position.X, rmp.Position.Y),
+                    RotationDeg = rmp.RotationDeg,
+                    EntryNodeId = rmp.EntryNodeId,
+                    ExitNodeId = rmp.ExitNodeId,
+                    StartZ = rmp.StartZ,
+                    EndZ = rmp.EndZ,
+                    LengthMm = rmp.LengthMm
+                };
+                _context.Ramps.Add(dbRmp);
+            }
         }
 
         await _context.SaveChangesAsync();
@@ -179,6 +215,43 @@ public class CadDocumentStore : ICadDocumentStore
             if (minX <= maxX) route.CachedBounds = new TrainService.Core.Geometry.BoundingBox(minX, minY, maxX, maxY);
             
             document.RestoreEntity(route);
+        }
+
+        var sws = await _context.Switches.Where(s => s.ProjectId == projectId).ToListAsync();
+        foreach (var dbSw in sws)
+        {
+            var sw = new RailSwitch
+            {
+                Id = dbSw.Id,
+                LayerId = dbSw.LayerId,
+                Position = new TrainService.Core.Geometry.Vector2D(dbSw.Position.X, dbSw.Position.Y),
+                RotationDeg = dbSw.RotationDeg,
+                EntryNodeId = dbSw.EntryNodeId,
+                MainExitNodeId = dbSw.MainExitNodeId,
+                DivergingExitNodeId = dbSw.DivergingExitNodeId,
+                State = dbSw.State,
+                BoundServoDeviceId = dbSw.BoundServoDeviceId
+            };
+            document.RestoreEntity(sw);
+        }
+
+        var rmps = await _context.Ramps.Where(r => r.ProjectId == projectId).ToListAsync();
+        foreach (var dbRmp in rmps)
+        {
+            var rmp = new Ramp
+            {
+                Id = dbRmp.Id,
+                LayerId = dbRmp.LayerId,
+                SegmentId = dbRmp.SegmentId,
+                Position = new TrainService.Core.Geometry.Vector2D(dbRmp.Position.X, dbRmp.Position.Y),
+                RotationDeg = dbRmp.RotationDeg,
+                EntryNodeId = dbRmp.EntryNodeId,
+                ExitNodeId = dbRmp.ExitNodeId,
+                StartZ = dbRmp.StartZ,
+                EndZ = dbRmp.EndZ,
+                LengthMm = dbRmp.LengthMm
+            };
+            document.RestoreEntity(rmp);
         }
 
         document.NotifyReloaded();

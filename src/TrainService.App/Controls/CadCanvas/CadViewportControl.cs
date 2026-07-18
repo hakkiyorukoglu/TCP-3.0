@@ -45,6 +45,7 @@ public class CadViewportControl : ContentControl
     private CadDocument? _document;
     private SelectionService? _selectionService;
     private Guid _hoveredId = Guid.Empty;
+    private bool _gridVisible = true;
     private readonly RadialMenuControl _radialMenu = new();
 
     public void AttachSelection(SelectionService sel)
@@ -628,6 +629,12 @@ public class CadViewportControl : ContentControl
 
     private void RenderGrid()
     {
+        if (!_gridVisible)
+        {
+            _gridVisual.RenderOpen().Close(); // clear
+            return;
+        }
+
         using var dc = _gridVisual.RenderOpen();
         
         double baseGrid = _document?.GridSizeMm ?? 100.0;
@@ -788,6 +795,121 @@ public class CadViewportControl : ContentControl
     /// Feature Tree'den cift tiklandiginda entity'e zoom yapar.
     /// Entity'nin bounding box'ini viewport'a sigdirir.
     /// </summary>
+    /// <summary>
+    /// Tüm entity'leri viewport'a sığdır (Zoom Extents).
+    /// </summary>
+    public void ZoomExtents()
+    {
+        if (_document == null || _document.Entities.Count == 0)
+        {
+            // Hiç entity yoksa, origin'e zoom yap
+            Transform.Scale = 1.0;
+            Transform.PanOffset = new Vector2D(0, 0);
+            RenderModelBake();
+            RequestRender();
+            return;
+        }
+
+        double minX = double.MaxValue, minY = double.MaxValue;
+        double maxX = double.MinValue, maxY = double.MinValue;
+        bool hasAny = false;
+
+        foreach (var entity in _document.Entities)
+        {
+            if (entity is TrackNode node)
+            {
+                minX = Math.Min(minX, node.Position.X);
+                minY = Math.Min(minY, node.Position.Y);
+                maxX = Math.Max(maxX, node.Position.X);
+                maxY = Math.Max(maxY, node.Position.Y);
+                hasAny = true;
+            }
+            else if (entity is RailSwitch sw)
+            {
+                minX = Math.Min(minX, sw.Position.X);
+                minY = Math.Min(minY, sw.Position.Y);
+                maxX = Math.Max(maxX, sw.Position.X);
+                maxY = Math.Max(maxY, sw.Position.Y);
+                hasAny = true;
+            }
+            else if (entity is Ramp rmp)
+            {
+                minX = Math.Min(minX, rmp.Position.X);
+                minY = Math.Min(minY, rmp.Position.Y);
+                maxX = Math.Max(maxX, rmp.Position.X);
+                maxY = Math.Max(maxY, rmp.Position.Y);
+                hasAny = true;
+            }
+            else if (entity is TrackSegment seg)
+            {
+                if (_document.TryGetEntity(seg.StartNodeId, out var sn) && sn is TrackNode a &&
+                    _document.TryGetEntity(seg.EndNodeId, out var en) && en is TrackNode b)
+                {
+                    minX = Math.Min(minX, Math.Min(a.Position.X, b.Position.X));
+                    minY = Math.Min(minY, Math.Min(a.Position.Y, b.Position.Y));
+                    maxX = Math.Max(maxX, Math.Max(a.Position.X, b.Position.X));
+                    maxY = Math.Max(maxY, Math.Max(a.Position.Y, b.Position.Y));
+                    hasAny = true;
+                }
+            }
+        }
+
+        if (!hasAny)
+        {
+            Transform.Scale = 1.0;
+            Transform.PanOffset = new Vector2D(0, 0);
+            RequestRender();
+            return;
+        }
+
+        double halfW = (maxX - minX) / 2 + 50;
+        double halfH = (maxY - minY) / 2 + 50;
+        double centerX = (minX + maxX) / 2;
+        double centerY = (minY + maxY) / 2;
+
+        double vpW = ActualWidth;
+        double vpH = ActualHeight;
+        if (vpW < 1 || vpH < 1) return;
+
+        double margin = 0.85;
+        double newScale = Math.Min(vpW * margin / (2 * halfW), vpH * margin / (2 * halfH));
+        newScale = Math.Clamp(newScale, 0.01, 100.0);
+
+        Transform.PanOffset = new Vector2D(
+            centerX - vpW / (2 * newScale),
+            centerY - vpH / (2 * newScale));
+        Transform.Scale = newScale;
+
+        RenderModelBake();
+        RequestRender();
+    }
+
+    /// <summary>
+    /// Pencere yakınlaştırma (MVP: merkezden 1.5x zoom-in).
+    /// </summary>
+    public void ZoomWindow()
+    {
+        Point center = new Point(ActualWidth / 2, ActualHeight / 2);
+        Transform.ZoomAt(center, 1.5);
+
+        if (ToolController != null && _lastSnap != null)
+        {
+            _lastSnap = ToolController.PointerMove(center, 25.0);
+            RenderToolLayer(_lastSnap);
+        }
+
+        RequestRender();
+    }
+
+    /// <summary>
+    /// Izgara görünürlüğünü değiştir.
+    /// </summary>
+    public void ToggleGrid()
+    {
+        _gridVisible = !_gridVisible;
+        RequestRender();
+    }
+
     public void ZoomToEntity(Guid entityId, CadDocument doc)
     {
         if (!doc.TryGetEntity(entityId, out var entity)) return;

@@ -2,55 +2,95 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TrainService.Core.Entities;
+using TrainService.Core.Geometry;
 
 namespace TrainService.Cad.UndoRedo;
 
+/// <summary>
+/// Panodan yapıştırılan entity'leri ekler. Undo ile kaldırır.
+/// v3.0.29.1-fix: Paste artık CommandStack üzerinden undo/redo'lu.
+/// ID remap, referans çözümleme ve +20 offset içerir.
+/// </summary>
 public sealed class PasteEntitiesCommand : ICadCommand
 {
-    private readonly IReadOnlyList<CadEntity> _kaynak;
-    private readonly List<CadEntity> _eklenen = new();
-    private const double Offset = 20.0;
+    private readonly List<CadEntity> _entities;
 
-    public PasteEntitiesCommand(IReadOnlyList<CadEntity> kaynak) => _kaynak = kaynak;
-    public string Description => $"Yapıştır: {_kaynak.Count} nesne";
+    /// <summary>Yapıştırılan entity'lerin yeni ID'leri.</summary>
+    public IReadOnlyList<Guid> EklenenIds => _entities.Select(e => e.Id).ToList();
+
+    public PasteEntitiesCommand(IReadOnlyList<CadEntity> clipboardEntities)
+    {
+        _entities = clipboardEntities.ToList();
+        var idMap = new Dictionary<Guid, Guid>();
+
+        // 1. Her entity'ye yeni ID ata
+        foreach (var e in _entities)
+        {
+            var oldId = e.Id;
+            var newId = Guid.NewGuid();
+            idMap[oldId] = newId;
+            var idProp = e.GetType().GetProperty("Id");
+            if (idProp != null && idProp.CanWrite)
+                idProp.SetValue(e, newId);
+        }
+
+        // 2. Referans property'lerini yeni ID'lere çevir + offset uygula
+        foreach (var e in _entities)
+        {
+            switch (e)
+            {
+                case TrackNode node:
+                    node.Position = new Vector2D(node.Position.X + 20, node.Position.Y + 20);
+                    break;
+
+                case TrackSegment seg:
+                    if (idMap.TryGetValue(seg.StartNodeId, out var newStart))
+                        seg.StartNodeId = newStart;
+                    if (idMap.TryGetValue(seg.EndNodeId, out var newEnd))
+                        seg.EndNodeId = newEnd;
+                    break;
+
+                case RailSwitch sw:
+                    if (idMap.TryGetValue(sw.EntryNodeId, out var newEntry))
+                        sw.EntryNodeId = newEntry;
+                    if (idMap.TryGetValue(sw.MainExitNodeId, out var newMain))
+                        sw.MainExitNodeId = newMain;
+                    if (idMap.TryGetValue(sw.DivergingExitNodeId, out var newDiv))
+                        sw.DivergingExitNodeId = newDiv;
+                    break;
+
+                case Ramp ramp:
+                    if (idMap.TryGetValue(ramp.EntryNodeId, out var newRampEntry))
+                        ramp.EntryNodeId = newRampEntry;
+                    if (idMap.TryGetValue(ramp.ExitNodeId, out var newRampExit))
+                        ramp.ExitNodeId = newRampExit;
+                    if (idMap.TryGetValue(ramp.SegmentId, out var newRampSeg))
+                        ramp.SegmentId = newRampSeg;
+                    break;
+
+                case Route route:
+                    for (int i = 0; i < route.Steps.Count; i++)
+                    {
+                        var step = route.Steps[i];
+                        if (idMap.TryGetValue(step.SegmentId, out var newSegId))
+                            route.Steps[i] = step with { SegmentId = newSegId };
+                    }
+                    break;
+            }
+        }
+    }
+
+    public string Description => $"Yapıştır: {_entities.Count} nesne";
 
     public void Execute(CadDocument doc)
     {
-        _eklenen.Clear();
-        var idMap = new Dictionary<Guid, Guid>();
-        var yeniNodeById = new Dictionary<Guid, TrackNode>();
-
-        foreach (var n in _kaynak.OfType<TrackNode>())
-        {
-            var yeni = new TrackNode {
-                Position = new TrainService.Core.Geometry.Vector2D(n.Position.X + Offset, n.Position.Y + Offset),
-                Z = n.Z, Role = n.Role, LayerId = n.LayerId };
-            idMap[n.Id] = yeni.Id;
-            yeniNodeById[yeni.Id] = yeni;
-            _eklenen.Add(yeni);
-        }
-
-        foreach (var s in _kaynak.OfType<TrackSegment>())
-        {
-            if (!idMap.TryGetValue(s.StartNodeId, out var yeniStart)) continue;
-            if (!idMap.TryGetValue(s.EndNodeId,   out var yeniEnd))   continue;
-            
-            var a = yeniNodeById[yeniStart].Position;
-            var b = yeniNodeById[yeniEnd].Position;
-            var yeni = new TrackSegment {
-                StartNodeId = yeniStart, EndNodeId = yeniEnd,
-                LengthMm = (b - a).Length, LayerId = s.LayerId };
-            _eklenen.Add(yeni);
-        }
-
-        foreach (var e in _eklenen) doc.AddEntity(e);
+        foreach (var e in _entities)
+            doc.RestoreEntity(e);
     }
 
     public void Undo(CadDocument doc)
     {
-        foreach (var e in _eklenen) doc.RemoveEntity(e.Id);
-        _eklenen.Clear();
+        foreach (var e in _entities)
+            doc.RemoveEntity(e.Id);
     }
-
-    public IReadOnlyList<Guid> EklenenIds => _eklenen.Select(e => e.Id).ToList();
 }
