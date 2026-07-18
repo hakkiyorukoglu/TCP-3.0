@@ -47,6 +47,11 @@ dotnet run --project src/TrainService.App/TrainService.App.csproj
 
 ## 📝 Sürüm Geçmişi (Changelog)
 
+- **v3.0.29.3**: `DocumentTabs UI` (Sekmeli Çoklu Belge — UI Entegrasyonu) — Sekme şeridi `EditorView`'e entegre edildi.
+  - **`DocumentTabsControl.xaml/cs`**: WPF sekme şeridi — + butonu, sekme başlıkları, kirli gösterge (★ turuncu), X kapatma butonu. `IsDirty=true` → sekme arka planı `#3a3a2a`.
+  - **`EditorView.xaml`**: Grid.Row +1 (sekme şeridi), mevcut içerik alanı `Grid.Row="2"` olarak korundu. `Viewport`, `FeatureTreeCtrl`, `RibbonCtrl` dokunulmadı.
+  - **8 test (T350–T357)**: Proxy komutlar, sekme başlığı + kirli bayrak, doküman izolasyonu, aktif sekme değişiminde Viewport/FeatureTree bağlama, + butonu, X butonu, Ribbon komutları. 280/280 tüm çözüm yeşil.
+
 - **v3.0.29.2**: `DocumentTabs` (Sekmeli Çoklu Belge — Arka Uç) — Her sekme izole `CadDocument` + `CommandStack` + `SelectionService` seti barındırır.
   - **`EditorTabModel.cs`**: Sekme başına izole veri seti — `ProjectId`, `DisplayName`, `IsDirty`, `CadDocument`, `CommandStack`, `SelectionService`, `SnapEngine`, `ClipboardService`.
   - **`DocumentTabsViewModel.cs`**: Sekme yöneticisi — `AddTab`, `CloseTab` (kirli kontrolü), `RenameTab`, `ActiveTab` değişimi. Son sekme kapanınca otomatik yeni boş sekme.

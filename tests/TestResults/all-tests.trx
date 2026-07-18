@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="254077c3-c977-49cf-bc06-559f29ed1ae7" name="yoruk@HAKKI 2026-07-19 00:57:33" runUser="HAKKI\yoruk" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-07-19T00:57:33.0191422+03:00" queuing="2026-07-19T00:57:33.0191428+03:00" start="2026-07-19T00:57:31.9094586+03:00" finish="2026-07-19T00:57:33.0510038+03:00" />
+  <TestSettings name="default" id="4d8f71aa-ff03-4571-bb9d-644bac197ea6">
+    <Deployment runDeploymentRoot="yoruk_HAKKI_2026-07-19_00_57_33" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="3a6cad93-ca53-4d68-b4c6-39b7ebea9f68" testId="3359d187-3d2a-e783-7d4e-ec6098ec59e2" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T005_Messaging_DataBagimsiz" computerName="HAKKI" duration="00:00:00.0939916" startTime="2026-07-19T00:57:32.9079197+03:00" endTime="2026-07-19T00:57:32.9079202+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3a6cad93-ca53-4d68-b4c6-39b7ebea9f68" />
+    <UnitTestResult executionId="ffdc6d25-b219-4ff9-b291-2dc12a507c81" testId="e645c25a-a759-3fcf-040f-cdd82a6ee300" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T008_TumKomutlar_ICadCommandUygular" computerName="HAKKI" duration="00:00:00.0010528" startTime="2026-07-19T00:57:32.9470879+03:00" endTime="2026-07-19T00:57:32.9470883+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ffdc6d25-b219-4ff9-b291-2dc12a507c81" />
+    <UnitTestResult executionId="f76b3f6c-efa4-43fc-bf3a-adb71e2e6f7f" testId="4c129f1d-b6e6-0112-b541-483150b8c443" testName="TrainService.Architecture.Tests.T010_KapsamBekcisi.T010_TestSayisi_TabanAltinaDusemez" computerName="HAKKI" duration="00:00:00.0392894" startTime="2026-07-19T00:57:32.8587638+03:00" endTime="2026-07-19T00:57:32.8587639+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f76b3f6c-efa4-43fc-bf3a-adb71e2e6f7f" />
+    <UnitTestResult executionId="0fd25b52-7d23-4bfd-b8bf-f43067f85024" testId="da300c7e-985e-b1c3-f81a-b584e4e496d9" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T003_Core_WpfTipiIcermez" computerName="HAKKI" duration="00:00:00.0047489" startTime="2026-07-19T00:57:32.9459444+03:00" endTime="2026-07-19T00:57:32.9459446+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0fd25b52-7d23-4bfd-b8bf-f43067f85024" />
+    <UnitTestResult executionId="c69c6364-719d-400c-bcf4-2ab658843c96" testId="52d039a5-b18b-188b-fbff-f58a790f3edf" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T007_TumEntityler_CadEntityMirasAlir" computerName="HAKKI" duration="00:00:00.0012579" startTime="2026-07-19T00:57:32.9410819+03:00" endTime="2026-07-19T00:57:32.9410821+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c69c6364-719d-400c-bcf4-2ab658843c96" />
+    <UnitTestResult executionId="3a3b7cd9-eca6-4d48-a25c-dd18d2cf3e96" testId="8f227ea5-c251-8254-dd9a-c46f138b7cbd" testName="TrainService.Architecture.Tests.T011_TrivialTestGuard.T011_TrivialAssertYasak" computerName="HAKKI" duration="00:00:00.0400517" startTime="2026-07-19T00:57:32.8562285+03:00" endTime="2026-07-19T00:57:32.8562454+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3a3b7cd9-eca6-4d48-a25c-dd18d2cf3e96" />
+    <UnitTestResult executionId="ef155495-b76a-408f-b3ba-f0a2a611d7bf" testId="ec8e54cb-e1cc-002e-56cd-b483bb19ff98" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T006_Simulation_IskeletBos" computerName="HAKKI" duration="00:00:00.0011414" startTime="2026-07-19T00:57:32.9745298+03:00" endTime="2026-07-19T00:57:32.9745299+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ef155495-b76a-408f-b3ba-f0a2a611d7bf" />
+    <UnitTestResult executionId="b8c79c84-15bc-443d-ab5e-635821f97503" testId="16dbb8f6-b370-4bd3-13b4-388a3a65c6de" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T002_Cad_SadeceCoreyeBagimli" computerName="HAKKI" duration="00:00:00.0083416" startTime="2026-07-19T00:57:32.9397565+03:00" endTime="2026-07-19T00:57:32.9397570+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b8c79c84-15bc-443d-ab5e-635821f97503" />
+    <UnitTestResult executionId="2a5bd146-b90e-4182-8c27-8532a5513f2d" testId="e7f93743-4cfd-2cdb-97fd-8a7047ade989" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T004_Cad_WpfTipiIcermez" computerName="HAKKI" duration="00:00:00.0167837" startTime="2026-07-19T00:57:32.9248848+03:00" endTime="2026-07-19T00:57:32.9248852+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2a5bd146-b90e-4182-8c27-8532a5513f2d" />
+    <UnitTestResult executionId="72b919c5-a2a9-46bf-ae9f-8057f762f1e1" testId="adca624e-5d49-2ca3-48e6-86fca3524b53" testName="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T001_Core_HicbirProjeyeBagimliDegil" computerName="HAKKI" duration="00:00:00.0063507" startTime="2026-07-19T00:57:32.9312704+03:00" endTime="2026-07-19T00:57:32.9312709+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="72b919c5-a2a9-46bf-ae9f-8057f762f1e1" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="TrainService.Architecture.Tests.T010_KapsamBekcisi.T010_TestSayisi_TabanAltinaDusemez" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0-windows10.0.17763.0\trainservice.architecture.tests.dll" id="4c129f1d-b6e6-0112-b541-483150b8c443">
+      <Execution id="f76b3f6c-efa4-43fc-bf3a-adb71e2e6f7f" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0-windows10.0.17763.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T010_KapsamBekcisi" name="T010_TestSayisi_TabanAltinaDusemez" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T008_TumKomutlar_ICadCommandUygular" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0-windows10.0.17763.0\trainservice.architecture.tests.dll" id="e645c25a-a759-3fcf-040f-cdd82a6ee300">
+      <Execution id="ffdc6d25-b219-4ff9-b291-2dc12a507c81" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0-windows10.0.17763.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T008_TumKomutlar_ICadCommandUygular" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T003_Core_WpfTipiIcermez" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0-windows10.0.17763.0\trainservice.architecture.tests.dll" id="da300c7e-985e-b1c3-f81a-b584e4e496d9">
+      <Execution id="0fd25b52-7d23-4bfd-b8bf-f43067f85024" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0-windows10.0.17763.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T003_Core_WpfTipiIcermez" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T007_TumEntityler_CadEntityMirasAlir" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0-windows10.0.17763.0\trainservice.architecture.tests.dll" id="52d039a5-b18b-188b-fbff-f58a790f3edf">
+      <Execution id="c69c6364-719d-400c-bcf4-2ab658843c96" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0-windows10.0.17763.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T007_TumEntityler_CadEntityMirasAlir" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T002_Cad_SadeceCoreyeBagimli" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0-windows10.0.17763.0\trainservice.architecture.tests.dll" id="16dbb8f6-b370-4bd3-13b4-388a3a65c6de">
+      <Execution id="b8c79c84-15bc-443d-ab5e-635821f97503" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0-windows10.0.17763.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T002_Cad_SadeceCoreyeBagimli" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T006_Simulation_IskeletBos" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0-windows10.0.17763.0\trainservice.architecture.tests.dll" id="ec8e54cb-e1cc-002e-56cd-b483bb19ff98">
+      <Execution id="ef155495-b76a-408f-b3ba-f0a2a611d7bf" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0-windows10.0.17763.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T006_Simulation_IskeletBos" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T001_Core_HicbirProjeyeBagimliDegil" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0-windows10.0.17763.0\trainservice.architecture.tests.dll" id="adca624e-5d49-2ca3-48e6-86fca3524b53">
+      <Execution id="72b919c5-a2a9-46bf-ae9f-8057f762f1e1" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0-windows10.0.17763.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T001_Core_HicbirProjeyeBagimliDegil" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T004_Cad_WpfTipiIcermez" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0-windows10.0.17763.0\trainservice.architecture.tests.dll" id="e7f93743-4cfd-2cdb-97fd-8a7047ade989">
+      <Execution id="2a5bd146-b90e-4182-8c27-8532a5513f2d" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0-windows10.0.17763.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T004_Cad_WpfTipiIcermez" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T0xx_ArchitectureTests.T005_Messaging_DataBagimsiz" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0-windows10.0.17763.0\trainservice.architecture.tests.dll" id="3359d187-3d2a-e783-7d4e-ec6098ec59e2">
+      <Execution id="3a6cad93-ca53-4d68-b4c6-39b7ebea9f68" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0-windows10.0.17763.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T0xx_ArchitectureTests" name="T005_Messaging_DataBagimsiz" />
+    </UnitTest>
+    <UnitTest name="TrainService.Architecture.Tests.T011_TrivialTestGuard.T011_TrivialAssertYasak" storage="c:\users\yoruk\.gemini\antigravity\scratch\trainservice\tests\trainservice.architecture.tests\bin\debug\net8.0-windows10.0.17763.0\trainservice.architecture.tests.dll" id="8f227ea5-c251-8254-dd9a-c46f138b7cbd">
+      <Execution id="3a3b7cd9-eca6-4d48-a25c-dd18d2cf3e96" />
+      <TestMethod codeBase="C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\tests\TrainService.Architecture.Tests\bin\Debug\net8.0-windows10.0.17763.0\TrainService.Architecture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="TrainService.Architecture.Tests.T011_TrivialTestGuard" name="T011_TrivialAssertYasak" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="3359d187-3d2a-e783-7d4e-ec6098ec59e2" executionId="3a6cad93-ca53-4d68-b4c6-39b7ebea9f68" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e645c25a-a759-3fcf-040f-cdd82a6ee300" executionId="ffdc6d25-b219-4ff9-b291-2dc12a507c81" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4c129f1d-b6e6-0112-b541-483150b8c443" executionId="f76b3f6c-efa4-43fc-bf3a-adb71e2e6f7f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="da300c7e-985e-b1c3-f81a-b584e4e496d9" executionId="0fd25b52-7d23-4bfd-b8bf-f43067f85024" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="52d039a5-b18b-188b-fbff-f58a790f3edf" executionId="c69c6364-719d-400c-bcf4-2ab658843c96" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8f227ea5-c251-8254-dd9a-c46f138b7cbd" executionId="3a3b7cd9-eca6-4d48-a25c-dd18d2cf3e96" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ec8e54cb-e1cc-002e-56cd-b483bb19ff98" executionId="ef155495-b76a-408f-b3ba-f0a2a611d7bf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="16dbb8f6-b370-4bd3-13b4-388a3a65c6de" executionId="b8c79c84-15bc-443d-ab5e-635821f97503" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e7f93743-4cfd-2cdb-97fd-8a7047ade989" executionId="2a5bd146-b90e-4182-8c27-8532a5513f2d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="adca624e-5d49-2ca3-48e6-86fca3524b53" executionId="72b919c5-a2a9-46bf-ae9f-8057f762f1e1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Bir Listede Olmayan Sonuçlar" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Yüklenen Tüm Sonuçlar" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="10" executed="10" passed="10" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.28)&#xD;
+[xUnit.net 00:00:00.08]   Discovering: TrainService.Architecture.Tests&#xD;
+[xUnit.net 00:00:00.11]   Discovered:  TrainService.Architecture.Tests&#xD;
+[xUnit.net 00:00:00.11]   Starting:    TrainService.Architecture.Tests&#xD;
+     Warning:&#xD;
+     The component "Fluent Assertions" is governed by the rules defined in the Xceed License Agreement and&#xD;
+     the Xceed Fluent Assertions Community License. You may use Fluent Assertions free of charge for&#xD;
+     non-commercial use only. An active subscription is required to use Fluent Assertions for commercial use.&#xD;
+     Please contact Xceed Sales mailto:sales@xceed.com to acquire a subscription at a very low cost.&#xD;
+     A paid commercial license supports the development and continued increasing support of&#xD;
+     Fluent Assertions users under both commercial and community licenses. Help us&#xD;
+     keep Fluent Assertions at the forefront of unit testing.&#xD;
+     For more information, visit https://xceed.com/products/unit-testing/fluent-assertions/&#xD;
+[xUnit.net 00:00:00.34]   Finished:    TrainService.Architecture.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="HAKKI" outcome="Warning" timestamp="2026-07-19T00:57:32.6244675+03:00">
+        <Text>Aynı 'executor://xunit/VsTestRunner2/netcoreapp' URI’sine sahip birden fazla test bağdaştırıcısı bulundu. 'Xunit.Runner.VisualStudio.VsTestRunner' bağdaştırıcısı yoksayılıyor. Bu uyarıyı önlemek için lütfen çakışan bağdaştırıcıları kaldırın.</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>
