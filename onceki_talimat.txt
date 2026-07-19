@@ -45,10 +45,26 @@ Her yeni sürüm (v3.0.29.17 ve sonrası) için aşağıdaki adımlar SIRASIYLA 
 - [ ] `Roadmap.md`'de ilgili sürümü `(MÜHÜRLENDİ)` olarak işaretle
 - [ ] Roadmap başlığındaki tarihi güncelle
 
-### ADIM 7: GIT COMMIT + PUSH (kullanıcı "pushla" derse)
-- [ ] `git add -A`
-- [ ] `git commit -m "v{sürüm}: {açıklama}"`
-- [ ] `git push`
+    ### ADIM 7: README GÜNCELLE
+    - [ ] `README.md`'de "📍 ŞU ANKİ DURUM" tablosunu güncelle:
+      - Son Sürüm = v{sürüm}
+      - Son Git Commit = (commit sonrası hash)
+      - Son Yapılan = {açıklama}
+      - Sıradaki Sürüm = v{sonraki_sürüm} — {içerik}
+    - [ ] `README.md`'de "📊 FAZ VE VERSİYON ÖZETİ" tablosunda ilgili grubu ✅ işaretle
+    - [ ] `README.md`'de "📝 TAM SÜRÜM GEÇMİŞİ" bölümüne YENİ changelog ekle:
+      ```markdown
+      ### v{sürüm} — {açıklama} ✅
+      - **DEĞİŞEN:** `Dosya.cs` — detay.
+      - **TEST:** T{baslangic}–T{bitis} (N test). N/N PASSED.
+      ```
+    - [ ] `README.md` en alt satırdaki `Son güncelleme` tarihini ve commit hash'i güncelle
+    - [ ] `README.md`'de versiyon badge'ini güncelle (`v3.0.29.XX`)
+
+    ### ADIM 8: GIT COMMIT + PUSH (kullanıcı "pushla" derse)
+    - [ ] `git add -A`
+    - [ ] `git commit -m "v{sürüm}: {açıklama}"`
+    - [ ] `git push`
 
 ═══════════════════════════════════════════════════════════════════
 ## HER VERSİYONDA KONTROL EDİLMESİ GEREKEN DOSYALAR
@@ -62,7 +78,8 @@ Her yeni sürüm (v3.0.29.17 ve sonrası) için aşağıdaki adımlar SIRASIYLA 
 | 2 | `plans/v3{versiyon}_muhur.md` | YENİ — mühür raporu | ✅ Her sürüm |
 | 3 | `tests/.../T{baslangic}_{bitis}_Tests.cs` | YENİ — test dosyası | ✅ Her sürüm |
 | 4 | `Roadmap.md` | Sürüm durumu güncelle | ✅ Her sürüm |
-| 5 | Git commit | `v{sürüm}: {açıklama}` | ✅ Her sürüm (push öncesi) |
+| 5 | `README.md` | Son sürüm, commit hash, changelog, aktif faz güncelle | ✅ Her sürüm |
+| 6 | Git commit | `v{sürüm}: {açıklama}` | ✅ Her sürüm (push öncesi) |
 
 ### DURUMA GÖRE DEĞİŞMESİ GEREKENLER:
 
