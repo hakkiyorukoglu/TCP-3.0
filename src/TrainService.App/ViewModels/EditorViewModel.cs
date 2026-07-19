@@ -49,6 +49,11 @@ public partial class EditorViewModel : ObservableObject
     private string _activeLayerStatusText = "Katman: Zemin";
 
     [ObservableProperty]
+    private double _zoomScale = 1.0;
+
+    public string ZoomPercentText => $"{ZoomScale * 100:F0}%";
+
+    [ObservableProperty]
     private EditorTabModel? _activeTab;
 
     [ObservableProperty]

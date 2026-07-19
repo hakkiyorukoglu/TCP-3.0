@@ -190,4 +190,18 @@ public partial class EditorView : Page
     {
         Dispatcher.Invoke(() => ViewModel.ActiveLayerStatusText = msg);
     }
+
+    private void OnZoomOutClick(object sender, RoutedEventArgs e)
+    {
+        Viewport.Transform.ZoomAt(new Point(Viewport.ActualWidth / 2, Viewport.ActualHeight / 2), 1 / 1.25);
+        ViewModel.ZoomScale = Viewport.Transform.Scale;
+        Viewport.RequestRender();
+    }
+
+    private void OnZoomInClick(object sender, RoutedEventArgs e)
+    {
+        Viewport.Transform.ZoomAt(new Point(Viewport.ActualWidth / 2, Viewport.ActualHeight / 2), 1.25);
+        ViewModel.ZoomScale = Viewport.Transform.Scale;
+        Viewport.RequestRender();
+    }
 }
