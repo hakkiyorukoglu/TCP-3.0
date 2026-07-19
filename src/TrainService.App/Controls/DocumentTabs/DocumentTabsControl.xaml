@@ -28,12 +28,17 @@
                                 Background="#333333"
                                 BorderBrush="#444444" BorderThickness="1,1,1,0"
                                 CornerRadius="4,4,0,0"
-                                Cursor="Hand">
+                                Cursor="Hand"
+                                MouseLeftButtonDown="OnTabClicked">
                             <Border.Style>
                                 <Style TargetType="Border">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsDirty}" Value="True">
                                             <Setter Property="Background" Value="#3a3a2a"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType=ContentPresenter}}" Value="True">
+                                            <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                            <Setter Property="BorderThickness" Value="1,1,1,2"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>

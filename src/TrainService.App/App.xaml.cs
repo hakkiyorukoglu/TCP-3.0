@@ -75,6 +75,7 @@ public partial class App : Application
             services.AddTransient<TerminalPanelViewModel>();
             services.AddTransient<TrainService.App.Views.Pages.HomeView>();
             services.AddTransient<HomeViewModel>();
+            services.AddTransient<DocumentTabsViewModel>();
             services.AddTransient<TrainService.App.Views.Pages.EditorView>();
             services.AddTransient<EditorViewModel>();
             services.AddTransient<TrainService.App.Views.Pages.ElectronicsView>();

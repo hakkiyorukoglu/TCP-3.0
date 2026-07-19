@@ -10,12 +10,21 @@ namespace TrainService.App.Views.Pages;
 public partial class EditorView : Page
 {
     public EditorViewModel ViewModel { get; }
+    public DocumentTabsViewModel TabsViewModel { get; }
 
-    public EditorView(EditorViewModel viewModel)
+    public EditorView(DocumentTabsViewModel tabsVm, EditorViewModel viewModel)
     {
+        TabsViewModel = tabsVm;
         ViewModel = viewModel;
         DataContext = this;
         InitializeComponent();
+
+        // ActiveTab değişiminde yeniden bağla
+        tabsVm.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(DocumentTabsViewModel.ActiveTab))
+                ReattachActiveTab();
+        };
 
         this.PreviewKeyDown += (s, e) =>
         {
@@ -88,33 +97,18 @@ public partial class EditorView : Page
 
         this.Loaded += (s, e) =>
         {
+            // İlk sekme oluştur ve bağla
+            if (TabsViewModel.Tabs.Count == 0)
+                TabsViewModel.AddTabCommand.Execute(null);
+
+            ReattachActiveTab();
+
             _ = ViewModel.InitializeAsync();
-            Viewport.AttachDocument(ViewModel.Document);
-            Viewport.AttachSelection(ViewModel.SelectionService);
-
-            // Feature Tree ViewModel oluştur ve bağla
-            var featureTreeVm = new FeatureTreeViewModel(ViewModel.Document, ViewModel.SelectionService);
-            FeatureTreeCtrl.AttachViewModel(featureTreeVm);
-
-            // ZoomToEntity olayını Viewport'a bağla
-            featureTreeVm.ZoomRequested += (_, entityId) =>
-            {
-                Viewport.ZoomToEntity(entityId, ViewModel.Document);
-            };
-
-            var ctx = new TrainService.Cad.Tools.ToolContext(ViewModel.Document, ViewModel.CommandStack, ViewModel.SelectionService) { Clipboard = ViewModel.ClipboardService };
-            var initialTool = new TrainService.Cad.Tools.SelectTool();
-            Viewport.ToolController = new TrainService.App.Controls.CadCanvas.ToolController(ctx, ViewModel.SnapEngine, Viewport.Transform, initialTool) { Clipboard = ViewModel.ClipboardService };
-            Viewport.CommandStack = ViewModel.CommandStack;
-
-            Viewport.ToolController.LayerStatusChanged += (msg) =>
-            {
-                Dispatcher.Invoke(() => ViewModel.ActiveLayerStatusText = msg);
-            };
 
             // Ribbon → tool mapping
             ViewModel.ToolChangeRequested += (toolName) =>
             {
+                if (Viewport.ToolController == null) return;
                 if (toolName == "Select")
                     Viewport.ToolController.SetTool(new TrainService.Cad.Tools.SelectTool());
                 else if (toolName == "Track")
@@ -145,5 +139,49 @@ public partial class EditorView : Page
                 Dispatcher.Invoke(() => Viewport.ToggleGrid());
             };
         };
+    }
+
+    /// <summary>
+    /// Aktif sekmenin dokümanını Viewport, FeatureTree ve ToolController'a bağlar.
+    /// </summary>
+    private void ReattachActiveTab()
+    {
+        var tab = TabsViewModel.ActiveTab;
+        if (tab == null) return;
+
+        // 1. Viewport yeniden bağla
+        Viewport.AttachDocument(tab.Document);
+        Viewport.AttachSelection(tab.SelectionService);
+
+        // 2. ToolController yeniden oluştur
+        var currentTool = new TrainService.Cad.Tools.SelectTool();
+        var ctx = new TrainService.Cad.Tools.ToolContext(
+            tab.Document, tab.CommandStack, tab.SelectionService)
+        {
+            Clipboard = tab.ClipboardService
+        };
+        Viewport.ToolController = new TrainService.App.Controls.CadCanvas.ToolController(
+            ctx, tab.SnapEngine, Viewport.Transform, currentTool)
+        {
+            Clipboard = tab.ClipboardService
+        };
+        Viewport.CommandStack = tab.CommandStack;
+
+        Viewport.ToolController.LayerStatusChanged += (msg) =>
+        {
+            Dispatcher.Invoke(() => ViewModel.ActiveLayerStatusText = msg);
+        };
+
+        // 3. FeatureTree yeniden bağla
+        var featureTreeVm = new FeatureTreeViewModel(tab.Document, tab.SelectionService);
+        FeatureTreeCtrl.AttachViewModel(featureTreeVm);
+
+        featureTreeVm.ZoomRequested += (_, entityId) =>
+        {
+            Viewport.ZoomToEntity(entityId, tab.Document);
+        };
+
+        // 4. Ribbon proxy (ileri sürümde implemente edilecek)
+        // ViewModel.ActiveTab = tab;
     }
 }
