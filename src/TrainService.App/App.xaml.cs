@@ -47,7 +47,7 @@ public partial class App : Application
             services.AddSingleton<TrainService.Cad.Clipboard.ClipboardService>();
             services.AddSingleton<TrainService.Cad.Snapping.ISnapProvider, TrainService.Cad.Snapping.EndpointSnapProvider>();
             services.AddSingleton<TrainService.Cad.Snapping.ISnapProvider, TrainService.Cad.Snapping.OnSegmentSnapProvider>();
-            services.AddSingleton<TrainService.Cad.Snapping.ISnapProvider, TrainService.Cad.Snapping.MidpointSnapProvider>();  // ★ v3.0.29.22
+            services.AddSingleton<TrainService.Cad.Snapping.ISnapProvider, TrainService.Cad.Snapping.MidpointSnapProvider>();  // v3.0.29.22
             services.AddSingleton<TrainService.Cad.Snapping.ISnapProvider, TrainService.Cad.Snapping.GridSnapProvider>();
             services.AddSingleton<TrainService.Cad.Snapping.SnapEngine>();
             services.AddScoped<TrainService.Cad.Persistence.ICadDocumentStore, TrainService.App.Services.CadDocumentStore>();
