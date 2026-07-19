@@ -149,11 +149,15 @@ public partial class EditorView : Page
         var tab = TabsViewModel.ActiveTab;
         if (tab == null) return;
 
-        // 1. Viewport yeniden bağla
+        // 1. Önceki event handler'ları temizle (memory leak önleme)
+        if (Viewport.ToolController != null)
+            Viewport.ToolController.LayerStatusChanged -= OnLayerStatusChanged;
+
+        // 2. Viewport yeniden bağla
         Viewport.AttachDocument(tab.Document);
         Viewport.AttachSelection(tab.SelectionService);
 
-        // 2. ToolController yeniden oluştur
+        // 3. ToolController yeniden oluştur
         var currentTool = new TrainService.Cad.Tools.SelectTool();
         var ctx = new TrainService.Cad.Tools.ToolContext(
             tab.Document, tab.CommandStack, tab.SelectionService)
@@ -167,12 +171,9 @@ public partial class EditorView : Page
         };
         Viewport.CommandStack = tab.CommandStack;
 
-        Viewport.ToolController.LayerStatusChanged += (msg) =>
-        {
-            Dispatcher.Invoke(() => ViewModel.ActiveLayerStatusText = msg);
-        };
+        Viewport.ToolController.LayerStatusChanged += OnLayerStatusChanged;
 
-        // 3. FeatureTree yeniden bağla
+        // 4. FeatureTree yeniden bağla
         var featureTreeVm = new FeatureTreeViewModel(tab.Document, tab.SelectionService);
         FeatureTreeCtrl.AttachViewModel(featureTreeVm);
 
@@ -181,7 +182,12 @@ public partial class EditorView : Page
             Viewport.ZoomToEntity(entityId, tab.Document);
         };
 
-        // 4. Ribbon proxy (ileri sürümde implemente edilecek)
-        // ViewModel.ActiveTab = tab;
+        // 5. Ribbon proxy — aktif sekme EditorViewModel'e bildirilir
+        ViewModel.ActiveTab = tab;
+    }
+
+    private void OnLayerStatusChanged(string msg)
+    {
+        Dispatcher.Invoke(() => ViewModel.ActiveLayerStatusText = msg);
     }
 }

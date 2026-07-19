@@ -9,4 +9,4 @@ Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 19: 'FOREIGN KE
    at Microsoft.EntityFrameworkCore.Migrations.Internal.MigrationCommandExecutor.ExecuteNonQuery(IEnumerable`1 migrationCommands, IRelationalConnection connection)
    at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.Migrate(String targetMigration)
    at Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.Migrate(DatabaseFacade databaseFacade)
-   at TrainService.App.App.OnStartup(StartupEventArgs e) in C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\src\TrainService.App\App.xaml.cs:line 100
+   at TrainService.App.App.OnStartup(StartupEventArgs e) in C:\Users\yoruk\.gemini\antigravity\scratch\TrainService\src\TrainService.App\App.xaml.cs:line 101

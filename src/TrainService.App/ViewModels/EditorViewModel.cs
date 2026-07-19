@@ -10,6 +10,7 @@ using TrainService.Cad.Selection;
 using TrainService.Cad.Debug;
 using TrainService.Cad.Persistence;
 using TrainService.App.Controls.Ribbon;
+using TrainService.App.Models;
 
 namespace TrainService.App.ViewModels;
 
@@ -46,6 +47,18 @@ public partial class EditorViewModel : ObservableObject
 
     [ObservableProperty]
     private string _activeLayerStatusText = "Katman: Zemin";
+
+    [ObservableProperty]
+    private EditorTabModel? _activeTab;
+
+    partial void OnActiveTabChanged(EditorTabModel? value)
+    {
+        if (value == null) return;
+
+        Document = value.Document;
+        // Property'lerin referansları güncelleniyor
+        // (CommandStack, SelectionService, SnapEngine, ClipboardService readonly)
+    }
 
     public Action<string>? ToolChangeRequested;
     public Action? ZoomExtentsRequested;
@@ -139,23 +152,27 @@ public partial class EditorViewModel : ObservableObject
         _logBus.Info("Editor", $"Araç seçildi: {toolName}");
     }
 
-    private bool CanUndo() => CommandStack.CanUndo;
+    private bool CanUndo() => ActiveTab?.CommandStack.CanUndo ?? CommandStack.CanUndo;
     
     [RelayCommand(CanExecute = nameof(CanUndo))]
     private void Undo()
     {
-        var desc = CommandStack.PeekUndoDescription;
-        CommandStack.Undo(Document);
+        var stack = ActiveTab?.CommandStack ?? CommandStack;
+        var doc = ActiveTab?.Document ?? Document;
+        var desc = stack.PeekUndoDescription;
+        stack.Undo(doc);
         _logBus.Info("Editor", $"Geri alındı: {desc}");
     }
 
-    private bool CanRedo() => CommandStack.CanRedo;
+    private bool CanRedo() => ActiveTab?.CommandStack.CanRedo ?? CommandStack.CanRedo;
     
     [RelayCommand(CanExecute = nameof(CanRedo))]
     private void Redo()
     {
-        var desc = CommandStack.PeekRedoDescription;
-        CommandStack.Redo(Document);
+        var stack = ActiveTab?.CommandStack ?? CommandStack;
+        var doc = ActiveTab?.Document ?? Document;
+        var desc = stack.PeekRedoDescription;
+        stack.Redo(doc);
         _logBus.Success("Editor", $"Tekrar yapıldı: {desc}");
     }
 
@@ -181,52 +198,69 @@ public partial class EditorViewModel : ObservableObject
     [RelayCommand]
     private void Delete()
     {
-        var selectedIds = SelectionService.SelectedIds.ToList();
+        var sel = ActiveTab?.SelectionService ?? SelectionService;
+        var doc = ActiveTab?.Document ?? Document;
+        var stack = ActiveTab?.CommandStack ?? CommandStack;
+
+        var selectedIds = sel.SelectedIds.ToList();
         if (selectedIds.Count == 0) return;
 
         var cmd = new DeleteEntitiesCommand(selectedIds);
-        CommandStack.Do(cmd, Document);
+        stack.Do(cmd, doc);
         _logBus.Success("Editor", $"Silindi: {selectedIds.Count} nesne");
     }
 
     [RelayCommand]
     private void Copy()
     {
-        var selected = Document.Entities
-            .Where(e => SelectionService.SelectedIds.Contains(e.Id))
+        var sel = ActiveTab?.SelectionService ?? SelectionService;
+        var doc = ActiveTab?.Document ?? Document;
+        var clip = ActiveTab?.ClipboardService ?? ClipboardService;
+
+        var selected = doc.Entities
+            .Where(e => sel.SelectedIds.Contains(e.Id))
             .ToList();
 
         if (selected.Count == 0) return;
 
-        ClipboardService.Set(selected);
+        clip.Set(selected);
         _logBus.Info("Editor", $"Kopyalandı: {selected.Count} nesne");
     }
 
     [RelayCommand]
     private void Cut()
     {
-        var selected = Document.Entities
-            .Where(e => SelectionService.SelectedIds.Contains(e.Id))
+        var sel = ActiveTab?.SelectionService ?? SelectionService;
+        var doc = ActiveTab?.Document ?? Document;
+        var stack = ActiveTab?.CommandStack ?? CommandStack;
+        var clip = ActiveTab?.ClipboardService ?? ClipboardService;
+
+        var selected = doc.Entities
+            .Where(e => sel.SelectedIds.Contains(e.Id))
             .ToList();
 
         if (selected.Count == 0) return;
 
-        ClipboardService.Set(selected);
+        clip.Set(selected);
 
         var ids = selected.Select(e => e.Id).ToList();
         var cmd = new DeleteEntitiesCommand(ids);
-        CommandStack.Do(cmd, Document);
+        stack.Do(cmd, doc);
         _logBus.Success("Editor", $"Kesildi: {selected.Count} nesne");
     }
 
     [RelayCommand]
     private void Paste()
     {
-        if (!ClipboardService.HasContent) return;
+        var stack = ActiveTab?.CommandStack ?? CommandStack;
+        var doc = ActiveTab?.Document ?? Document;
+        var clip = ActiveTab?.ClipboardService ?? ClipboardService;
 
-        var clones = ClipboardService.Get();
+        if (!clip.HasContent) return;
+
+        var clones = clip.Get();
         var cmd = new PasteEntitiesCommand(clones);
-        CommandStack.Do(cmd, Document);
+        stack.Do(cmd, doc);
 
         _logBus.Success("Editor", $"Yapıştırıldı: {clones.Count} nesne");
     }
