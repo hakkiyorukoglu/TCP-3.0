@@ -73,6 +73,25 @@ public partial class RibbonControl : UserControl
 
         foreach (var item in QuickAccessItems)
         {
+            if (item.Id == "Save" && _vmCache is EditorViewModel vm)
+            {
+                var saveBtn = CreateRibbonButton(item, isQuickAccess: true);
+                
+                // IsDirty değişiminde buton rengi değişsin
+                vm.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(EditorViewModel.DocumentStatusText))
+                    {
+                        saveBtn.Appearance = vm.Document.IsDirty 
+                            ? WpfUi::ControlAppearance.Caution  // Turuncu — kaydedilmemiş
+                            : WpfUi::ControlAppearance.Secondary; // Normal
+                    }
+                };
+                
+                QuickAccessPanel.Children.Add(saveBtn);
+                continue;
+            }
+
             var btn = CreateRibbonButton(item, isQuickAccess: true);
             QuickAccessPanel.Children.Add(btn);
         }
