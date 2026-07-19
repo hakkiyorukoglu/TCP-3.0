@@ -27,6 +27,7 @@ public class CadViewportControl : ContentControl
     private readonly DrawingVisual _modelVisual;
     private readonly DrawingVisual _toolVisual;
     private readonly DrawingVisual _crosshairVisual;
+    private TrainService.App.Controls.CadCanvas.Adorners.GripAdorner? _gripAdorner;
     
     public ToolController? ToolController { get; set; }
     public TrainService.Cad.UndoRedo.CommandStack? CommandStack { get; set; }
