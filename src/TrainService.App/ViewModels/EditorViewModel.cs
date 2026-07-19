@@ -48,7 +48,6 @@ public partial class EditorViewModel : ObservableObject
         Document = value.Document;
         ActiveLayerId = value.Document.ActiveLayerId;
     }
-
     partial void OnActiveLayerIdChanged(Guid value) => ActiveTab?.Document.SetActiveLayer(value);
 
     public string ActiveLayerName => ActiveTab?.Document.Layers.FirstOrDefault(l => l.Id == ActiveLayerId)?.Name ?? "Zemin";
@@ -70,7 +69,6 @@ public partial class EditorViewModel : ObservableObject
         Document = document; CommandStack = commandStack;
         SelectionService = selectionService; SnapEngine = snapEngine; ClipboardService = clipboardService;
         _logBus = logBus; _store = store;
-
         CommandStack.StackChanged += (s, e) => { UndoCommand.NotifyCanExecuteChanged(); RedoCommand.NotifyCanExecuteChanged(); };
         Document.Changed += (s, e) => { SaveCommand.NotifyCanExecuteChanged(); UpdateDocumentStatus(); };
         SelectionService.PruneMissing(Document);
@@ -94,7 +92,7 @@ public partial class EditorViewModel : ObservableObject
     private bool CanRedo() => ActiveTab?.CommandStack.CanRedo ?? CommandStack.CanRedo;
     [RelayCommand(CanExecute = nameof(CanRedo))] private void Redo() { var stack = ActiveTab?.CommandStack ?? CommandStack; var doc = ActiveTab?.Document ?? Document; var desc = stack.PeekRedoDescription; stack.Redo(doc); _logBus.Success("Editor", $"Tekrar yapıldı: {desc}"); }
     [RelayCommand] private void DebugAddLine() { var cmd = new DebugAddLineCommand(Document.ActiveLayerId); CommandStack.Do(cmd, Document); _logBus.Success("Editor", $"Komut: {cmd.Description}"); }
-    [RelayCommand] private void ToggleSnap() { IsSnapEnabled = !IsSnapEnabled; if (SnapEngine != null) SnapEngine.IsEnabled = IsSnapEnabled; SnapStatusText = IsSnapEnabled ? " [GRID]" : " [OFF]"; }
+    [RelayCommand] private void ToggleSnap() { IsSnapEnabled = !IsSnapEnabled; if (SnapEngine != null) SnapEngine.IsEnabled = IsSnapEnabled; SnapStatusText = IsSnapEnabled ? " [GRID]" : " [OFF]"; _logBus.Info("Snap", IsSnapEnabled ? "Snap AÇIK" : "Snap KAPALI"); }
     [RelayCommand] private void Delete() { var sel = ActiveTab?.SelectionService ?? SelectionService; var doc = ActiveTab?.Document ?? Document; var stack = ActiveTab?.CommandStack ?? CommandStack; var selectedIds = sel.SelectedIds.ToList(); if (selectedIds.Count == 0) return; var cmd = new DeleteEntitiesCommand(selectedIds); stack.Do(cmd, doc); _logBus.Success("Editor", $"Silindi: {selectedIds.Count} nesne"); }
     [RelayCommand] private void Copy() { var sel = ActiveTab?.SelectionService ?? SelectionService; var doc = ActiveTab?.Document ?? Document; var clip = ActiveTab?.ClipboardService ?? ClipboardService; var selected = doc.Entities.Where(e => sel.SelectedIds.Contains(e.Id)).ToList(); if (selected.Count == 0) return; clip.Set(selected); _logBus.Info("Editor", $"Kopyalandı: {selected.Count} nesne"); }
     [RelayCommand] private void Cut() { var sel = ActiveTab?.SelectionService ?? SelectionService; var doc = ActiveTab?.Document ?? Document; var stack = ActiveTab?.CommandStack ?? CommandStack; var clip = ActiveTab?.ClipboardService ?? ClipboardService; var selected = doc.Entities.Where(e => sel.SelectedIds.Contains(e.Id)).ToList(); if (selected.Count == 0) return; clip.Set(selected); var ids = selected.Select(e => e.Id).ToList(); var cmd = new DeleteEntitiesCommand(ids); stack.Do(cmd, doc); _logBus.Success("Editor", $"Kesildi: {selected.Count} nesne"); }
@@ -104,9 +102,9 @@ public partial class EditorViewModel : ObservableObject
     [RelayCommand] private void ToggleGrid() { ToggleGridRequested?.Invoke(); _logBus.Info("Editor", "Izgara değiştirildi"); }
     [RelayCommand] private void SetActiveLayer(string layerId) { if (Guid.TryParse(layerId, out var id)) { ActiveLayerId = id; _logBus.Info("Editor", $"Aktif katman: {ActiveLayerName}"); } }
 
-    // v3.0.29.22 — Snap toggle komutları
-    [RelayCommand] private void ToggleEndpointSnap() { if (SnapEngine == null) return; if (SnapEngine.DisabledKinds.Contains(SnapKind.Endpoint)) SnapEngine.DisabledKinds.Remove(SnapKind.Endpoint); else SnapEngine.DisabledKinds.Add(SnapKind.Endpoint); }
-    [RelayCommand] private void ToggleMidpointSnap() { if (SnapEngine == null) return; if (SnapEngine.DisabledKinds.Contains(SnapKind.Midpoint)) SnapEngine.DisabledKinds.Remove(SnapKind.Midpoint); else SnapEngine.DisabledKinds.Add(SnapKind.Midpoint); }
-    [RelayCommand] private void ToggleOnSegmentSnap() { if (SnapEngine == null) return; if (SnapEngine.DisabledKinds.Contains(SnapKind.OnSegment)) SnapEngine.DisabledKinds.Remove(SnapKind.OnSegment); else SnapEngine.DisabledKinds.Add(SnapKind.OnSegment); }
-    [RelayCommand] private void ToggleGridSnap() { if (SnapEngine == null) return; if (SnapEngine.DisabledKinds.Contains(SnapKind.Grid)) SnapEngine.DisabledKinds.Remove(SnapKind.Grid); else SnapEngine.DisabledKinds.Add(SnapKind.Grid); }
+    // v3.0.29.22 — Snap toggle komutları (log'lu)
+    [RelayCommand] private void ToggleEndpointSnap() { if (SnapEngine == null) return; bool wasOff = SnapEngine.DisabledKinds.Contains(SnapKind.Endpoint); if (wasOff) SnapEngine.DisabledKinds.Remove(SnapKind.Endpoint); else SnapEngine.DisabledKinds.Add(SnapKind.Endpoint); _logBus.Info("Snap", wasOff ? "Endpoint Snap: AÇILDI" : "Endpoint Snap: KAPATILDI"); }
+    [RelayCommand] private void ToggleMidpointSnap() { if (SnapEngine == null) return; bool wasOff = SnapEngine.DisabledKinds.Contains(SnapKind.Midpoint); if (wasOff) SnapEngine.DisabledKinds.Remove(SnapKind.Midpoint); else SnapEngine.DisabledKinds.Add(SnapKind.Midpoint); _logBus.Info("Snap", wasOff ? "Midpoint Snap: AÇILDI" : "Midpoint Snap: KAPATILDI"); }
+    [RelayCommand] private void ToggleOnSegmentSnap() { if (SnapEngine == null) return; bool wasOff = SnapEngine.DisabledKinds.Contains(SnapKind.OnSegment); if (wasOff) SnapEngine.DisabledKinds.Remove(SnapKind.OnSegment); else SnapEngine.DisabledKinds.Add(SnapKind.OnSegment); _logBus.Info("Snap", wasOff ? "OnSegment Snap: AÇILDI" : "OnSegment Snap: KAPATILDI"); }
+    [RelayCommand] private void ToggleGridSnap() { if (SnapEngine == null) return; bool wasOff = SnapEngine.DisabledKinds.Contains(SnapKind.Grid); if (wasOff) SnapEngine.DisabledKinds.Remove(SnapKind.Grid); else SnapEngine.DisabledKinds.Add(SnapKind.Grid); _logBus.Info("Snap", wasOff ? "Grid Snap: AÇILDI" : "Grid Snap: KAPATILDI"); }
 }
