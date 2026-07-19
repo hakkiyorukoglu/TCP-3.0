@@ -65,6 +65,19 @@ public sealed class FeatureTreeItem : INotifyPropertyChanged
 
     public ICommand? DoubleClickCommand { get; set; }
 
+    public string EyeIcon => IsVisible ? "👁" : "🚫";
+
+    public void ToggleVisibility()
+    {
+        IsVisible = !IsVisible;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EyeIcon)));
+    }
+
+    public void ToggleLock()
+    {
+        IsLocked = !IsLocked;
+    }
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private void SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)

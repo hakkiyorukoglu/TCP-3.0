@@ -43,11 +43,28 @@ public partial class FeatureTreeControl : UserControl
 
     private void OnTreeViewDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        if (_viewModel == null) return;
-
-        if (FeatureTreeView.SelectedItem is FeatureTreeItem item && item.EntityId.HasValue)
+        if (FeatureTreeView.SelectedItem is FeatureTreeItem item && item.DoubleClickCommand != null)
         {
-            _viewModel.ZoomToEntityCommand.Execute(item.EntityId);
+            if (item.DoubleClickCommand.CanExecute(item.EntityId))
+                item.DoubleClickCommand.Execute(item.EntityId);
+        }
+    }
+
+    private void OnToggleVisibilityClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.DataContext is FeatureTreeItem item)
+        {
+            item.ToggleVisibility();
+            e.Handled = true;
+        }
+    }
+
+    private void OnToggleLockClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.DataContext is FeatureTreeItem item)
+        {
+            item.ToggleLock();
+            e.Handled = true;
         }
     }
 }
