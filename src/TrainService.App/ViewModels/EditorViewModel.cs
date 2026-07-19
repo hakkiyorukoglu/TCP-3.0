@@ -91,7 +91,7 @@ public partial class EditorViewModel : ObservableObject
         Guid? projectId = null)
     {
         _projectId = projectId ?? Guid.NewGuid();
-        _document = document;
+        Document = document;
         CommandStack = commandStack;
         SelectionService = selectionService;
         SnapEngine = snapEngine;
@@ -119,8 +119,8 @@ public partial class EditorViewModel : ObservableObject
     {
         try
         {
-            await _store.LoadDocumentAsync(_projectId, _document);
-            SelectionService.PruneMissing(_document);
+            await _store.LoadDocumentAsync(_projectId, Document);
+            SelectionService.PruneMissing(Document);
             UpdateDocumentStatus();
             _logBus.Info("Editor", "Proje veritabanından yüklendi.");
         }

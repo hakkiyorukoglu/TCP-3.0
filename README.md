@@ -47,6 +47,29 @@ dotnet run --project src/TrainService.App/TrainService.App.csproj
 
 ## 📝 Sürüm Geçmişi (Changelog)
 
+- **v3.0.29.9**: `Katman Yönetimi` — EditorViewModel'de `ActiveLayerId` property; araçlar zaten `LayerId` destekliyordu.
+  - **`EditorViewModel.cs`**: `ActiveLayerId` `[ObservableProperty]` + `OnActiveLayerIdChanged` partial metod; `ActiveLayerName` computed property.
+  - **8 test (T410–T417)**: Aktif katman varsayılanı, SetActiveLayer, visibility/lock entity etkisi, katman sayısı, isimler, geçersiz ID, Z yükseklikleri. 320/320 tüm çözüm yeşil.
+
+- **v3.0.29.8**: `Ribbon Proxy + Memory Leak Düzeltmesi` — Ribbon komutları aktif sekme üzerinden çalışır.
+  - **`EditorViewModel.cs`**: `ActiveTab` property + komut yönlendirmesi (`ActiveTab?.Service ?? fallback`).
+  - **`EditorView.xaml.cs`**: `LayerStatusChanged` event unsubscribe/subscribe memory leak düzeltmesi.
+  - **8 test (T400–T407)**: ActiveTab Document güncelleme, null fallback, Undo/Redo routing. 312/312 tüm çözüm yeşil.
+
+- **v3.0.29.7**: `Gerçek UI Entegrasyonu` — Sekme tıklama ile aktif sekme değişimi + Viewport/FeatureTree/ToolController yeniden bağlama.
+  - **`DocumentTabsControl.xaml/cs`**: `MouseLeftButtonDown` handler.
+  - **`EditorView.xaml.cs`**: `ReattachActiveTab()` + `ViewModel.ActiveTab = tab`.
+  - **304/304 tüm çözüm yeşil.**
+
+- **v3.0.29.6**: `Gerçek Çalışma Zamanı Entegrasyonu Testleri` — Sekme değişiminde servis izolasyonu.
+  - **8 test (T380–T387)**: CommandStack, SelectionService, SnapEngine, ClipboardService yeniden bağlama.
+
+- **v3.0.29.5**: `Sekme Değişiminde Yeniden Bağlama Testleri` — Viewport/FeatureTree bağlama davranışı.
+  - **8 test (T370–T377)**: ReattachActiveTab çağrımı, Viewport doc/selection, FeatureTree VM, ToolController context.
+
+- **v3.0.29.4**: `Çalışma Zamanı Entegrasyonu` — `DocumentTabsViewModel` + `EditorViewModel` sekme senkronizasyonu.
+  - **8 test (T360–T367)**: ViewModel sekme senkronizasyonu, command routing, Ribbon proxy.
+
 - **v3.0.29.3**: `DocumentTabs UI` (Sekmeli Çoklu Belge — UI Entegrasyonu) — Sekme şeridi `EditorView`'e entegre edildi.
   - **`DocumentTabsControl.xaml/cs`**: WPF sekme şeridi — + butonu, sekme başlıkları, kirli gösterge (★ turuncu), X kapatma butonu. `IsDirty=true` → sekme arka planı `#3a3a2a`.
   - **`EditorView.xaml`**: Grid.Row +1 (sekme şeridi), mevcut içerik alanı `Grid.Row="2"` olarak korundu. `Viewport`, `FeatureTreeCtrl`, `RibbonCtrl` dokunulmadı.
