@@ -3,34 +3,14 @@ using System.Linq;
 
 namespace TrainService.App.Controls.Ribbon;
 
-// ———— Data Models ————
-
 public sealed record RibbonItem(
-    string Id,
-    string Label,
-    string IconKind,              // IconPacks kind name (örn: "ContentSave")
-    string? ShortcutText,
-    string? CommandName,
-    string? CommandParameter,
-    string GroupId = "",
-    bool IsToggle = false,
-    bool IsEnabled = true,
-    string IconPack = "MaterialDesign"  // IconPacks paket adı (varsayılan: MaterialDesign)
+    string Id, string Label, string IconKind, string? ShortcutText,
+    string? CommandName, string? CommandParameter, string GroupId = "",
+    bool IsToggle = false, bool IsEnabled = true, string IconPack = "MaterialDesign"
 );
 
-public sealed record RibbonGroup(
-    string Id,
-    string Label,
-    List<RibbonItem> Items
-);
-
-public sealed record RibbonTab(
-    string Id,
-    string Label,
-    List<RibbonGroup> Groups
-);
-
-// ———— Static Definition ————
+public sealed record RibbonGroup(string Id, string Label, List<RibbonItem> Items);
+public sealed record RibbonTab(string Id, string Label, List<RibbonGroup> Groups);
 
 public static class RibbonDefinitions
 {
@@ -49,6 +29,12 @@ public static class RibbonDefinitions
                 new("Copy", "Kopyala", "ContentCopy", "(Ctrl+C)", "Copy", null),
                 new("Cut", "Kes", "ContentCut", "(Ctrl+X)", "Cut", null),
                 new("Paste", "Yapıştır", "ContentPaste", "(Ctrl+V)", "Paste", null),
+            }),
+            new RibbonGroup("selection", "Seçim", new()
+            {
+                new("SelWindow", "Window", "SelectAll", "", "SetSelectionMode", "Window", IsToggle: true),
+                new("SelCrossing", "Crossing", "SelectInverse", "", "SetSelectionMode", "Crossing", IsToggle: true),
+                new("SelFence", "Fence", "VectorPolyline", "", "SetSelectionMode", "Fence", IsToggle: true),
             }),
             new RibbonGroup("layer", "", new()
             {
@@ -78,10 +64,7 @@ public static class RibbonDefinitions
                 new("DeleteEdit", "Sil", "TrashCan", "(Del)", "Delete", null),
                 new("SplitSegment", "Böl", "ArrowSplitHorizontal", "", null, null, IsEnabled: false),
             }),
-            new RibbonGroup("placeholder", "", new()
-            {
-                // Boş grup — ilerisi için
-            }),
+            new RibbonGroup("placeholder", "", new() { }),
         }),
         new RibbonTab("view", "GÖRÜNÜM", new()
         {
@@ -94,6 +77,10 @@ public static class RibbonDefinitions
             {
                 new("ToggleGrid", "Izgara", "Grid", "", "ToggleGrid", null),
                 new("ToggleSnap", "Snap", "RulerSquare", "(F9)", "ToggleSnap", null),
+                new("SnapEndpoint", "Uç", "VectorPoint", "", "ToggleEndpointSnap", "", IsToggle: true),
+                new("SnapMidpoint", "Orta", "VectorSquare", "", "ToggleMidpointSnap", "", IsToggle: true),
+                new("SnapOnSegment", "Kenar", "VectorLine", "", "ToggleOnSegmentSnap", "", IsToggle: true),
+                new("SnapGridSnp", "GridS", "GridDots", "", "ToggleGridSnap", "", IsToggle: true),
             }),
         }),
     };

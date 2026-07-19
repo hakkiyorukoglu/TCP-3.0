@@ -54,17 +54,27 @@ public partial class RibbonControl : UserControl
 
     private static void OnTabsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is RibbonControl ctrl) ctrl.RebuildTabs();
+        if (d is RibbonControl ctrl && ctrl._vmCache != null)
+            ctrl.RebuildTabs();
     }
 
     private static void OnQuickAccessChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is RibbonControl ctrl) ctrl.RebuildQuickAccess();
+        if (d is RibbonControl ctrl && ctrl._vmCache != null)
+            ctrl.RebuildQuickAccess();
     }
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is RibbonControl ctrl) ctrl._vmCache = e.NewValue;
+        if (d is RibbonControl ctrl)
+        {
+            ctrl._vmCache = e.NewValue;
+            // ViewModel geldi, şimdi butonları komutlarla oluştur
+            if (ctrl.QuickAccessItems != null)
+                ctrl.RebuildQuickAccess();
+            if (ctrl.Tabs != null)
+                ctrl.RebuildTabs();
+        }
     }
 
     private void RebuildQuickAccess()
@@ -77,21 +87,18 @@ public partial class RibbonControl : UserControl
             if (item.Id == "Save" && _vmCache is EditorViewModel vm)
             {
                 var saveBtn = CreateRibbonButton(item, isQuickAccess: true);
-                
                 vm.PropertyChanged += (s, e) =>
                 {
                     if (e.PropertyName == nameof(EditorViewModel.DocumentStatusText))
                     {
-                        saveBtn.Appearance = vm.Document.IsDirty 
+                        saveBtn.Appearance = vm.Document.IsDirty
                             ? WpfUi::ControlAppearance.Caution
                             : WpfUi::ControlAppearance.Secondary;
                     }
                 };
-                
                 QuickAccessPanel.Children.Add(saveBtn);
                 continue;
             }
-
             var btn = CreateRibbonButton(item, isQuickAccess: true);
             QuickAccessPanel.Children.Add(btn);
         }
@@ -133,26 +140,17 @@ public partial class RibbonControl : UserControl
         for (int i = 0; i < TabHeaderPanel.Children.Count; i++)
         {
             if (TabHeaderPanel.Children[i] is ToggleButton tb && Tabs != null && i < Tabs.Count)
-            {
                 tb.IsChecked = Tabs[i].Id == tabId;
-            }
         }
-
         RebuildTabContent();
     }
 
     private void RebuildTabContent()
     {
         TabContentPanel.Children.Clear();
-
-        var selectedTab = Tabs?.FirstOrDefault(t => t.Id == _selectedTabId)
-                          ?? Tabs?.FirstOrDefault();
+        var selectedTab = Tabs?.FirstOrDefault(t => t.Id == _selectedTabId) ?? Tabs?.FirstOrDefault();
         if (selectedTab == null) return;
-
-        if (string.IsNullOrEmpty(_selectedTabId) && selectedTab != null)
-        {
-            _selectedTabId = selectedTab.Id;
-        }
+        if (string.IsNullOrEmpty(_selectedTabId)) _selectedTabId = selectedTab.Id;
 
         foreach (var group in selectedTab.Groups)
         {
@@ -163,7 +161,6 @@ public partial class RibbonControl : UserControl
                 BorderBrush = new SolidColorBrush(Color.FromRgb(0x44, 0x44, 0x44)),
                 BorderThickness = new Thickness(0, 0, 1, 0),
             };
-
             var stack = new StackPanel { Orientation = Orientation.Horizontal };
 
             foreach (var item in group.Items)
@@ -172,11 +169,9 @@ public partial class RibbonControl : UserControl
                 {
                     var cb = new ComboBox
                     {
-                        Width = 120,
-                        Margin = new Thickness(4, 4, 4, 4),
+                        Width = 120, Margin = new Thickness(4, 4, 4, 4),
                         ItemsSource = editorVm.Document.Layers,
-                        DisplayMemberPath = "Name",
-                        SelectedValuePath = "Id",
+                        DisplayMemberPath = "Name", SelectedValuePath = "Id",
                         SelectedValue = editorVm.ActiveLayerId,
                         Background = new SolidColorBrush(Color.FromRgb(0x33, 0x33, 0x33)),
                         Foreground = new SolidColorBrush(Color.FromRgb(0xCC, 0xCC, 0xCC)),
@@ -184,10 +179,7 @@ public partial class RibbonControl : UserControl
                     };
                     cb.SelectionChanged += (s, e) =>
                     {
-                        if (cb.SelectedValue is Guid id)
-                        {
-                            editorVm.ActiveLayerId = id;
-                        }
+                        if (cb.SelectedValue is Guid id) editorVm.ActiveLayerId = id;
                     };
                     stack.Children.Add(cb);
                     continue;
@@ -199,25 +191,20 @@ public partial class RibbonControl : UserControl
                     Margin = new Thickness(4, 0, 4, 0),
                     Width = 48,
                 };
-
                 var btn = CreateRibbonButton(item, isQuickAccess: false);
                 itemPanel.Children.Add(btn);
-
                 if (!string.IsNullOrEmpty(item.Label))
                 {
                     itemPanel.Children.Add(new TextBlock
                     {
-                        Text = item.Label,
-                        FontSize = 9,
+                        Text = item.Label, FontSize = 9,
                         Foreground = new SolidColorBrush(Color.FromRgb(0xAA, 0xAA, 0xAA)),
                         TextAlignment = TextAlignment.Center,
                         TextWrapping = TextWrapping.NoWrap,
                     });
                 }
-
                 stack.Children.Add(itemPanel);
             }
-
             groupBorder.Child = stack;
             TabContentPanel.Children.Add(groupBorder);
         }
@@ -238,7 +225,6 @@ public partial class RibbonControl : UserControl
             Margin = new Thickness(isQuickAccess ? 2 : 0, 0, isQuickAccess ? 2 : 0, 2),
         };
 
-        // IconPacks ikonu oluştur
         if (!string.IsNullOrEmpty(item.IconKind))
         {
             var icon = CreateIconPacks(item.IconKind, item.IconPack);
@@ -255,9 +241,7 @@ public partial class RibbonControl : UserControl
         {
             btn.Command = ResolveCommand(item.CommandName);
             if (!string.IsNullOrEmpty(item.CommandParameter))
-            {
                 btn.CommandParameter = item.CommandParameter;
-            }
         }
 
         return btn;
@@ -266,7 +250,6 @@ public partial class RibbonControl : UserControl
     private static Control? CreateIconPacks(string kind, string pack)
     {
         if (string.IsNullOrEmpty(kind)) return null;
-
         try
         {
             return pack switch
@@ -281,10 +264,7 @@ public partial class RibbonControl : UserControl
                 }
             };
         }
-        catch
-        {
-            return null;
-        }
+        catch { return null; }
     }
 
     private static string BuildToolTip(RibbonItem item)
@@ -298,14 +278,9 @@ public partial class RibbonControl : UserControl
     private ICommand? ResolveCommand(string commandName)
     {
         if (_vmCache == null) return null;
-
         var propName = commandName.EndsWith("Command") ? commandName : commandName + "Command";
         var prop = _vmCache.GetType().GetProperty(propName,
             System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-
-        if (prop?.GetValue(_vmCache) is ICommand cmd)
-            return cmd;
-
-        return null;
+        return prop?.GetValue(_vmCache) as ICommand;
     }
 }

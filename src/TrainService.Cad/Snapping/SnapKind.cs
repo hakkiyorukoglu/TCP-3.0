@@ -1,11 +1,12 @@
 namespace TrainService.Cad.Snapping;
 
-/// <summary>Snap türü. Sayısal değerler öncelik DEĞİLDİR (öncelik ISnapProvider.Priority'dedir);
-/// aralıklı bırakılmıştır ki ileride ara tür eklemek serileştirmeyi bozmasın.</summary>
+/// <summary>Snap turu. Sayisal degerler oncelik DEGILDIR (oncelik ISnapProvider.Priority'dedir);
+/// aralikli birakilmistir ki ileride ara tur eklemek serilestirmeyi bozmasin.</summary>
 public enum SnapKind
 {
     None = 0,
     Grid = 10,
-    OnSegment = 20,   // v3.0.19 — bugün render switch'inde boş kol olarak var
-    Endpoint = 30     // v3.0.19
+    OnSegment = 20,
+    Endpoint = 30,
+    Midpoint = 40     // v3.0.29.22 — segment orta noktasi
 }

@@ -53,3 +53,8 @@ public sealed record PreviewRampPlace(
     Vector2D EntryPos,
     Vector2D ExitPos
 ) : PreviewShape;
+
+public sealed record PreviewFence(
+    System.Collections.Generic.IReadOnlyList<Vector2D> Points,
+    bool IsClosed
+) : PreviewShape;

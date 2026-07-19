@@ -18,7 +18,23 @@ public sealed class SelectTool : ITool
     private Vector2D _pressWorld;
     private Vector2D _cursorWorld;
 
+    // Fence state
+    private SelectionMode _mode = SelectionMode.Crossing;
+    private List<Vector2D> _fencePoints = new();
+    private bool _isFencing;
+
     public PreviewShape? Preview { get; private set; }
+
+    public void SetMode(SelectionMode mode)
+    {
+        _mode = mode;
+        if (_isFencing && mode != SelectionMode.Fence)
+        {
+            _fencePoints.Clear();
+            _isFencing = false;
+            Preview = null;
+        }
+    }
 
     public void Activate(ToolContext ctx) => Reset();
     public void Deactivate(ToolContext ctx) => Reset();
@@ -27,11 +43,28 @@ public sealed class SelectTool : ITool
     {
         _pressed = false;
         _dragging = false;
+        _isFencing = false;
+        _fencePoints.Clear();
         Preview = null;
     }
 
     public void OnPointerDown(SnapResult snapped, ToolMouseButton button, ToolContext ctx)
     {
+        if (_mode == SelectionMode.Fence)
+        {
+            if (button == ToolMouseButton.Left)
+            {
+                _fencePoints.Add(snapped.Point);
+                _isFencing = true;
+                Preview = new PreviewFence(_fencePoints.ToList(), false);
+            }
+            else if (button == ToolMouseButton.Right)
+            {
+                CommitFence(ctx);
+            }
+            return;
+        }
+
         if (button != ToolMouseButton.Left) return;
         _pressed = true;
         _dragging = false;
@@ -41,6 +74,8 @@ public sealed class SelectTool : ITool
 
     public void OnPointerMove(SnapResult snapped, ToolContext ctx)
     {
+        if (_mode == SelectionMode.Fence) return;
+
         _cursorWorld = snapped.Point;
         if (!_pressed) { Preview = null; return; }
 
@@ -56,40 +91,129 @@ public sealed class SelectTool : ITool
 
     public void OnPointerUp(SnapResult snapped, ToolMouseButton button, ToolContext ctx)
     {
+        if (_mode == SelectionMode.Fence) return;
+
         if (button != ToolMouseButton.Left || !_pressed) return;
         _pressed = false;
         _cursorWorld = snapped.Point;
 
         if (_dragging) MarqueeSelect(ctx);
-        else           ClickSelect(ctx);
+        else ClickSelect(ctx);
 
         _dragging = false;
+        Preview = null;
+    }
+
+    public void OnKeyDown(ToolKey key, ToolContext ctx)
+    {
+        if (_mode == SelectionMode.Fence && _isFencing)
+        {
+            switch (key)
+            {
+                case ToolKey.Enter:
+                    CommitFence(ctx);
+                    return;
+                case ToolKey.Escape:
+                    CancelFence(ctx);
+                    return;
+            }
+        }
+
+        switch (key)
+        {
+            case ToolKey.Delete:
+                if (ctx.Selection.SelectedIds.Count > 0)
+                {
+                    ctx.Commands.Do(new DeleteEntitiesCommand(ctx.Selection.SelectedIds.ToList()), ctx.Document);
+                    ctx.Selection.Clear();
+                }
+                break;
+
+            case ToolKey.Copy:
+                if (ctx.Selection.SelectedIds.Count > 0)
+                    ctx.Clipboard.Set(SeciliEntities(ctx));
+                break;
+
+            case ToolKey.Cut:
+                if (ctx.Selection.SelectedIds.Count > 0)
+                {
+                    ctx.Commands.Do(new CutEntitiesCommand(ctx.Selection.SelectedIds.ToList(), ctx.Clipboard), ctx.Document);
+                    ctx.Selection.Clear();
+                }
+                break;
+
+            case ToolKey.Paste:
+                if (ctx.Clipboard != null && ctx.Clipboard.HasContent)
+                {
+                    var cmd = new PasteEntitiesCommand(ctx.Clipboard.Get());
+                    ctx.Commands.Do(cmd, ctx.Document);
+                    ctx.Selection.Set(cmd.EklenenIds);
+                }
+                break;
+
+            case ToolKey.Escape:
+                _pressed = false;
+                _dragging = false;
+                Preview = null;
+                break;
+        }
+    }
+
+    private void CommitFence(ToolContext ctx)
+    {
+        if (_fencePoints.Count < 3)
+        {
+            CancelFence(ctx);
+            return;
+        }
+
+        _isFencing = false;
+        Preview = new PreviewFence(_fencePoints.ToList(), true);
+
+        var selected = MarqueeSelector.FenceSelect(ctx.Document, _fencePoints);
+
+        if (ctx.ModifierAdd)
+            foreach (var id in selected) ctx.Selection.Add(id);
+        else
+            ctx.Selection.Set(selected);
+
+        _fencePoints.Clear();
+        Preview = null;
+    }
+
+    private void CancelFence(ToolContext ctx)
+    {
+        _isFencing = false;
+        _fencePoints.Clear();
         Preview = null;
     }
 
     private void MarqueeSelect(ToolContext ctx)
     {
         var box = BoxOf(_pressWorld, _cursorWorld);
-        bool crossing = _cursorWorld.X < _pressWorld.X;
+        bool rightToLeft = _cursorWorld.X < _pressWorld.X; // sağdan-sola = crossing yönü
 
-        var buf = new List<Guid>(128);
-        ctx.Document.QueryRegion(box, buf);
-
-        var secilen = new List<Guid>();
-        foreach (var id in buf)
+        List<Guid> selected;
+        if (_mode == SelectionMode.Window)
         {
-            if (!ctx.Document.TryGetEntity(id, out var e)) continue;
-            if (!ctx.Document.IsSelectable(id)) continue;
-            var eb = EntityBounds(e, ctx.Document);
-            if (eb == null) continue;
-            bool hit = crossing ? box.IntersectsWith(eb.Value) : box.Contains(eb.Value);
-            if (hit) secilen.Add(id);
+            // Window mode: her zaman tamamen içeren
+            selected = MarqueeSelector.WindowSelect(ctx.Document, box);
+        }
+        else if (rightToLeft)
+        {
+            // Default (Crossing) + sağdan-sola: kesişen
+            selected = MarqueeSelector.CrossingSelect(ctx.Document, box);
+        }
+        else
+        {
+            // Default (Crossing) + soldan-sağa: tamamen içeren (window davranışı)
+            selected = MarqueeSelector.WindowSelect(ctx.Document, box);
         }
 
         if (ctx.ModifierAdd)
-            foreach (var id in secilen) ctx.Selection.Add(id);
+            foreach (var id in selected) ctx.Selection.Add(id);
         else
-            ctx.Selection.Set(secilen);
+            ctx.Selection.Set(selected);
     }
 
     private void ClickSelect(ToolContext ctx)
@@ -143,60 +267,6 @@ public sealed class SelectTool : ITool
         }
     }
 
-    private static BoundingBox? EntityBounds(CadEntity e, CadDocument doc)
-    {
-        if (e.Bounds != null) return e.Bounds;
-        // Segment için node pozisyonlarından hesapla
-        if (e is TrackSegment seg &&
-            doc.TryGetEntity(seg.StartNodeId, out var sa) && sa is TrackNode a &&
-            doc.TryGetEntity(seg.EndNodeId, out var sb) && sb is TrackNode b)
-        {
-            return new BoundingBox(
-                Math.Min(a.Position.X, b.Position.X), Math.Min(a.Position.Y, b.Position.Y),
-                Math.Max(a.Position.X, b.Position.X), Math.Max(a.Position.Y, b.Position.Y));
-        }
-        return null;
-    }
-
-    private static BoundingBox BoxOf(Vector2D a, Vector2D b)
-        => new(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y), Math.Max(a.X, b.X), Math.Max(a.Y, b.Y));
-
-    public void OnKeyDown(ToolKey key, ToolContext ctx)
-    {
-        switch (key)
-        {
-            case ToolKey.Delete:
-                if (ctx.Selection.SelectedIds.Count > 0)
-                {
-                    ctx.Commands.Do(new DeleteEntitiesCommand(ctx.Selection.SelectedIds.ToList()), ctx.Document);
-                    ctx.Selection.Clear();
-                }
-                break;
-
-            case ToolKey.Copy:
-                if (ctx.Selection.SelectedIds.Count > 0)
-                    ctx.Clipboard.Set(SeciliEntities(ctx));
-                break;
-
-            case ToolKey.Cut:
-                if (ctx.Selection.SelectedIds.Count > 0)
-                {
-                    ctx.Commands.Do(new CutEntitiesCommand(ctx.Selection.SelectedIds.ToList(), ctx.Clipboard), ctx.Document);
-                    ctx.Selection.Clear();
-                }
-                break;
-
-            case ToolKey.Paste:
-                if (ctx.Clipboard != null && ctx.Clipboard.HasContent)
-                {
-                    var cmd = new PasteEntitiesCommand(ctx.Clipboard.Get());
-                    ctx.Commands.Do(cmd, ctx.Document);
-                    ctx.Selection.Set(cmd.EklenenIds);
-                }
-                break;
-        }
-    }
-
     private static List<CadEntity> SeciliEntities(ToolContext ctx)
     {
         var list = new List<CadEntity>();
@@ -204,4 +274,7 @@ public sealed class SelectTool : ITool
             if (ctx.Document.TryGetEntity(id, out var e)) list.Add(e);
         return list;
     }
+
+    private static BoundingBox BoxOf(Vector2D a, Vector2D b)
+        => new(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y), Math.Max(a.X, b.X), Math.Max(a.Y, b.Y));
 }
