@@ -3,7 +3,7 @@
 ![Platform](https://img.shields.io/badge/Platform-Windows-blue)
 ![Framework](https://img.shields.io/badge/Framework-.NET%208.0-512BD4)
 ![UI](https://img.shields.io/badge/UI-WPF%20%2B%20Fluent-success)
-![Version](https://img.shields.io/badge/Version-v3.0.29.18-orange)
+![Version](https://img.shields.io/badge/Version-v3.0.29.19-orange)
 ![GitHub](https://img.shields.io/badge/GitHub-hakkiyorukoglu%2FTCP--3.0-lightgrey)
 
 > GitHub: `https://github.com/hakkiyorukoglu/TCP-3.0.git`
@@ -31,11 +31,11 @@ TCP (Train Control Platform) 3.0, trenlerin otonom hareketlerini simüle eden, u
 
 | Alan | Değer |
 |------|-------|
-| **Son Sürüm** | v3.0.29.18 |
-| **Son Git Commit** | `cffd963` (pushed to GitHub) |
-| **Son Yapılan** | Sağ Properties Panel + Hover Highlight + README AI handover (tam oryantasyon) + Agent kuralları güncellemesi |
-| **Sıradaki Sürüm** | v3.0.29.19 — Alt Komut Satırı + Prompt Area + Coordinate Input Fields |
-| **Aktif Faz** | FAZ D3 GRUP 1 — Görsel Temel (v3.0.29.17–19) |
+| **Son Sürüm** | v3.0.29.19 |
+| **Son Git Commit** | `082cb1d` (pushed to GitHub) |
+| **Son Yapılan** | Alt Komut Satırı + Prompt Area + Coordinate Input Fields |
+| **Sıradaki Sürüm** | v3.0.29.20 — Grip Editing (seçili nesnede tutmaçlar) |
+| **Aktif Faz** | FAZ D3 GRUP 2 — Seçim ve Snap (v3.0.29.20–23) |
 | **Build Durumu** | ✅ 0 Error, 0 Warning |
 | **Test Durumu** | Tüm App.Tests geçiyor (12 yeni test T460–T470) |
 
@@ -264,7 +264,7 @@ Testler: T400–T417.
 
 | Grup | Versiyon | Tema | Test | Durum |
 |------|----------|------|------|-------|
-| G1 | v3.0.29.17–19 | Görsel Temel | T460–T474 | v3.0.29.17-18 ✅, v3.0.29.19 ⏳ |
+| G1 | v3.0.29.17–19 | Görsel Temel | T460–T474 | ✅ TAMAMLANDI |
 | G2 | v3.0.29.20–23 | Seçim ve Snap (Ortho **F10**!) | T475–T492 | ⏳ |
 | G3 | v3.0.29.24–27 | Modify Araçları | T493–T512 | ⏳ |
 | G4 | v3.0.29.28–30 | Draw Araçları (Circle/Arc!) | T513–T530 | ⏳ |
@@ -342,6 +342,12 @@ dotnet run --project src/TrainService.App/TrainService.App.csproj
 
 ## 📝 SÜRÜM GEÇMİŞİ
 
+### v3.0.29.19 — Alt Komut Satırı + Prompt Area + Coordinate Input Fields ✅
+- **YENİ:** `Services/ToolPromptService.cs` — 6 tool için bağlamsal prompt metni.
+- **DEĞİŞEN:** `EditorView.xaml` — Command Bar (Grid.Row="3"): PromptLabel + CommandInput + CoordX/Y/Z.
+- **DEĞİŞEN:** `EditorView.xaml.cs` — `OnCommandKeyDown` (11 komut), `OnCoordKeyDown`, prompt güncelleme.
+- **TEST:** T471–T474 (4 test). Build: 0 Error.
+
 ### v3.0.29.18 — Sağ Properties Panel + Hover Highlight ✅
 - **YENİ:** `Controls/PropertiesPanel/PropertiesPanelControl.cs` — Sağ panel; ID, Layer, X, Y, Z, Tür.
 - **DEĞİŞEN:** `EditorView.xaml` — 3 kolon (250 + * + 220). `EditorView.xaml.cs` — ReattachActiveTab'de bağlantı.
@@ -368,4 +374,4 @@ Detaylar `Roadmap.md` FAZ D2 ve D2-DEVAM bölümlerinde.
 
 ---
 
-*Son güncelleme: 2026-07-19 · v3.0.29.18 · Git: cffd963 · Aktif Faz: D3 G1*
+*Son güncelleme: 2026-07-19 · v3.0.29.19 · Git: 082cb1d · Aktif Faz: D3 G2*
