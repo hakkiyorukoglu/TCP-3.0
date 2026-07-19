@@ -120,7 +120,7 @@ TrainService.sln
 
 # BÖLÜM 2 — CAD EDİTÖRÜ: MATEMATİKSEL VE SINIFSAL ALTYAPI
 
-Editör genel amaçlı CAD değildir; **yalnızca demiryolu otomasyonu** primitifleri vardır: Ray, Hat (Rota), Makas, Rampa, İstasyon, Donanım-Bağı. Çember/yay/çokgen **yoktur**.
+Editör genel amaçlı CAD değildir; **yalnızca demiryolu otomasyonu** primitifleri vardır: Ray, Hat (Rota), Makas, Rampa, İstasyon, Donanım-Bağı. v3.0.29.29'dan itibaren Circle/Arc/Polygon araçları eklenecek olup, bu geometriler TrackSegment'lere ayrıştırılarak depolanır — yeni CadEntity türü eklenmez (A2 arteri korunur).
 
 ## 2.1 Koordinat Sistemi ve Dünya ↔ Ekran Dönüşümü
 
@@ -524,7 +524,7 @@ Sonuç: rampa çıkarken doğal yavaşlama, inişte hız artışı, engelde mesa
 
 
 # TrainService (TCP) — YOL HARİTASI (Roadmap)
-## Sürüm: 2026-07-18 · FAZ D kapanışı sonrası tam güncelleme
+## Sürüm: 2026-07-19 · FAZ D2-DEVAM kapanışı sonrası güncelleme
 
 > **BU DOSYAYI OKUYAN MODEL İÇİN — ÖNCE OKU:**
 > 1. Bu roadmap `AGENTS.md`'ye TABİDİR (aynı klasörde). Çelişkide AGENTS.md kazanır.
@@ -533,12 +533,13 @@ Sonuç: rampa çıkarken doğal yavaşlama, inişte hız artışı, engelde mesa
 >    `dotnet run` → DUR → kullanıcı manuel turu → mühür raporu (SABİT tools/muhur.ps1) → kullanıcı
 >    "pushla" derse commit+push. Bir oturumda TEK sürüm.
 > 4. Mühürlü davranışlar SÖKÜLMEZ (Y5): F9=snap, Esc=İPTAL, Enter/sağ-tık=COMMIT, SabitKatmanlar
->    (11111111/22222222/33333333), IsVisible/IsSelectable tek-kaynak, CadColors merkezî renk.
+>    (11111111/22222222/33333333) seed olarak korunur (v3.0.29.32'de dinamik genişletme — bkz. sapma),
+>    IsVisible/IsSelectable tek-kaynak, CadColors merkezî renk.
 > 5. Bekçi ispatı SADECE `//[Fact]` yöntemi (Y12). Test sorunu TESTTE çözülür, üretim sökülmez (Y13).
 > 6. 🔍 işaretli sürümlerde mühre EK olarak geriye-dönük denetim raporu üretilir
 >    (VERSIYON_KONTROL_DENETIMI.txt — önceki 🔍'den bu yana tüm sürümler).
-> 7. Ara-numara kuralı: v3.0.29.1–v3.0.29.7 GERÇEK sürümlerdir (FAZ D2). v3.0.30+ numaraları eski
->    belgelerle uyum için DEĞİŞTİRİLMEMİŞTİR.
+> 7. Ara-numara kuralı: v3.0.29.1–.29.42 GERÇEK sürümlerdir (FAZ D2 + D2-DEVAM + D3). v3.0.30+
+>    numaraları eski belgelerle uyum için DEĞİŞTİRİLMEMİŞTİR.
 
 ═══════════════════════════════════════════════════════════════════
 # BÖLÜM 0 — MÜHÜRLÜ GEÇMİŞ (v3.0.0 → v3.0.29) — DOKUNULMAZ
@@ -562,169 +563,168 @@ Mevcut test tabanı (blok mühür anı): **246 test** — Cad 146, Core 32, Data
 Migration listesi (hepsi applied): InitialSchema, AddElectronicsSchema, RemoveCadProjectJson, AddMissingTables, FixRailSwitchRampMapping.
 
 ═══════════════════════════════════════════════════════════════════
-# FAZ D2 — EDİTÖR ARAYÜZ CİLASI (YENİ) · v3.0.29.1 → v3.0.29.7
+# FAZ D2 — RIBBON & ÇOKLU BELGE · v3.0.29.1 → v3.0.29.7 (MÜHÜRLENDİ)
 ═══════════════════════════════════════════════════════════════════
-**Fazın amacı:** Backend'i tamamlanan editörün üstüne Alphacam sınıfı kullanım kolaylıkları giydirmek.
-Bu fazda ÇEKİRDEK MANTIK DEĞİŞMEZ — yalnızca App katmanı (XAML/ViewModel) genişler; Cad/Core'a dokunuş
-sadece komutları dışarı açan ince arayüzlerle sınırlıdır. Görsel/backend ayrımı kararı gereği bu faz,
-"görsel roadmap"in çekirdeğe bitişik ilk yarısıdır.
+Gerçekleşen: Ribbon şerit, sekmeli çoklu belge ve runtime entegrasyonu. App katmanı genişledi.
+İkon standardı: Wpf.Ui SymbolIcon.
 
-**UI test kimlik bloğu:** T330–T399 (App.Tests + Cad.Tests FeatureTree/ViewModel testleri).
-**İkon standardı (tüm faz):** Birincil = Wpf.Ui `SymbolIcon` (Fluent System Icons — pakette hazır,
-ek bağımlılık YOK). Eksik sembol olursa ikincil = `Material.Icons.WPF` (MIT lisans) NuGet paketi;
-üçüncül = `MahApps.Metro.IconPacks.Modern` (MIT). Yeni paket eklemek plan onayı gerektirir; PNG/asset
-dosyası eklenmez, yalnızca font/vektör ikon kullanılır (DPI bağımsızlığı).
+| Sürüm      | İçerik | Plan | Mühür | Test |
+|------------|--------|------|-------|------|
+| v3.0.29.1  | Ribbon Şerit + Quick Access (22 item, 15 kısayol) | `v30291_ribbon_plan.md` | `v30291_ribbon_muhur.md` | T330–T335 |
+| v3.0.29.1-fix | Kritik Bug Düzeltmeleri | `v30291_fix_plan.md` | `v30291_fix_muhur.md` | T336–T344 |
+| v3.0.29.2  | Sekmeli Çoklu Belge (arka uç) | `v30292_tabs_plan.md` | `v30292_tabs_muhur.md` | T340–T347 |
+| v3.0.29.3  | Sekmeli Belge UI Entegrasyonu | `v30293_tabs_ui_plan.md` | `v30293_tabs_ui_muhur.md` | T350–T357 |
+| v3.0.29.4  | Çalışma Zamanı Entegrasyonu | `v30294_tabs_runtime_plan.md` | `v30294_tabs_runtime_muhur.md` | T360–T367 |
+| v3.0.29.5  | Sekme Yeniden Bağlama (Reattach) | `v30295_tabs_reattach_plan.md` | `v30295_tabs_reattach_muhur.md` | T370–T377 |
+| v3.0.29.6  | Runtime Binding Testleri | `v30296_runtime_binding_plan.md` | `v30296_runtime_binding_muhur.md` | T380–T387 |
+| v3.0.29.7  | Gerçek UI Entegrasyonu | `v30297_ui_binding_plan.md` | `v30297_ui_binding_muhur.md` | T390–T394 |
 
----
-## v3.0.29.1 — Üst Ribbon: Sekmeli Komut Şeridi + Quick Access
-**Amaç:** Alphacam'deki sekmeli üst şerit düzeni: tüm araçlar ikonlu butonlarla üstte, kısayol
-ipuçları tooltip'te ("ScreenTip'te kısayol göster" davranışı).
-**İçerik:**
-- Üst bölge iki katman: (1) **Quick Access mini-bar** (pencere başlığı hizasında): Kaydet(Ctrl+S),
-  Geri Al(Ctrl+Z), Yinele(Ctrl+Y) — her zaman görünür. (2) **Sekmeli şerit**: `Giriş` · `Çizim` ·
-  `Düzen` · `Görünüm` sekmeleri.
-- `Giriş`: Seç(S), Taşı-yakında, Sil(Del), Kopyala/Kes/Yapıştır, katman ComboBox + göz/kilit (mevcut).
-- `Çizim`: Ray(T), Hat(R), Hibrit(H), Rampa, Makas — mevcut SetTool komutlarına bağlanır; aktif araç
-  butonu vurgulu (toggle görünümü, tek doğruluk kaynağı EditorViewModel.ActiveToolName).
-- `Düzen`: Undo/Redo, Delete, SplitSegment, (ilerisi için boş grup — Fillet/Trim YOK, bkz. YOK listesi).
-- `Görünüm`: Zoom Extents, Zoom Window, Grid ayarı, Snap toggle (F9 ile aynı komut), tema.
-- Her buton: SymbolIcon + başlık + ToolTip'te "İşlev (Kısayol)" formatı.
-- Şerit tanımı VERİ-SÜRÜMLÜ: `RibbonDefinition.cs` içinde komut listesi (id, ikon, kısayol, grup) —
-  XAML bu listeden ItemsControl ile üretilir. (Alphacam'in "toolbar customize" temeli; kullanıcı
-  özelleştirmesi BU sürümde YOK, sadece veri yapısı hazırlanır.)
-**YOK:** Kullanıcı toolbar özelleştirme UI'ı (ileride), Fillet/Trim/Offset gibi geometrik komutlar
-(çekirdek desteklemiyor — eklemek Y11 kapsam taşması), ribbon collapse animasyonları.
-**Kabul:** Tüm mevcut araçlara şeritten erişilir; aktif araç vurgulanır; tooltip'lerde kısayol görünür;
-klavye kısayolları AYNEN çalışmaya devam eder (S/T/R/H/F9/Esc/Enter/Del/Ctrl+C-X-V-Z-Y-S).
-**Test:** T330–T335 (ViewModel: SetTool eşlemesi, ActiveToolName senkronu, RibbonDefinition bütünlüğü —
-her komutun geçerli ikon+kısayol+handler'ı var; kısayol çakışma taraması testi).
-
----
-## v3.0.29.2 — Sekmeli Çoklu Belge (Üstte Sayfalar)
-**Amaç:** Alphacam/tarayıcı tarzı: üstte SAYFA sekmeleri; birden çok proje/çizim aynı anda açık.
-**İçerik:**
-- `DocumentTabsViewModel`: açık belgeler listesi (her biri kendi `CadDocument` + `CommandStack` +
-  `SelectionService` + ToolController seti — İZOLE; sekmeler arası hiçbir paylaşım yok).
-- Sekme şeridi (şeridin altı, tuvalin üstü): sekme başlığı = proje adı; ★ kirli (kaydedilmemiş) işareti;
-  X kapat butonu; çift-tık = yeniden adlandır (DB'ye Project.Name yazılır); sürükle-bırak = yeniden sırala.
-- `+` butonu: yeni boş proje (yeni ProjectId, SabitKatmanlar seed'i standart akışla).
-- Kapatırken kirliyse Wpf.Ui MessageBox: Kaydet / Kaydetme / Vazgeç.
-- Ctrl+Tab = sonraki sekme, Ctrl+W = sekme kapat (kaydet uyarılı).
-- Ctrl+S yalnız AKTİF sekmeyi kaydeder (mevcut CadDocumentStore, ProjectId'siyle — kod değişmez, çağrı bağlanır).
-**YOK:** Sekmeyi ayrı pencereye koparma, split-view, belgeler arası kopyala-yapıştır (pano zaten
-in-process tek — bu doğal ÇALIŞIR ve çalışması KABUL, engellenmez), oturum geri yükleme (son açık sekmeler).
-**Kabul:** İki proje açıkken çizimler, undo yığınları ve seçimler birbirine KARIŞMAZ (en kritik kriter);
-kirli sekme kapatılırken uyarı çıkar; yeniden adlandırma DB'ye yansır ve yeniden açılışta korunur.
-**Test:** T340–T347 (izolasyon: sekme-A'da çizim sekme-B'nin CommandStack'ine düşmez; kirli bayrak;
-rename persist; kapat-uyarı akışı ViewModel testi; Ctrl+Tab döngüsü).
-
----
-## v3.0.29.3 — Feature Tree Kolaylıkları (Katman Ağacı v2)
-**Amaç:** v3.0.28 ağacını Alphacam "Project Manager" konforuna çıkarmak.
-**İçerik:**
-- **Arama/filtre kutusu** (ağacın üstü): ada + türe göre canlı süzme; eşleşen düğümün ataları otomatik açılır.
-- **Tür grupları:** Katman düğümü altında ikinci seviye: Raylar / Hatlar / Makaslar / Rampalar
-  (sayaçlarıyla: "Makaslar (3)").
-- **Toplu göz/kilit:** grup ve katman düğümlerinde göz+kilit ikonları → altındaki TÜM öğelere uygular
-  (mevcut SetLayerVisibility/SetLayerLock + entity bazlı IsVisible tek-kaynağı ÜZERİNDEN — yeni
-  görünürlük yolu AÇILMAZ).
-- **Solo/İzole:** sağ-tık → "Yalnız bunu göster" (diğer katmanlar gizlenir; tekrar seçilince geri).
-  İzole durumu bir UI durumudur, belgeye YAZILMAZ.
-- **Sağ-tık ağaç menüsü:** Yeniden adlandır (katman/rota), Sil (undo'lu, mevcut DeleteEntitiesCommand),
-  Zoom (çift-tık ile aynı), Solo, Tümünü Göster.
-- **Sürükle-bırak katman değiştirme:** entity düğümünü başka katman düğümüne bırak →
-  `ChangeLayerCommand` (YENİ, ICadCommand, undo'lu — Cad katmanına eklenen TEK sınıf).
-**YOK:** Ağaçtan çoklu-sürükleme, katman ekleme/silme (3 sabit katman kararı korunur), tür grubu
-altında yeniden sıralama.
-**Kabul:** Arama 200+ nesnede takılmadan süzer (canlı); solo→geri tam döner; sürükle-bırak katman
-değişimi Ctrl+Z ile geri alınır; toplu göz/kilit tuval render'ına ANINDA yansır.
-**Test:** T350–T357 (filtre eşleşme+ata-açma; grup sayaçları; ChangeLayerCommand execute/undo; solo
-durum makinesi; toplu görünürlük → IsVisible sonuçları).
-
----
-## v3.0.29.4 — Radyal Menü v2 (Görsel + İşlev Genişlemesi)
-**Amaç:** v3.0.29 radyalini Alphacam/oyun-motoru kalitesine çıkarmak: ikonlu dilimler, alt halka,
-son-komut tekrarı.
-**İçerik:**
-- Dilimlerde SymbolIcon + etiket; hover'da dilim büyür (Fluent animasyon, 120ms).
-- **Alt-halka (submenu):** "Çizim ▸" dilimi → ikinci halka (Ray/Hat/Hibrit/Rampa/Makas). Tek seviye
-  derinlik SINIRI (iki halkadan fazlası YOK).
-- **Merkez buton = son komut:** son çalıştırılan radyal komutu merkezde ikonuyla; tıkla → tekrar
-  (Alphacam'de sağ-tık-tekrar alışkanlığının karşılığı).
-- Bağlam setleri genişler: boşluk / segment / rota / makas / rampa / ÇOKLU-SEÇİM (yeni: Sil, Kopyala,
-  Katman değiştir▸) / Feature Tree üstü (ağaç sağ-tık menüsüyle AYNI komut kaynağı — komut tanımı tek yerde).
-- Klavye: radyal açıkken ok tuşları dilim gezdirir, Enter seçer, Esc kapatır (Esc=iptal ilkesi burada da).
-- MÜHÜRLÜ KURAL KORUNUR: radyal SADECE araç Idle iken açılır; araç meşgulken sağ-tık = zincir bitir/commit.
-**YOK:** Serbest özelleştirilebilir dilimler, ikiden derin halkalar, radyalden metin girişi.
-**Kabul:** Idle-dışı açılmama davranışı REGRESYONsuz; alt-halka ve merkez-tekrar çalışır; tüm dilim
-komutları ribbon'daki eşdeğerleriyle AYNI handler'ı kullanır (çift mantık yok).
-**Test:** T360–T366 (bağlam→dilim seti seçimi; son-komut kaydı/tekrarı; Idle guard regresyon; klavye
-gezinme durum makinesi; çoklu-seçim seti).
-
----
-## v3.0.29.5 — Görünüm Kolaylıkları + Durum Çubuğu
-**Amaç:** Alphacam'in Z=Zoom All refleksi ve profesyonel CAD durum çubuğu.
-**İçerik:**
-- **Zoom Extents** (tüm çizimi kadrajla — kısayol `Z`, Alphacam birebir) ve **Zoom Window**
-  (W ile pencere çiz-yaklaş; Esc iptal). Her ikisi Görünüm şeridinde ikonlu.
-- **Snap toolbar'ı** (durum çubuğunda toggle grubu): Endpoint / OnSegment / Grid snap AYRI AYRI
-  açılıp kapanır (SnapEngine'e üç bayrak; F9 = üçünü birden aç/kapa — F9 davranışı DEĞİŞMEZ,
-  "hepsi kapalı↔son kombinasyon" olarak çalışır).
-- **Durum çubuğu** (pencere altı): imleç dünya koordinatı (X: Y: mm, AwayFromZero yuvarlak),
-  aktif katman adı, aktif araç, snap durum LED'leri, zoom yüzdesi, seçili nesne sayısı.
-- Orta-tuş çift-tık = Zoom Extents (CAD refleksi).
-**YOK:** Mini-harita, kaydedilmiş görünümler (named views), 3D/izometrik görünüm.
-**Kabul:** Z her durumda tüm çizimi kadrajlar (boş belgede no-op, sıfıra bölme guard'lı — AGENTS 7);
-snap bayrakları teker teker çalışır ve F9 eski davranışını bozmaz; koordinat göstergesi
-MouseMove'da TAHSISSIZ güncellenir (hot-path — string.Format değil, önbellekli StringBuilder/binding).
-**Test:** T370–T376 (Zoom Extents matematiği: bounds→transform; boş belge guard; snap bayrak
-kombinasyonları SnapEngine testi; F9 toggle regresyon; koordinat yuvarlama AwayFromZero).
-
----
-## v3.0.29.6 — Seçim Filtreleri + Hızlı Seçim Komutları
-**Amaç:** Kalabalık çizimde Alphacam tarzı hedefli seçim.
-**İçerik:**
-- **Seçim filtresi** (durum çubuğunda açılır): Tümü / Sadece Ray / Sadece Hat / Sadece Makas /
-  Sadece Rampa / Sadece Düğüm. Aktifken tık VE marquee yalnız o türü seçer (SelectTool'a tür
-  yüklemi enjekte edilir — SelectTool İMZASI değişmez, ToolContext'e `SelectionTypeFilter` eklenir).
-- **Ctrl+A** = filtreye uyan görünür+kilitsiz HERŞEYİ seç.
-- **Benzerlerini Seç** (sağ-tık/radyal, seçiliyken): aynı türden tümünü seç.
-- **Seçimi Tersine Çevir** (Ctrl+Shift+I).
-- Filtre aktifken durum çubuğunda uyarı rozeti (yanlışlıkla "niye seçemiyorum" karışıklığına karşı).
-**YOK:** Kaydedilmiş seçim setleri, özellik-bazlı sorgu (uzunluğa göre vb.).
-**Kabul:** Filtre marquee'nin window/crossing matematiğini DEĞİŞTİRMEZ (yalnız sonucu süzer);
-Ctrl+A gizli/kilitliyi ASLA seçmez (IsSelectable tek-kaynak); tersine çevirme filtreye saygılıdır.
-**Test:** T380–T386 (filtreli tık/marquee; Ctrl+A gizli-hariç; benzer-seç; tersine çevir; rozet durumu).
-
----
-## v3.0.29.7 — Kısayol Haritası + F1 Yardım Kaplaması + 🔍 D2 DENETİMİ
-**Amaç:** Fazı belgeleyip mühürlemek: tüm kısayollar tek kaynakta, F1'de görsel yardım.
-**İçerik:**
-- **`ShortcutMap.cs` TEK KAYNAK:** tüm kısayollar (tuş, komut id, açıklama, bağlam) burada;
-  ribbon tooltip'leri, radyal etiketleri ve F1 ekranı BU haritadan beslenir (üç ayrı liste YASAK).
-  Çakışma denetimi testle kilitlenir.
-- **F1 = Kısayol Kaplaması:** yarı saydam tam-ekran panel; kategorilere ayrılmış kısayol kartları
-  (Araçlar / Düzenleme / Görünüm / Seçim / Sistem); arama kutusu; Esc/F1 kapatır.
-- Kısayol tablosunun NİHAİ hali (mühürlü davranışlar + Alphacam eklentileri):
-  `S` Seç · `T` Ray · `R` Hat · `H` Hibrit · `Z` Zoom Extents · `W` Zoom Window · `Del` Sil ·
-  `F9` Snap (tümü) · `F1` Yardım · `Esc` İPTAL · `Enter/SağTık` COMMIT · `Ctrl+C/X/V` Pano ·
-  `Ctrl+Z/Y` Undo/Redo · `Ctrl+S` Kaydet · `Ctrl+A` Tümünü Seç · `Ctrl+Shift+I` Seçimi Çevir ·
-  `Ctrl+Tab` Sekme Değiştir · `Ctrl+W` Sekme Kapat.
-  (NOT: Alphacam'in M=Move/F=Fillet/X=Explode/E=Extend/T=Trim harfleri BİLİNÇLİ ALINMADI — karşılık
-  gelen çekirdek komutlar yok; T zaten Ray aracımız. Bu not, gelecekteki modellerin "Alphacam'de
-  vardı" diye kapsam taşırmasını önlemek içindir.)
-- **🔍 D2 DENETİM DURAĞI:** v3.0.29.1–.29.7 geriye-dönük denetim → `VERSIYON_KONTROL_DENETIMI.txt`:
-  D-serisi döküm (araç kaynakları D1 tarzı, gövdeler, tam koşum, T010+T011 kırmızı-yeşil, yapısal
-  taramalar: inline renk 0, hot-path LINQ 0, ShortcutMap çakışma 0, Idle-guard yerinde) + kullanıcı
-  BLOK manuel turu (aşağıdaki M listesi).
-**Kabul/Manuel (D2 blok turu):** M1 şeritten her araca eriş + tooltip kısayolları; M2 iki sekmede
-izole çizim + kirli-kapat uyarısı; M3 ağaçta ara/solo/sürükle-katman-değiştir + Ctrl+Z; M4 radyal
-alt-halka + merkez-tekrar + çizim ortasında AÇILMAMA; M5 Z/W zoom + snap toggle'ları + durum çubuğu
-koordinatı; M6 filtreli seçim + Ctrl+A; M7 F1 kaplaması + arama; M8 REGRESYON: F9, Esc/Enter,
-katman gizle/kilit, kopyala-yapıştır, rota okları, makas/rampa yerleştirme, Ctrl+S round-trip.
-**Test:** T390–T394 (ShortcutMap çakışma+bütünlük; F1 panel ViewModel; tooltip-harita eşleşmesi).
+NOT: Roadmap'te planlanan Feature Tree v2, Radyal Menü v2, Görünüm Kolaylıkları ve Seçim Filtreleri bu fazda YAPILMAMIŞTIR — D3'e taşınmıştır.
 
 ═══════════════════════════════════════════════════════════════════
+# FAZ D2-DEVAM — EDİTÖR CİLASI · v3.0.29.8 → v3.0.29.16 (MÜHÜRLENDİ)
+═══════════════════════════════════════════════════════════════════
+Hızlı cilalar — plan ve mühür raporları `plans/` altındadır.
+
+| Sürüm      | İçerik | Plan | Mühür | Test |
+|------------|--------|------|-------|------|
+| v3.0.29.8  | Ribbon Proxy + Memory Leak Düzeltmesi | `v30298_ribbon_proxy_plan.md` | `v30298_ribbon_proxy_muhur.md` | T400–T407 |
+| v3.0.29.9  | Katman Yönetimi (Layers) | `v30299_layers_plan.md` | `v30299_layers_muhur.md` | T410–T417 |
+| v3.0.29.9-fix | README + MVVMTK0034 Düzeltmesi | — | `v30299_fix_muhur.md` | — |
+| v3.0.29.10 | TerminalPanel Entegrasyonu | `v302910_terminal_plan.md` | `v302910_terminal_muhur.md` | — |
+| v3.0.29.11 | Katman Seçici (Ribbon Dropdown) | `v302911_layerselector_plan.md` | `v302911_layerselector_muhur.md` | — |
+| v3.0.29.12 | Feature Tree Toggle (Göz/Gizle + Kilit) | doğrudan mühür | `v302912_featuretree_toggle_muhur.md` | — |
+| v3.0.29.13 | Status Bar Düzeltme | `v302913_statusbar_plan.md` | `v302913_statusbar_muhur.md` | — |
+| v3.0.29.14 | Kısayol Düzeltme + Sağ Tık Undo | `v302914_shortcuts_plan.md` | `v302914_shortcuts_muhur.md` | — |
+| v3.0.29.15 | Zoom Kontrol (Slider + Fit) | `v302915_zoom_plan.md` | `v302915_zoom_muhur.md` | — |
+| v3.0.29.16 | Snap Göstergeleri (İmleç Rengi) | `v302916_snapcolor_plan.md` | `v302916_snapcolor_muhur.md` | — |
+
+═══════════════════════════════════════════════════════════════════
+# FAZ D3 — EDİTÖR PROFESYONEL CİLA · v3.0.29.17 → v3.0.29.42
+═══════════════════════════════════════════════════════════════════
+**Fazın amacı:** FAZ D2'de kurulan temel editör UI'ının üstüne tam Alphacam profesyonelliğinde
+görsel özellikler, modify/draw araçları, annotation ve verimlilik katmanı eklemek.
+Toplam 8 grupta 26 mikro-sürüm — her biri 2–3 hafif özellik.
+
+## GRUP 1: Görsel Temel (v3.0.29.17–v3.0.29.19)
+
+| Versiyon       | İçerik |
+|----------------|--------|
+| **v3.0.29.17** | **İkon Paketi Güncellemesi** (Alphacam tarzı profesyonel ikonlar — MahApps.Metro.IconPacks MaterialDesign) + **Crosshair Cursor** (artı işareti imleç, CadViewportControl'te DrawingVisual ile kesikli çizgi) |
+| **v3.0.29.18** | **Sağ Properties Panel** (seçili entity'nin özellikleri: ID, Layer, Koordinatlar) + **Hover Highlight** (fare üzerine gelince entity vurgusu) |
+| **v3.0.29.19** | **Alt Komut Satırı** (command line input — AutoCAD tarzı) + **Prompt Area** ("İlk noktayı tıklayın...") + **Coordinate Input Fields** (X, Y, Z manuel giriş) |
+| **Kabul (G1):** | Tüm ikonlar IconPacks MaterialDesign paketinden; crosshair DrawingVisual'da 60fps'de takılmadan çalışır; properties panel seçimle senkronizedir; hover highlight hit-test performansını bozmaz. |
+
+## GRUP 2: Seçim ve Snap (v3.0.29.20–v3.0.29.23)
+
+| Versiyon       | İçerik |
+|----------------|--------|
+| **v3.0.29.20** | **Grip Editing** (seçili nesnede tutmaçlar: stretch, move, rotate — Adorner katmanında) |
+| **v3.0.29.21** | **Selection Modları** (Window, Crossing, Fence selection — MarqueeSelector'a ek) |
+| **v3.0.29.22** | **Snap Mode Butonları** (Status bar'da Endpoint, Midpoint, Center, Intersection toggle — SnapEngine bayraklarına bağlı) |
+| **v3.0.29.23** | **Ortho Mode (F10)** + **Polar Tracking** (15°, 30°, 45° ipuçları) + **Dynamic Input** (fare yanında değer girişi — Tool katmanında) |
+| **Kabul (G2):** | Grip'ler seçimle görünür/kaybolur; Ortho+F10 regresyonsuz (F9 snap ve F8 Switch ile çakışmaz ⚠); Polar tracking snap motoruna entegre, GridSnap'ten önceliklidir. |
+
+## GRUP 3: Modify Araçları (v3.0.29.24–v3.0.29.27)
+
+| Versiyon       | İçerik |
+|----------------|--------|
+| **v3.0.29.24** | **Move** + **Copy** komutları (MoveTool, CopyTool — yeni ITool implementasyonları, Cad katmanında) |
+| **v3.0.29.25** | **Rotate** + **Scale** komutları (RotateTool, ScaleTool — anchor point + açı/faktör girişi) |
+| **v3.0.29.26** | **Mirror** + **Array** (dizi) komutları (MirrorTool: eksen çizgisiyle yansıtma; ArrayTool: doğrusal/polar dizi) |
+| **v3.0.29.27** | **Offset** + **Trim** + **Extend** komutları (OffsetTool: paralel kaydırma; TrimTool/ExtendTool: segment kesme/uzatma — TrackGraph komşuluğu kullanılır) |
+| **Kabul (G3):** | Tüm modify komutları undo'lu (ICadCommand); Move/Copy/Rotate/Scale seçili nesnelerde çalışır; Trim/Extend TrackGraph.areAdjacent ile hedef bulur; boş alanda hata vermez, prompt'a uyarı yazar. |
+
+## GRUP 4: Draw Araçları (v3.0.29.28–v3.0.29.30)
+
+| Versiyon       | İçerik |
+|----------------|--------|
+| **v3.0.29.28** | **Line** + **Polyline** + **Rectangle** (LineTool: 2 tık serbest çizgi; PolylineTool: çoklu segment; RectangleTool: 2 köşe ile dikdörtgen — hepsi TrackSegment üretir) |
+| **v3.0.29.29** | **Circle** + **Arc** + **Polygon** (CircleTool: merkez+yarıçap; ArcTool: 3 nokta yayı; PolygonTool: N-gen — çoklu segment olarak depolanır) |
+| **v3.0.29.30** | **Hatch** (tarama) + **Point** + **Spline** (HatchTool: kapalı alan tarama deseni; PointTool: bağımsız TrackNode; SplineTool: Catmull-Rom → segment zinciri) |
+| **Kabul (G4):** | Tüm draw araçları snap'e saygılıdır; Circle/Arc segmentlere ayrıştırılarak TrackSegment olarak depolanır (yeni entity türü EKLENMEZ — A2 arteri korunur); Hatch salt görsel render'dır, modeli değiştirmez. |
+
+## GRUP 5: Ribbon ve UI İyileştirmeleri (v3.0.29.31–v3.0.29.33)
+
+| Versiyon       | İçerik |
+|----------------|--------|
+| **v3.0.29.31** | **Context-Sensitive Ribbon** (seçime göre değişen ribbon sekmeleri) + **Dropdown/Split Buttons** (araç varyantları için açılır menü) |
+| **v3.0.29.32** | **Layer Manager Panel** (tüm katmanların detaylı yönetimi: ekle/sil/yeniden adlandır/Z ayarla — 3 sabit katman sınırı KALKAR, dinamik katman sistemine geçiş) |
+| **v3.0.29.33** | **Menu Bar** (File/Edit/View/Insert/Format/Tools/Draw/Help — klasik Windows menü çubuğu; ribbon üstünde veya bağımsız) |
+| **Kabul (G5):** | Seçime duyarlı ribbon yanlış sekmede kalma hatası vermez; DynamicInput ile entegredir. |
+
+## GRUP 6: Annotation ve Ölçü (v3.0.29.34–v3.0.29.36)
+
+| Versiyon       | İçerik |
+|----------------|--------|
+| **v3.0.29.34** | **Dimension** (Linear, Angular, Radius, Diameter — DimensionTool: snap noktalarından ölçü çizgisi üretir; ayrı Annotation katmanında render) |
+| **v3.0.29.35** | **Text** + **MText** (çok satır yazı) + **Leader** (TextTool: tıklanan noktaya metin; Leader: oklu açıklama çizgisi) |
+| **v3.0.29.36** | **Linetype** (kesik, noktalı) + **Lineweight** (çizgi kalınlığı) + **Transparency** (saydamlık) — entity başına görsel property'ler; CadColors genişler |
+| **Kabul (G6):** | Dimension'lar snap noktalarını takip eder (entity move edilince ölçü güncellenir — observer pattern); Linetype/Lineweight render'da DrawingVisual pen'lerine uygulanır. |
+
+## GRUP 7: Verimlilik ve Import/Export (v3.0.29.37–v3.0.29.39)
+
+| Versiyon       | İçerik |
+|----------------|--------|
+| **v3.0.29.37** | **Measure/Distance/Area** + **Properties Match** (format painter — bir entity'nin layer/linetype özelliklerini diğerine kopyala) |
+| **v3.0.29.38** | **Import/Export** (DXF, DWG, SVG, CSV — Cad katmanına yeni I/O servisleri; DXF/DWG: netDxf veya LibreDwg wrapper) |
+| **v3.0.29.39** | **AutoSave/Backup** + **Recent Files** + **Start Page** (HomeView yerine başlangıç sayfası: son projeler, yeni proje, şablonlar) |
+| **Kabul (G7):** | Import edilen geometri mevcut entity modeline dönüştürülür (TrackSegment/TrackNode olarak); Export round-trip testi: DXF'e yaz→oku→aynı entity sayısı. |
+
+## GRUP 8: Son Dokunuşlar (v3.0.29.40–v3.0.29.42)
+
+| Versiyon       | İçerik |
+|----------------|--------|
+| **v3.0.29.40** | **Ruler/Cetvel** + **Scrollbars** + **Background Color** ayarları (ViewportTransform kenar cetvelleri; SettingsView'a arka plan rengi) |
+| **v3.0.29.41** | **Spacebar Repeat** (son komutu tekrarla) + **Command Aliases** (L=Line, C=Circle, vb.) + **Escape = Cancel** (Esc davranışı güçlendirilir — tüm tool'lar ve dialoglar Esc ile kapanır) |
+| **v3.0.29.42** | **View Transitions** (yumuşak geçişler — zoom/pan animasyonu) + **Mouse Gestures** (sağ-tık-sürükle = pan; orta tekerlek = zoom — mevcut davranış korunur) + **Selection Preview** (seçim ön izleme) |
+| **Kabul (G8):** | Spacebar repeat tüm ITool'larda çalışır; Command aliases kısayol sistemine eklenir (ShortcutMap genişler); View transitions 120ms Fluent animasyon ile yapılır. |
+
+## FAZ D3 Özet
+
+| Grup  | Versiyon Aralığı  | Tema |
+|-------|-------------------|------|
+| G1    | v3.0.29.17–19     | Görsel Temel (ikon, cursor, properties, command line) |
+| G2    | v3.0.29.20–23     | Seçim ve Snap (grip, selection, snap buttons, ortho) |
+| G3    | v3.0.29.24–27     | Modify Araçları (move, copy, rotate, scale, mirror, offset) |
+| G4    | v3.0.29.28–30     | Draw Araçları (line, circle, arc, hatch) |
+| G5    | v3.0.29.31–33     | Ribbon ve UI (context ribbon, layer manager, menu bar) |
+| G6    | v3.0.29.34–36     | Annotation (dimension, text, linetype) |
+| G7    | v3.0.29.37–39     | Verimlilik (import/export, autosave, recent files) |
+| G8    | v3.0.29.40–42     | Son Dokunuşlar (ruler, shortcuts, transitions) |
+
+**Toplam: 26 versiyon, her biri 2–3 hafif özellik.**
+**Test bloğu:** T460–T587 (gruplara dağıtılır — `onceki_talimat.txt`'teki tabloya bakınız).
+
+**YOK (D3 kapsamında DEĞİL):** 3D/izometrik görünüm, BIM/IFC, ray rendering, gerçek zamanlı işbirliği,
+bulut senkronizasyonu, plug-in sistemi, kullanıcı toolbar özelleştirme, parametrik constraint'ler,
+dinamik bloklar, plot/style manager. (Bu özellikler v4.0+ kapsamındadır.)
+
+**NOT:** v3.0.29.8–v3.0.29.16 (Ribbon Proxy, Layers, TerminalPanel, Katman Seçici, Feature Tree Toggle,
+Status Bar Düzeltme, Kısayol Düzeltme, Zoom Kontrol, Snap Göstergeleri) — FAZ D2 kapsamında zaten
+yapıldı ve mühürlendi, bu listeye dahil değildir. v3.0.29.17 ile D3 başlar.
+
+═══════════════════════════════════════════════════════════════════
+# FAZ D3-SONRASI — ERTELENEN D2 ÖZELLİKLERİ · v3.0.29.43 → v3.0.29.48
+═══════════════════════════════════════════════════════════════════
+FAZ D2'de planlanıp gerçekleşmeyen 4 özellik (Feature Tree v2, Radyal Menü v2,
+Görünüm Kolaylıkları, Seçim Filtreleri) bu mini-fazda 6 versiyonda toplanır.
+
+| Sürüm        | İçerik | Test |
+|--------------|--------|------|
+| v3.0.29.43   | **Feature Tree v2** — arama/filtre kutusu, tür grupları (sayaçlı), toplu göz/kilit, solo/izole modu, sağ-tık ağaç menüsü, sürükle-bırak katman değiştirme (`ChangeLayerCommand`) | T588–T592 |
+| v3.0.29.44   | **Radyal Menü v2** — ikonlu dilimler (SymbolIcon + etiket), alt-halka (submenu — tek seviye), merkez buton = son komut tekrarı, genişletilmiş bağlam setleri (çoklu-seçim, Feature Tree üstü), klavye gezinme (ok tuşları) | T593–T597 |
+| v3.0.29.45   | **Görünüm Kolaylıkları** — Zoom Extents (Z), Zoom Window (W), orta-tuş çift-tık = Zoom Extents | T598–T601 |
+| v3.0.29.46   | **Durum Çubuğu** — imleç dünya koordinatı (X: Y: mm), aktif katman adı, aktif araç, snap durum LED'leri, zoom yüzdesi, seçili nesne sayısı | T602–T605 |
+| v3.0.29.47   | **Seçim Filtreleri** — tür filtresi (Tümü/Ray/Hat/Makas/Rampa/Düğüm), Ctrl+A (filtreye uyan), Benzerlerini Seç, Seçimi Tersine Çevir (Ctrl+Shift+I) | T606–T610 |
+| v3.0.29.48   | **Kısayol Haritası + F1 Yardım Kaplaması** — `ShortcutMap.cs` tek kaynak, F1 yarı saydam tam-ekran panel, kategorili kısayol kartları, arama kutusu | T611–T615 |
+
+**Toplam D3-SONRASI:** 6 versiyon, ~28 test (T588–T615).
+**Sıradaki:** v3.0.29.43 (Feature Tree v2) — D3 tamamlandıktan sonra.
+
+**NOT:** Bu özellikler roadmap'te FAZ D2 olarak planlanmıştı (v3.0.29.3–.7). Gerçekleşen D2
+(Ribbon & Çoklu Belge) bu özellikleri içermediği için D3-SONRASI olarak planlanmıştır.
+
 # FAZ E — DONANIM EŞLEME · v3.0.30 → v3.0.32
 ═══════════════════════════════════════════════════════════════════
 ## v3.0.30 — HardwareEndpoint Üretimi (Yüzen İpler)

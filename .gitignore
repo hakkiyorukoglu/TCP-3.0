@@ -38,6 +38,12 @@ _ReSharper*/
 *.db-shm
 *.db-wal
 
+# SQLite migration error log (root-level)
+/dberror.txt
+
+# Crash logs
+src/TrainService.App/Logs/
+
 # PlatformIO
 .pio/
 .pioenvs/
