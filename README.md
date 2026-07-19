@@ -3,38 +3,236 @@
 ![Platform](https://img.shields.io/badge/Platform-Windows-blue)
 ![Framework](https://img.shields.io/badge/Framework-.NET%208.0-512BD4)
 ![UI](https://img.shields.io/badge/UI-WPF%20%2B%20Fluent-success)
+![Version](https://img.shields.io/badge/Version-v3.0.29.18-orange)
 
 TCP (Train Control Platform) 3.0, trenlerin otonom hareketlerini simüle eden, uzaktan komuta sağlayan ve MQTT üzerinden IoT tabanlı haberleşme ile gerçek zamanlı veri akışını yöneten yeni nesil bir masaüstü kontrol merkezidir.
 
-## 🚀 Özellikler
+---
 
-- **Modern Kullanıcı Arayüzü**: WPF ve Wpf.Ui kütüphaneleriyle hazırlanmış karanlık mod ve Mica destekli Fluent tasarım.
-- **Modüler Mimari**: Bağımlılık Enjeksiyonu (Dependency Injection) ile ayrıştırılmış; Core, App, Cad, Data, Firmware, Messaging ve Simulation katmanlarından oluşan temiz yapı.
-- **Gerçek Zamanlı Haberleşme**: MQTTnet tabanlı Hub yapısıyla cihazlardan ve istasyonlardan gelen verilerin anlık işlenmesi.
-- **Merkezi Veritabanı ve Repository**: Entity Framework Core 8 ve SQLite kullanılarak, sistemdeki tüm trenlerin, cihazların ve ray geometrilerinin kalıcı olarak depolanması.
-- **Gelişmiş Log Otobüsü (LogBus)**: Uygulama içi terminaline ek olarak, alınan tüm önemli olayların asenkron bir biçimde veritabanındaki `EventLogs` tablosuna aynalanması.
+# 🤖 YAPAY ZEKA DEVİR TESLİM (AI HANDOVER)
 
-## 🏗️ Mimari Yapı
+> **Bu bölümü okuyan AI Model için:** Bu proje bir önceki AI tarafından belirli kurallar ve sürüm disiplini ile geliştirilmiştir. Aşağıdaki bilgiler, projeyi devraldığında hızlıca oryante olman için hazırlanmıştır.
 
-Proje toplamda **7 katmanlı** bir Clean Architecture (Temiz Mimari) yaklaşımını benimser:
-- `TrainService.Core`: Arayüzler (Interfaces), modeller, enumlar ve çekirdek iş kuralları.
-- `TrainService.App`: Uygulama sunumu (WPF), MVVM mimarisi ve arayüz servisleri.
-- `TrainService.Messaging`: İletişim (MQTT) altyapısı.
-- `TrainService.Data`: Veritabanı (EF Core) bağlantıları.
-- `TrainService.Simulation`: Tren davranışları ve simülasyon algoritmaları.
-- `TrainService.Cad`: CAD dosyalarının okunması, harita motorları.
-- `TrainService.Firmware`: Gömülü sistemlere (ESP vb.) dair kod/yardımcı dosyalar.
+---
 
-## ⚙️ Kurulum ve Çalıştırma
+## 📍 ŞU ANKİ DURUM (Current State)
+
+| Alan | Değer |
+|------|-------|
+| **Son Sürüm** | v3.0.29.18 |
+| **Son Git Commit** | `c6af693` (pushed to GitHub) |
+| **Son Yapılan** | Sağ Properties Panel + Hover Highlight (SelectionService senkron) |
+| **Sıradaki Sürüm** | v3.0.29.19 — Alt Komut Satırı + Prompt Area + Coordinate Input Fields |
+| **Aktif Faz** | FAZ D3 GRUP 1 — Görsel Temel |
+| **Build Durumu** | ✅ 0 Error, 0 Warning |
+| **Test Durumu** | Tüm App.Tests geçiyor |
+
+---
+
+## 📁 KRİTİK DOSYA KONUMLARI
+
+### Yol Haritası ve Planlar
+| Dosya | Açıklama |
+|-------|----------|
+| `Roadmap.md` | **ANA YOL HARİTASI** — Tüm sürümler, fazlar, gruplar. Burası TEK DOĞRULUK KAYNAĞIDIR. |
+| `plans/` | Her sürüm için plan ve mühür raporları (`v3{versiyon}_aciklama_plan.md` + `_muhur.md`) |
+| `onceki_talimat.txt` | **AGENT KURALLARI** — Her versiyonda değişmesi gerekenler, test numaralandırma, mühür şablonu |
+
+### Agent Kuralları (`onceki_talimat.txt`)
+- Her sürüm için 7 adımlı akış: PLAN → TDD → KOD → TEST → MANUEL TUR → MÜHÜR → ROADMAP GÜNCELLE → GIT
+- Test numaralandırma tablosu (D3 için T460–T587, D3-SONRASI için T588–T615)
+- Mühür raporu şablonu
+- Bekçi kontrol listesi (T001–T011)
+- Hatalı durum kuralları
+
+### Mühürlü Davranışlar (Y5 — ASLA DEĞİŞMEZ)
+- F9 = Snap toggle
+- Esc = İPTAL (aktif tool'u iptal eder)
+- Enter/SağTık = COMMIT (tool zincirini bitirir)
+- SabitKatmanlar GUID'leri: `11111111-1111-1111-1111-111111111111` (Zemin), `22222222-...` (AltKat), `33333333-...` (ÜstKat)
+- IsVisible/IsSelectable tek kaynak: `CadDocument` üzerinden
+- CadColors merkezî renk tanımları
+
+### Sapma Kaydı
+| Dosya | Açıklama |
+|-------|----------|
+| `tools/sapma.txt` | Y5 sapma kaydı — v3.0.29.32'de dinamik katman sistemine geçiş için |
+
+---
+
+## 🏗️ MİMARİ YAPI
+
+Proje toplamda **7 katmanlı** Clean Architecture:
+- `TrainService.Core`: Arayüzler, modeller, enumlar — **hiçbir projeye bağımlı değil**
+- `TrainService.Cad`: CAD çekirdeği (Snap, Tools, Selection, UndoRedo, Topology) — **sadece Core'a bağımlı, WPF'siz**
+- `TrainService.App`: WPF UI (MVVM), Controllers, ViewModels — **tüm servislere DI üzerinden erişir**
+- `TrainService.Messaging`: MQTTnet broker + Hub + Device Registry
+- `TrainService.Data`: EF Core 8 + SQLite
+- `TrainService.Firmware`: C++ kod üretimi + PlatformIO
+- `TrainService.Simulation`: Fizik motoru (şu an boş iskelet)
+
+**Bağımlılık yönü:** `App → (Cad, Messaging, Data, Firmware, Simulation) → Core`
+
+---
+
+## 📊 FAZ VE VERSİYON ÖZETİ
+
+### FAZ D2 — RIBBON & ÇOKLU BELGE (v3.0.29.1 → v3.0.29.7) ✅ MÜHÜRLÜ
+Ribbon şerit, sekmeli çoklu belge, runtime entegrasyonu. Testler: T330–T394.
+
+### FAZ D2-DEVAM — EDİTÖR CİLASI (v3.0.29.8 → v3.0.29.16) ✅ MÜHÜRLÜ
+Hızlı cilalar: Ribbon Proxy, Layers, TerminalPanel, Katman Seçici, Feature Tree Toggle, Status Bar, Kısayol, Zoom, Snap. Testler: T400–T417.
+
+### FAZ D3 — EDİTÖR PROFESYONEL CİLA (v3.0.29.17 → v3.0.29.42)
+26 sürüm, 8 grup:
+
+| Grup | Versiyon | Tema | Test | Durum |
+|------|----------|------|------|-------|
+| G1 | v3.0.29.17–19 | Görsel Temel | T460–T474 | v3.0.29.17-18 ✅, v3.0.29.19 ⏳ |
+| G2 | v3.0.29.20–23 | Seçim ve Snap (Ortho F10!) | T475–T492 | ⏳ |
+| G3 | v3.0.29.24–27 | Modify Araçları | T493–T512 | ⏳ |
+| G4 | v3.0.29.28–30 | Draw Araçları | T513–T530 | ⏳ |
+| G5 | v3.0.29.31–33 | Ribbon ve UI (dinamik katman!) | T531–T545 | ⏳ |
+| G6 | v3.0.29.34–36 | Annotation | T546–T560 | ⏳ |
+| G7 | v3.0.29.37–39 | Verimlilik | T561–T575 | ⏳ |
+| G8 | v3.0.29.40–42 | Son Dokunuşlar | T576–T587 | ⏳ |
+
+### FAZ D3-SONRASI (v3.0.29.43 → v3.0.29.48) ⏳
+D2'den ertelenen özellikler: Feature Tree v2, Radyal Menü v2, Görünüm Kolaylıkları, Durum Çubuğu, Seçim Filtreleri, Kısayol Haritası + F1. Testler: T588–T615.
+
+### FAZ E–H (v3.0.30 → v3.0.48)
+Donanım Eşleme, Firmware & OTA, Operasyon, Simülasyon. Detaylar `Roadmap.md`'de.
+
+---
+
+## 🔧 GELİŞTİRME İŞ AKIŞI (Her Sürüm İçin)
+
+1. **ADIM 0 — PLAN:** `plans/v3{versiyon}_aciklama_plan.md` oluştur → DUR → kullanıcı onayı
+2. **ADIM 1 — TDD:** Testi önce yaz, KIRMIZI gör
+3. **ADIM 2 — KOD:** Plan dosyasındaki değişen dosyaları implemente et, her dosyada `dotnet build`
+4. **ADIM 3 — TEST:** `dotnet test` — TÜM testler geçmeli, regresyon OLMAMALI
+5. **ADIM 4 — MANUEL TUR:** `dotnet run --project src/TrainService.App` → kullanıcı test eder
+6. **ADIM 5 — MÜHÜR:** `plans/v3{versiyon}_muhur.md` oluştur
+7. **ADIM 6 — ROADMAP:** `Roadmap.md`'de sürümü `(MÜHÜRLENDİ)` işaretle
+8. **ADIM 7 — GIT:** `git commit -m "v{sürüm}: {açıklama}"` → kullanıcı "pushla" derse `git push`
+
+---
+
+## 🧪 TEST KOMUTLARI
+
+```bash
+# Tüm testler
+dotnet test
+
+# Sadece App testleri
+dotnet test tests/TrainService.App.Tests/
+
+# Belirli test grubu
+dotnet test tests/TrainService.App.Tests/ --filter "FullyQualifiedName~T460"
+
+# Build + test (test dosyası değiştiyse)
+dotnet build tests/TrainService.App.Tests/TrainService.App.Tests.csproj && dotnet test tests/TrainService.App.Tests/ --no-build --filter "FullyQualifiedName~T465"
+```
+
+---
+
+## ⚠️ ÖNEMLİ NOTLAR
+
+1. **Roadmap TEK DOĞRULUK KAYNAĞIDIR.** Sıradaki sürüm = `(MÜHÜRLENDİ)` işareti OLMAYAN ilk satır.
+2. **F8 tuşu ÇAKIŞMASI:** v3.0.29.1'de F8 = Switch aracı. v3.0.29.23'te Ortho Mode için **F10** kullanılacak.
+3. **Dinamik Katman (v3.0.29.32):** Y5 sapması! SabitKatmanlar GUID'leri seed olarak korunur, yeni katman ID'leri dinamik üretilir.
+4. **Circle/Arc (v3.0.29.29):** Segmentlere ayrıştırılarak depolanır, yeni CadEntity türü EKLENMEZ.
+5. **Katman (A1 arteri):** Core'a dokunulmaz. Cad sadece Core'a bağımlıdır. WPF tipleri Cad/Core'a sızamaz.
+
+---
+
+## 📝 SÜRÜM GEÇMİŞİ (Changelog)
+
+### v3.0.29.18 — Sağ Properties Panel + Hover Highlight ✅
+- **YENİ:** `Controls/PropertiesPanel/PropertiesPanelControl.cs` — Sağ kenar paneli; ID, Layer, X, Y, Z, Tür alanları (TrackNode/TrackSegment/Route/Switch/Ramp destekli). `AttachSelection(SelectionService, CadDocument)` + `SelectionChanged` event'i ile otomatik güncelleme. `GetPropertyValue()` test helper'ı.
+- **DEĞİŞEN:** `Views/Pages/EditorView.xaml` — 3 kolon layout (250 + * + 220), xmlns:props namespace, `<props:PropertiesPanelControl>` elementi.
+- **DEĞİŞEN:** `Views/Pages/EditorView.xaml.cs` — `ReattachActiveTab()` içinde `PropertiesPanel.AttachSelection(tab.SelectionService, tab.Document)` bağlantısı.
+- **TEST:** 6 reflection testi (T465–T470) — PropertiesPanelControl sınıfı/property'leri, AttachSelection metodu, GetPropertyValue, EditorView entegrasyonu, hover _hoveredId alanı, namespace kontrolü.
+- 6/6 PASSED. Build: 0 Error.
+
+### v3.0.29.17 — İkon Paketi (MahApps.Metro.IconPacks MaterialDesign) + Crosshair Cursor ✅
+- **DEĞİŞEN:** `TrainService.App.csproj` — `MahApps.Metro.IconPacks` v5.0.0 NuGet paketi.
+- **DEĞİŞEN:** `Controls/Ribbon/RibbonDefinition.cs` — `RibbonItem`'a `IconPack` property'si (varsayılan "MaterialDesign"). Tüm IconKind değerleri MaterialDesign enum isimleriyle güncellendi (23 item).
+- **DEĞİŞEN:** `Controls/Ribbon/RibbonControl.xaml.cs` — `SymbolIcon`/`CreateIcon()` kaldırıldı, `CreateIconPacks(string kind, string pack)` eklendi. Try-catch fallback ile geçersiz ikon → null.
+- **DEĞİŞEN:** `Controls/CadCanvas/CadViewportControl.cs` — `_crosshairVisual` (DrawingVisual), `RenderCrosshair(Point)` (20px kesikli çizgili artı işareti + 2px merkez nokta), `OnMouseMove`'da `RenderCrosshair(currentPos)`, `OnMouseLeave`'de crosshair temizleme.
+- **TEST:** 6 test (T460–T464).
+- **Mühür:** `plans/v302917_icons_cursor_muhur.md`.
+
+### v3.0.29.16 — Snap Göstergeleri (İmleç Rengi Değişimi) ✅
+- Plan: `plans/v302916_snapcolor_plan.md` · Mühür: `plans/v302916_snapcolor_muhur.md`
+
+### v3.0.29.15 — Zoom Kontrol (Slider + Fit Butonu) ✅
+- Plan: `plans/v302915_zoom_plan.md` · Mühür: `plans/v302915_zoom_muhur.md`
+
+### v3.0.29.14 — Kısayol Düzeltme + Sağ Tık Undo ✅
+- Plan: `plans/v302914_shortcuts_plan.md` · Mühür: `plans/v302914_shortcuts_muhur.md`
+
+### v3.0.29.13 — Status Bar Düzeltme (Koordinat Paneli + Kaydet Görsel) ✅
+- Plan: `plans/v302913_statusbar_plan.md` · Mühür: `plans/v302913_statusbar_muhur.md`
+
+### v3.0.29.12 — Feature Tree Toggle (Göz/Gizle + Kilit) ✅
+- Mühür: `plans/v302912_featuretree_toggle_muhur.md` (doğrudan mühür)
+
+### v3.0.29.11 — Katman Seçici (Ribbon Layer Dropdown) ✅
+- Plan: `plans/v302911_layerselector_plan.md` · Mühür: `plans/v302911_layerselector_muhur.md`
+
+### v3.0.29.10 — TerminalPanel Entegrasyonu ✅
+- Plan: `plans/v302910_terminal_plan.md` · Mühür: `plans/v302910_terminal_muhur.md`
+
+### v3.0.29.9 — Katman Yönetimi (Layers) ✅
+- Plan: `plans/v30299_layers_plan.md` · Mühür: `plans/v30299_layers_muhur.md`
+- v3.0.29.9-fix: README + MVVMTK0034 Düzeltmesi — `plans/v30299_fix_muhur.md`
+- **8 test (T410–T417)**: Aktif katman varsayılanı, SetActiveLayer, visibility/lock entity etkisi, katman sayısı, isimler, geçersiz ID, Z yükseklikleri.
+
+### v3.0.29.8 — Ribbon Proxy + Memory Leak Düzeltmesi ✅
+- Plan: `plans/v30298_ribbon_proxy_plan.md` · Mühür: `plans/v30298_ribbon_proxy_muhur.md`
+- **8 test (T400–T407)**: ActiveTab Document güncelleme, null fallback, Undo/Redo routing.
+
+### v3.0.29.7 — Gerçek UI Entegrasyonu ✅
+- `DocumentTabsControl.xaml/cs` + `EditorView.xaml.cs` ReattachActiveTab. Plan/Mühür: `plans/v30297_ui_binding_*.md`
+
+### v3.0.29.6 — Gerçek Çalışma Zamanı Entegrasyonu Testleri ✅
+- 8 test (T380–T387). Plan/Mühür: `plans/v30296_runtime_binding_*.md`
+
+### v3.0.29.5 — Sekme Değişiminde Yeniden Bağlama Testleri ✅
+- 8 test (T370–T377). Plan/Mühür: `plans/v30295_tabs_reattach_*.md`
+
+### v3.0.29.4 — Çalışma Zamanı Entegrasyonu ✅
+- 8 test (T360–T367). Plan/Mühür: `plans/v30294_tabs_runtime_*.md`
+
+### v3.0.29.3 — DocumentTabs UI (Sekmeli Çoklu Belge) ✅
+- **WPF sekme şeridi**: + butonu, kirli gösterge (★), X kapatma, aktif sekme vurgusu.
+- **8 test (T350–T357)**. Plan/Mühür: `plans/v30293_tabs_ui_*.md`
+
+### v3.0.29.2 — DocumentTabs Arka Uç (Sekmeli Çoklu Belge) ✅
+- `EditorTabModel.cs`, `DocumentTabsViewModel.cs` — izole CadDocument/CommandStack/SelectionService.
+- **8 test (T340–T347)**. Plan/Mühür: `plans/v30292_tabs_*.md`
+
+### v3.0.29.1-fix — Kritik Bug Düzeltmeleri ✅
+- PasteEntitiesCommand, ClipboardService.Klonla, CadDocument.RestoreEntity, EditorViewModel.ProjectId.
+- **9 test (T336–T344)**. Plan/Mühür: `plans/v30291_fix_*.md`
+
+### v3.0.29.1 — Ribbon (Şerit Arayüzü) ✅
+- 4 sekme (GİRİŞ, ÇİZİM, DÜZEN, GÖRÜNÜM) + QuickAccess, 22 RibbonItem, 15 kısayol.
+- **6 test (T330–T335)**. Plan/Mühür: `plans/v30291_ribbon_*.md`
+
+### v3.0.29 → v3.0.0 (Önceki Sürümler)
+Detaylar için `Roadmap.md` Bölüm 0'a bakınız. Tümü mühürlüdür.
+
+---
+
+## ⚙️ KURULUM VE ÇALIŞTIRMA
 
 ### Gereksinimler
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - Windows 10/11 (WPF arayüzü nedeniyle)
-- MQTT Broker (Örn: Mosquitto - Varsayılan `127.0.0.1:1883`)
 
 ### Çalıştırma
-Projeyi derlemek ve başlatmak için terminalden aşağıdaki komutları kullanabilirsiniz:
-
 ```bash
 # Bağımlılıkları yükle ve projeyi derle
 dotnet build
@@ -43,104 +241,10 @@ dotnet build
 dotnet run --project src/TrainService.App/TrainService.App.csproj
 ```
 
-> **Not:** Windows masaüstündeki `TrainService_Baslat.bat` dosyasını çalıştırarak uygulamayı hızlıca başlatabilirsiniz.
-
-## 📝 Sürüm Geçmişi (Changelog)
-
-- **v3.0.29.9**: `Katman Yönetimi` — EditorViewModel'de `ActiveLayerId` property; araçlar zaten `LayerId` destekliyordu.
-  - **`EditorViewModel.cs`**: `ActiveLayerId` `[ObservableProperty]` + `OnActiveLayerIdChanged` partial metod; `ActiveLayerName` computed property.
-  - **8 test (T410–T417)**: Aktif katman varsayılanı, SetActiveLayer, visibility/lock entity etkisi, katman sayısı, isimler, geçersiz ID, Z yükseklikleri. 320/320 tüm çözüm yeşil.
-
-- **v3.0.29.8**: `Ribbon Proxy + Memory Leak Düzeltmesi` — Ribbon komutları aktif sekme üzerinden çalışır.
-  - **`EditorViewModel.cs`**: `ActiveTab` property + komut yönlendirmesi (`ActiveTab?.Service ?? fallback`).
-  - **`EditorView.xaml.cs`**: `LayerStatusChanged` event unsubscribe/subscribe memory leak düzeltmesi.
-  - **8 test (T400–T407)**: ActiveTab Document güncelleme, null fallback, Undo/Redo routing. 312/312 tüm çözüm yeşil.
-
-- **v3.0.29.7**: `Gerçek UI Entegrasyonu` — Sekme tıklama ile aktif sekme değişimi + Viewport/FeatureTree/ToolController yeniden bağlama.
-  - **`DocumentTabsControl.xaml/cs`**: `MouseLeftButtonDown` handler.
-  - **`EditorView.xaml.cs`**: `ReattachActiveTab()` + `ViewModel.ActiveTab = tab`.
-  - **304/304 tüm çözüm yeşil.**
-
-- **v3.0.29.6**: `Gerçek Çalışma Zamanı Entegrasyonu Testleri` — Sekme değişiminde servis izolasyonu.
-  - **8 test (T380–T387)**: CommandStack, SelectionService, SnapEngine, ClipboardService yeniden bağlama.
-
-- **v3.0.29.5**: `Sekme Değişiminde Yeniden Bağlama Testleri` — Viewport/FeatureTree bağlama davranışı.
-  - **8 test (T370–T377)**: ReattachActiveTab çağrımı, Viewport doc/selection, FeatureTree VM, ToolController context.
-
-- **v3.0.29.4**: `Çalışma Zamanı Entegrasyonu` — `DocumentTabsViewModel` + `EditorViewModel` sekme senkronizasyonu.
-  - **8 test (T360–T367)**: ViewModel sekme senkronizasyonu, command routing, Ribbon proxy.
-
-- **v3.0.29.3**: `DocumentTabs UI` (Sekmeli Çoklu Belge — UI Entegrasyonu) — Sekme şeridi `EditorView`'e entegre edildi.
-  - **`DocumentTabsControl.xaml/cs`**: WPF sekme şeridi — + butonu, sekme başlıkları, kirli gösterge (★ turuncu), X kapatma butonu. `IsDirty=true` → sekme arka planı `#3a3a2a`.
-  - **`EditorView.xaml`**: Grid.Row +1 (sekme şeridi), mevcut içerik alanı `Grid.Row="2"` olarak korundu. `Viewport`, `FeatureTreeCtrl`, `RibbonCtrl` dokunulmadı.
-  - **8 test (T350–T357)**: Proxy komutlar, sekme başlığı + kirli bayrak, doküman izolasyonu, aktif sekme değişiminde Viewport/FeatureTree bağlama, + butonu, X butonu, Ribbon komutları. 280/280 tüm çözüm yeşil.
-
-- **v3.0.29.2**: `DocumentTabs` (Sekmeli Çoklu Belge — Arka Uç) — Her sekme izole `CadDocument` + `CommandStack` + `SelectionService` seti barındırır.
-  - **`EditorTabModel.cs`**: Sekme başına izole veri seti — `ProjectId`, `DisplayName`, `IsDirty`, `CadDocument`, `CommandStack`, `SelectionService`, `SnapEngine`, `ClipboardService`.
-  - **`DocumentTabsViewModel.cs`**: Sekme yöneticisi — `AddTab`, `CloseTab` (kirli kontrolü), `RenameTab`, `ActiveTab` değişimi. Son sekme kapanınca otomatik yeni boş sekme.
-  - **8 test (T340–T347)**: Izole set oluşturma, doküman izolasyonu (A→B veri kaçağı yok), undo yığını izolasyonu, kirli bayrak, yeniden adlandırma, son sekme kapatma, kirli sekme vazgeç, aktif sekme değişimi. 272/272 tüm çözüm yeşil.
-
-- **v3.0.29.1-fix**: Kritik Bug Düzeltmeleri — Paste/RestoreEntity/Clipboard/ProjectId.
-  - **`PasteEntitiesCommand`**: Panodan yapıştırma artık `CommandStack` üzerinden undo/redo'lu. ID remap + referans çözümleme + +20mm offset.
-  - **`CadDocument.RestoreEntity`**: `IsDirty=true` + `Changed` event fırlatma (AddEntity ile tutarlı).
-  - **`ClipboardService.Klonla`**: `RailSwitch`, `Ramp`, `Route` klonlama desteği eklendi.
-  - **`EditorViewModel`**: `ProjectId` constructor parametresi (default `Guid.NewGuid()`), `Guid.Empty` sabit kullanımı kaldırıldı.
-  - **9 test (T336–T344)**: Paste undo/redo, IsDirty, RestoreEntity event, Clipboard yeni entity türleri, SaveLoad ProjectId. 272/272 tüm çözüm yeşil.
-
-- **v3.0.29.1**: `Ribbon` (Şerit Arayüzü) — Alphacam/WPF tarzı şerit.
-  - **`RibbonDefinitions.cs`**: 4 sekme (Ana Sayfa, Ekle, Görünüm, Katman) + Hızlı Erişim (Kaydet, Geri Al, Yenile, Yaklaştır). Her sekme grupları butonlar, açılır listeler, onay kutuları içerir.
-  - **`RibbonControl.xaml/cs`**: WPF şerit kontrolü — TabItem başlıkları, gruplar arası dikey ayırıcı, aktif sekme vurgusu (turuncu alt çizgi), hover efektleri. MVVM `RelayCommand<T>` ile bağlantı.
-  - **`EditorView.xaml`**: Ribbon `Grid.Row="0"` olarak entegre, eski `ui:TitleBar` yerine şeritli düzen.
-  - **6 test (T330–T335)**: Sekme sayısı, ilk sekme adı, RibbonQuickAccess varlığı, buton sayısı, buton ikonları, sekme başlıkları. 41/41 App.Tests yeşil.
-
-- **v3.0.29**: `RadialMenu` (Sağ Tık Radyal Menü) — Bağlama duyarlı dairesel menü.
-  - **`RadialMenuItem.cs`**: Immutable record — Label, IconGlyph, Command (Action), IsEnabled.
-  - **`RadialMenuControl.xaml/cs`**: WPF Popup + Canvas tabanlı dairesel menü — 8 dilim (45°), hover vurgulama, tıkla komut çalıştırma. Menü yarıçapı 120px, iç boşluk 30px.
-  - **`CadViewportControl.cs`**: `BuildRadialMenuItems()` — hit-test ile entity tespiti, entity varsa (Seç/Yakınlaştır/Sil/türe özel), yoksa (Seç Pencere/Ray Çiz/Rota Çiz/Makas Yerleştir). `OnMouseDown` sağ tık yakalama. `CommandStack` property ile silme işlemi.
-  - **`EditorView.xaml.cs`**: `Viewport.CommandStack = ViewModel.CommandStack` bağlantısı.
-  - **10 test (T320-T329)**: RadialMenuItem varsayılanları, IsEnabled, Command çalıştırma, çoklu öğe, boş liste, null Command, record eşitliği, farklı ikonlar, sıralı çalıştırma, devre dışı komut çağrılmama. 234/234 tüm çözüm yeşil (Cad.Tests 144, App.Tests 10).
-
-- **v3.0.28**: `FeatureTree` (Öğe Ağacı Paneli) — CAD belgesindeki tüm entity'leri hiyerarşik ağaç görünümünde listeleyen sol panel.
-  - **`FeatureTreeItem.cs`**: INotifyPropertyChanged model — Name, Icon, EntityId, EntityType, IsVisible, IsLocked, IsSelected, IsExpanded, Children (ObservableCollection), Parent, DoubleClickCommand.
-  - **`FeatureTreeViewModel.cs`**: MVVM ViewModel — CadDocument + SelectionService bağımlılığı, çift yönlü seçim senkronizasyonu (tuval↔ağaç), ZoomToEntity event, RelayCommand<T> (WPF bağımlılığı yok).
-  - **`CadDocument.FeatureTree.cs`**: Partial class extension — `BuildFeatureTree()` 5 grup üretir: Katmanlar (3 katman), Raylar (TrackSegment), Hatlar (Route), Makaslar (RailSwitch), Rampalar (Ramp).
-  - **`FeatureTreeControl.xaml/cs`**: WPF TreeView — HierarchicalDataTemplate ile grup→alt öğe hiyerarşisi, göster/gizle simgesi, kilit simgesi, seçim vurgulama (DeepSkyBlue), çift tıkla ZoomToEntity.
-  - **`EditorView.xaml/cs`**: Sol panel (250px) + sağ viewport layout, FeatureTreeControl entegrasyonu.
-  - **`CadViewportControl.cs`**: `ZoomToEntity(Guid, CadDocument)` — entity bounding box hesaplama, viewport %80'ine sığdırma, PanOffset+Scale güncelleme.
-  - **12 test (T310-T319c)**: FeatureTreeItem varsayılanları, PropertyChanged, çocuk hiyerarşisi, 5 grup varlığı, her gruptaki entity sayıları, çift yönlü seçim senkronizasyonu, doküman değişikliğinde yeniden oluşturma. 144/144 Cad.Tests yeşil.
-
-- **v3.0.27**: `SwitchTool` (Makas Prefab Yerleştirme) — 1 tıkla prefab RailSwitch yerleştirme aracı.
-  - **`SwitchDefaults.cs`**: Geometri sabitleri (LengthMm=80, DivergingAngleDeg=30°) ve 3 port offset hesaplamaları (Entry/MainExit/DivergingExit).
-  - **`SwitchTool.cs`**: RampTool deseninde 1-click prefab — OnPointerMove'da `PreviewSwitchPlace` (Y-şekilli ghost), OnPointerDown'da 3 `TrackNode` + 1 `RailSwitch` oluşturur, `CompositeCadCommand` ile tek Ctrl+Z.
-  - **9 test (T296-T304)**: Preview, entity sayısı, port pozisyonları (30° diverging açısı doğrulaması), RailSwitch properties (State=Main, 3 farklı port ID), tek undo, Escape gizleme, sağ tık yoksayma, selection. 134/134 Cad.Tests yeşil.
-  - **M1-M7 manuel test**: F8/toolbar seçimi, Y-şekilli ghost, sol tık+entity oluşumu, segment bağlama, Ctrl+Z/Y, Escape — tümü başarılı.
-
-- **v3.0.26**: `RampTool` (Rampa Prefab Yerleştirme) — 1 tıkla prefab Ramp (yokuş) yerleştirme aracı.
-  - **`RampDefaults.cs`**: Geometri sabitleri (LengthMm=100, MaxGradePercent=15, DefaultStartZ=0, DefaultEndZ=350).
-  - **`RampTool.cs`**: 1-click prefab — 2 `TrackNode` (Entry/Exit) + 1 `Ramp` oluşturur, `CompositeCadCommand` ile tek Ctrl+Z.
-  - **`RailSwitch` entity altyapısı**: DomainEntities'e eklendi (Position/RotationDeg/3 port ID/State/BoundServoDeviceId). `TrackGraph` switch metodları (Build overload, IsSwitchPort, GetSwitchState, GetSwitchForPort) tamamlandı.
-  - **Render altyapısı**: `CadColors` (SwitchMarkerFill/Pen, SwitchMainPen, SwitchDivergingPen), `CadViewportControl` (PreviewSwitchPlace Y-şekilli ghost, RailSwitch diamond marker, SwitchNode highlight) — SwitchTool için hazır.
-  - **UI bağlantısı**: EditorView.xaml (BranchFork24 toolbar butonu + F8 shortcut) ve EditorView.xaml.cs (SwitchTool() instantiation) — SwitchTool.cs olmadan derlenemezdi, artık v3.0.27'de eklendi.
-  - **9 test (T287-T295)**: RampTool davranışı. 125/125 Cad.Tests.
-
-- **v3.0.25**: `HybridTool` (Eşzamanlı Ray+Hat) tam implementasyonu tamamlandı. TrackTool ve RouteTool davranışlarını birleştiren hibrit araç: sol tık ile segment üstünde chaining başlatır, her tık bir `TrackNode` + `TrackSegment` + `RouteStep` üretir. `PreviewHybrid` record'u ile hem çizgi (From/To/SegmentGecerli) hem rota (Steps/AdaySegmentId/AdayGecerli) önizlemesi tek seferde render edilir. Commit anında tüm oluşturulan entity'ler tek `CompositeCadCommand` içinde sarılır — tek Ctrl+Z ile geri alınır. Bayat graf koruması (`_tiklananSegmentIds` ile doc entity varlık denetimi), segmente komşu olmayan aday reddi, Escape ile iptal. 10 test (T260-T269) ile kapsama alındı; 187/187 tüm çözüm yeşil.
-
-- **v3.0.24**: `RouteTool` (Hat Çizimi) tam implementasyonu tamamlandı. Sadece segment-üstü snap kabul eden, TrackGraph ile komşuluk doğrulaması yapan, yön okları render eden rota çizim aracı. `PreviewRoute` record'u ile aday segment + yön önizlemesi. Boş alana hat çizilemez; ardışık adımlar grafikte BFS ile doğrulanır. T010 bekçi ispatı metodolojisi (`//[Fact]` kesme) sabitlendi.
-
-- **v3.0.22**: **Pano (Clipboard)** eklendi. `CadClipboard` ile CAD nesnelerinin kopyalama (Ctrl+C), kesme (Ctrl+X) ve yapıştırma (Ctrl+V) işlemleri. Deep clone ile bağımsız ID'ler üretilir, yapıştırma imleç konumuna ofsetli yapılır. Snap ile düğüm birleşimi desteklenir. `PasteCommand` undo/redo uyumlu.
-
-- **v3.0.21**: `SelectTool` tam implementasyonu tamamlandı. AutoCAD referanslı Marquee seçim: soldan-sağa = Window (mavi, Contains), sağdan-sola = Crossing (yeşil kesikli, IntersectsWith). Hover vurgusu (cyan), seçim vurgusu (beyaz kesikli), `DeleteEntitiesCommand` (undo'lu silme) ve merkezi `CadColors` paleti eklendi.
-
-- **v3.0.20**: `TrackGraph` ile ray ağının mantıksal topolojisi, komşuluk analizleri, rota doğrulama ve blok bölümleme mekanizması Core katmanına eklendi. İlk geniş çaplı "5-Sürüm Geriye Dönük Denetim" gerçekleştirildi. README sürüm geçmişi düzenli güncellenmeye başlandı.
-
-- **v3.0.19**: `SnapEngine v2` geliştirilerek Endpoint (uç nokta) ve OnSegment (hat üzeri) yakalama özellikleri `SpatialHash` mimarisiyle eklendi.
-- **v3.0.18**: `TrackTool` entegre edilerek ekranda tıkla-tıkla ray çizim mekanizması ve Ctrl+S (Undo/Redo CommandStack) ilişkisel kayıt altyapısı sağlandı.
-- **v3.0.17**: `SnapEngine v1` ile GridSnap (ızgaraya hizalama) altyapısı kuruldu.
-- **v3.0.16**: `CadDocument`, `CommandStack` ve `SelectionService` mimarisi eklendi. Çizim alanının doküman bazlı mutasyon ve Undo/Redo özellikleri tamamlandı.
-- **v3.0.15**: CAD Editörü altyapısı (CadViewportControl) oluşturuldu. Endüstriyel render performansı elde etmek adına `Shape` veya primitif render yerine, doğrudan DirectX/GPU iletişimine dayalı `StreamGeometry` ve Batch-Render (VBO benzeri) mimarisi sisteme entegre edildi. Z-Index sorunları giderilerek 60 FPS donanım seviyesinde çalışan gerçek UI sayaçları ve X/Y milimetrik koordinat panelleri eklendi. Ana mimari kuralları korunarak 10.000 çizgi testinde pürüzsüz akıcılık (Retained Mode) doğrulandı.
-- **v3.0.14**: Ağ üzerindeki cihazların canlı durumlarını (DeviceHealth) takip etmek üzere PingService ve DeviceRegistry MQTT LWT sistemi birleştirildi. ElectronicsView canvasındaki cihazlara canlı durum (LED) göstergeleri eklendi. `CommunityToolkit.Mvvm` bağımlılığı Messaging katmanından ayrılarak saf C# event'lerine (`Action`) geçirildi; bu sayede temiz mimari (Clean Architecture) bağımlılık kuralları (Core -> Messaging -> App) tamamen sağlandı. PingService için `PingServiceTests` xUnit testleri projeye dâhil edildi.
-- **v3.0.13**: Node-based network topology canvas (ElectronicsView) eklendi. Switch'ler ve cihazlar DataGrid üzerinde render edilmek yerine tuval üzerinde gösterilmeye başlandı. Cihaz pozisyonları otomatik hesaplandı.
-- **v3.0.12 - Öncesi**: EF Core (SQLite) altyapısı, MQTT Embedded broker kurulumu, Dispatch (ACK/Timeout tabanlı) komut kuyruğu mekanizmaları ve birim testleri başarıyla tamamlandı.
+### Hata Durumunda
+- `dberror.txt` oluşursa → `del trainservice.db` ile DB'yi sil, yeniden başlat
+- Migration hatası → `dotnet ef database update --project src/TrainService.Data`
 
 ---
-*Geliştirme aşamasındadır (v3.0.x).*
+
+*Son güncelleme: 2026-07-19 · v3.0.29.18 · Git: c6af693*
