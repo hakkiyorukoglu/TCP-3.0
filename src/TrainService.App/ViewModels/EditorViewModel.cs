@@ -51,14 +51,26 @@ public partial class EditorViewModel : ObservableObject
     [ObservableProperty]
     private EditorTabModel? _activeTab;
 
+    [ObservableProperty]
+    private Guid _activeLayerId;
+
     partial void OnActiveTabChanged(EditorTabModel? value)
     {
         if (value == null) return;
 
         Document = value.Document;
+        ActiveLayerId = value.Document.ActiveLayerId;
         // Property'lerin referansları güncelleniyor
         // (CommandStack, SelectionService, SnapEngine, ClipboardService readonly)
     }
+
+    partial void OnActiveLayerIdChanged(Guid value)
+    {
+        ActiveTab?.Document.SetActiveLayer(value);
+    }
+
+    public string ActiveLayerName =>
+        ActiveTab?.Document.Layers.FirstOrDefault(l => l.Id == ActiveLayerId)?.Name ?? "Zemin";
 
     public Action<string>? ToolChangeRequested;
     public Action? ZoomExtentsRequested;
