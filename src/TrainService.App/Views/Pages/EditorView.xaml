@@ -113,7 +113,7 @@
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                             <ui:SymbolIcon Symbol="TargetArrow24" Foreground="DeepSkyBlue" Margin="0,0,5,0"/>
                             <TextBlock x:Name="LblCoordinates" Text="X: 0.0 Y: 0.0 mm" FontFamily="Consolas" FontSize="14" Foreground="White" FontWeight="Bold"/>
-                            <TextBlock x:Name="LblSnapStatus" Text="{Binding ViewModel.SnapStatusText}" FontFamily="Consolas" FontSize="14" Foreground="Yellow" FontWeight="Bold" Visibility="Visible"/>
+                            <TextBlock x:Name="LblSnapStatus" Text="{Binding ViewModel.SnapStatusText}" FontFamily="Consolas" FontSize="14" Foreground="{Binding ViewModel.SnapStatusColor}" FontWeight="Bold" Visibility="Visible"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <ui:SymbolIcon Symbol="Video24" Foreground="LimeGreen" Margin="0,0,5,0"/>

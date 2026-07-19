@@ -138,6 +138,20 @@ public partial class EditorView : Page
             {
                 Dispatcher.Invoke(() => Viewport.ToggleGrid());
             };
+
+            Viewport.SnapKindChanged += (kind) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    ViewModel.SnapStatusColor = kind switch
+                    {
+                        TrainService.Cad.Snapping.SnapKind.Grid => "#32CD32",      // LimeGreen
+                        TrainService.Cad.Snapping.SnapKind.Endpoint => "#FFA500",  // Orange
+                        TrainService.Cad.Snapping.SnapKind.OnSegment => "#9370DB", // MediumPurple
+                        _ => ViewModel.IsSnapEnabled ? "#FFFF00" : "#FF4444",      // Sarı / Kırmızı
+                    };
+                });
+            };
         };
     }
 

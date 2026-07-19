@@ -34,6 +34,7 @@ public class CadViewportControl : ContentControl
     
     // FPS Bilgisini UI'a aktarmak için event
     public event Action<int>? FpsUpdated;
+    public event Action<TrainService.Cad.Snapping.SnapKind>? SnapKindChanged;
     
     private Point _lastMousePos;
     private bool _isPanning;
@@ -276,6 +277,7 @@ public class CadViewportControl : ContentControl
                 }
             }
             RenderToolLayer(_lastSnap);
+            SnapKindChanged?.Invoke(_lastSnap?.Kind ?? SnapKind.None);
         }
     }
 

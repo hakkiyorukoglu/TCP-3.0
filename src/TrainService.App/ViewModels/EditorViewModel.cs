@@ -43,6 +43,9 @@ public partial class EditorViewModel : ObservableObject
     private string _snapStatusText = " [GRID]";
 
     [ObservableProperty]
+    private string _snapStatusColor = "#FFFF00"; // Sarı (default)
+
+    [ObservableProperty]
     private string _documentStatusText = "";
 
     [ObservableProperty]
