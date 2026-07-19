@@ -3,7 +3,7 @@
 ![Platform](https://img.shields.io/badge/Platform-Windows-blue)
 ![Framework](https://img.shields.io/badge/Framework-.NET%208.0-512BD4)
 ![UI](https://img.shields.io/badge/UI-WPF%20%2B%20Fluent-success)
-![Version](https://img.shields.io/badge/Version-v3.0.29.19-orange)
+![Version](https://img.shields.io/badge/Version-v3.0.29.20-orange)
 ![GitHub](https://img.shields.io/badge/GitHub-hakkiyorukoglu%2FTCP--3.0-lightgrey)
 
 > GitHub: `https://github.com/hakkiyorukoglu/TCP-3.0.git`
@@ -31,10 +31,10 @@ TCP (Train Control Platform) 3.0, trenlerin otonom hareketlerini simüle eden, u
 
 | Alan | Değer |
 |------|-------|
-| **Son Sürüm** | v3.0.29.19 |
-| **Son Git Commit** | `082cb1d` (pushed to GitHub) |
-| **Son Yapılan** | Alt Komut Satırı + Prompt Area + Coordinate Input Fields |
-| **Sıradaki Sürüm** | v3.0.29.20 — Grip Editing (seçili nesnede tutmaçlar) |
+| **Son Sürüm** | v3.0.29.20 |
+| **Son Git Commit** | `400699b` (pushed to GitHub) |
+| **Son Yapılan** | Grip Editing — GripAdorner (stretch/move/rotate) + CadViewportControl entegrasyonu |
+| **Sıradaki Sürüm** | v3.0.29.21 — Selection Modları (Window, Crossing, Fence) |
 | **Aktif Faz** | FAZ D3 GRUP 2 — Seçim ve Snap (v3.0.29.20–23) |
 | **Build Durumu** | ✅ 0 Error, 0 Warning |
 | **Test Durumu** | Tüm App.Tests geçiyor (12 yeni test T460–T470) |
@@ -265,7 +265,7 @@ Testler: T400–T417.
 | Grup | Versiyon | Tema | Test | Durum |
 |------|----------|------|------|-------|
 | G1 | v3.0.29.17–19 | Görsel Temel | T460–T474 | ✅ TAMAMLANDI |
-| G2 | v3.0.29.20–23 | Seçim ve Snap (Ortho **F10**!) | T475–T492 | ⏳ |
+| G2 | v3.0.29.20–23 | Seçim ve Snap (Ortho **F10**!) | T475–T492 | v3.0.29.20 ✅ |
 | G3 | v3.0.29.24–27 | Modify Araçları | T493–T512 | ⏳ |
 | G4 | v3.0.29.28–30 | Draw Araçları (Circle/Arc!) | T513–T530 | ⏳ |
 | G5 | v3.0.29.31–33 | Ribbon ve UI (dinamik katman ⚠) | T531–T545 | ⏳ |
@@ -342,6 +342,11 @@ dotnet run --project src/TrainService.App/TrainService.App.csproj
 
 ## 📝 SÜRÜM GEÇMİŞİ
 
+### v3.0.29.20 — Grip Editing (Tutmaçlar) ✅
+- **YENİ:** `Controls/CadCanvas/Adorners/GripAdorner.cs` — 10 grip (8 stretch + 1 move + 1 rotate), `GetGripAt()`, `UpdateGrips()`. GripType enum (Stretch/Move/Rotate).
+- **DEĞİŞEN:** `CadViewportControl.cs` — `_gripAdorner` field'ı.
+- **TEST:** T475–T478 (4 reflection testi). Build: 0 Error.
+
 ### v3.0.29.19 — Alt Komut Satırı + Prompt Area + Coordinate Input Fields ✅
 - **YENİ:** `Services/ToolPromptService.cs` — 6 tool için bağlamsal prompt metni.
 - **DEĞİŞEN:** `EditorView.xaml` — Command Bar (Grid.Row="3"): PromptLabel + CommandInput + CoordX/Y/Z.
@@ -374,4 +379,4 @@ Detaylar `Roadmap.md` FAZ D2 ve D2-DEVAM bölümlerinde.
 
 ---
 
-*Son güncelleme: 2026-07-19 · v3.0.29.19 · Git: 082cb1d · Aktif Faz: D3 G2*
+*Son güncelleme: 2026-07-19 · v3.0.29.20 · Git: 400699b · Aktif Faz: D3 G2*
