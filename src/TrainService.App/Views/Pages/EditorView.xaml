@@ -7,6 +7,7 @@
       xmlns:ft="clr-namespace:TrainService.App.Controls.FeatureTree"
       xmlns:docTabs="clr-namespace:TrainService.App.Controls.DocumentTabs"
       xmlns:term="clr-namespace:TrainService.App.Controls"
+      xmlns:props="clr-namespace:TrainService.App.Controls.PropertiesPanel"
       Title="Editor">
 
     <Page.InputBindings>
@@ -40,11 +41,12 @@
         <docTabs:DocumentTabsControl Grid.Row="1" x:Name="TabStrip"
             DataContext="{Binding TabsViewModel}"/>
 
-        <!-- Content Area (Mevcut içerik alanı — değişmez) -->
+        <!-- Content Area -->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="220"/>
             </Grid.ColumnDefinitions>
 
             <!-- Sol Panel: Feature Tree -->
@@ -55,21 +57,19 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Başlık -->
                     <Border Grid.Row="0" Padding="8,6" Background="#252525" BorderBrush="#333333" BorderThickness="0,0,0,1">
                         <TextBlock Text="Öğe Ağacı" FontWeight="Bold" Foreground="#CCCCCC" FontSize="13"/>
                     </Border>
 
-                    <!-- Feature Tree Control -->
                     <ft:FeatureTreeControl x:Name="FeatureTreeCtrl" Grid.Row="1"/>
                 </Grid>
             </Border>
 
-            <!-- Sağ Panel: Viewport -->
+            <!-- Orta: Viewport -->
             <Grid Grid.Column="1">
                 <cad:CadViewportControl x:Name="Viewport"/>
 
-                <!-- Zoom Kontrol Paneli (alt sol) -->
+                <!-- Zoom Kontrol Paneli -->
                 <Border Panel.ZIndex="999" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                         Margin="10,0,0,10" Padding="6"
                         Background="#EE1E1E1E" CornerRadius="6"
@@ -79,23 +79,19 @@
                                 Background="Transparent" Foreground="#CCC"
                                 BorderBrush="#555" BorderThickness="1"
                                 Click="OnZoomOutClick"/>
-                        
                         <Slider x:Name="ZoomSlider" Width="100"
                                 Minimum="1" Maximum="10000" 
                                 Value="{Binding ViewModel.ZoomScale}"
                                 Margin="4,0"/>
-                        
                         <Button Content="+" Width="24" Height="24"
                                 Background="Transparent" Foreground="#CCC"
                                 BorderBrush="#555" BorderThickness="1"
                                 Click="OnZoomInClick"/>
-                        
                         <TextBlock x:Name="ZoomPercent" 
                                    Text="{Binding ViewModel.ZoomPercentText}"
                                    FontFamily="Consolas" FontSize="12"
                                    Foreground="#CCC" Margin="6,0,0,0"
                                    VerticalAlignment="Center" Width="40"/>
-                        
                         <Button Content="Fit" Width="32" Height="24"
                                 Margin="4,0,0,0"
                                 Background="Transparent" Foreground="#CCC"
@@ -104,7 +100,7 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Yüzen Koordinat ve FPS Paneli -->
+                <!-- Koordinat ve FPS Paneli -->
                 <Border Panel.ZIndex="999" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                         Margin="10,0,10,10" Padding="8"
                         Background="#EE1E1E1E" CornerRadius="6"
@@ -128,9 +124,12 @@
                     </StackPanel>
                 </Border>
             </Grid>
+
+            <!-- Sağ Panel: Properties -->
+            <props:PropertiesPanelControl Grid.Column="2" x:Name="PropertiesPanel"/>
         </Grid>
 
-        <!-- Terminal Panel (Alt Dock) -->
+        <!-- Terminal Panel -->
         <term:TerminalPanel Grid.Row="3" 
             DataContext="{Binding ViewModel.TerminalViewModel}"
             BorderBrush="#333333" BorderThickness="0,1,0,0"/>

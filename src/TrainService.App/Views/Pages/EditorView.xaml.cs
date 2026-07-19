@@ -196,7 +196,10 @@ public partial class EditorView : Page
             Viewport.ZoomToEntity(entityId, tab.Document);
         };
 
-        // 5. Ribbon proxy — aktif sekme EditorViewModel'e bildirilir
+        // 5. Properties Panel bağla
+        PropertiesPanel.AttachSelection(tab.SelectionService, tab.Document);
+
+        // 6. Ribbon proxy — aktif sekme EditorViewModel'e bildirilir
         ViewModel.ActiveTab = tab;
     }
 
