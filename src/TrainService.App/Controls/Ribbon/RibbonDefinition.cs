@@ -86,7 +86,7 @@ public static class RibbonDefinitions
         {
             new RibbonGroup("zoom", "", new()
             {
-                new("ZoomExtents", "Sığdır", "ZoomFit24", "(Z)", "ZoomExtents", null),
+                new("ZoomExtents", "Sığdır", "ZoomFit24", "(Ctrl+Shift+Z)", "ZoomExtents", null),
                 new("ZoomWindow", "Pencere", "ZoomIn24", "(W)", "ZoomWindow", null),
             }),
             new RibbonGroup("display", "", new()

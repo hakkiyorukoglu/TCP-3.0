@@ -14,7 +14,7 @@
         <KeyBinding Key="Y" Modifiers="Control" Command="{Binding ViewModel.RedoCommand}" />
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding ViewModel.SaveCommand}" />
         <KeyBinding Key="F9" Command="{Binding ViewModel.ToggleSnapCommand}" />
-        <KeyBinding Key="Z" Command="{Binding ViewModel.ZoomExtentsCommand}" />
+        <KeyBinding Key="Z" Modifiers="Control+Shift" Command="{Binding ViewModel.ZoomExtentsCommand}" />
         <KeyBinding Key="W" Command="{Binding ViewModel.ZoomWindowCommand}" />
         <KeyBinding Key="C" Modifiers="Control" Command="{Binding ViewModel.CopyCommand}" />
         <KeyBinding Key="X" Modifiers="Control" Command="{Binding ViewModel.CutCommand}" />

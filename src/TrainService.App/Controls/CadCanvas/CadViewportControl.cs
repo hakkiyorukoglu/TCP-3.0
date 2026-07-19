@@ -763,6 +763,22 @@ public class CadViewportControl : ContentControl
         else
         {
             // Empty space context menu
+            items.Add(new RadialMenuItem("Geri Al", "↩️", () =>
+            {
+                if (CommandStack?.CanUndo == true && _document != null)
+                {
+                    CommandStack.Undo(_document);
+                    RenderModelBake(); RequestRender();
+                }
+            }));
+            items.Add(new RadialMenuItem("Yenile", "↪️", () =>
+            {
+                if (CommandStack?.CanRedo == true && _document != null)
+                {
+                    CommandStack.Redo(_document);
+                    RenderModelBake(); RequestRender();
+                }
+            }));
             items.Add(new RadialMenuItem("Seç (Pencere)", "🔲", () =>
             {
                 if (ToolController != null)
