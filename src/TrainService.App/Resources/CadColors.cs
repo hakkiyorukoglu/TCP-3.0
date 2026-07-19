@@ -2,67 +2,34 @@ using System.Windows.Media;
 
 namespace TrainService.App.Resources;
 
-/// <summary>
-/// Merkezi AutoCAD renk paleti. Tüm render kodu buradan beslenir — inline Color.FromArgb YASAK.
-/// </summary>
 public static class CadColors
 {
-    // --- Marquee: soldan-sağa = Window (mavi) ---
     public static readonly Brush WindowFill = Frozen(Color.FromArgb(50, 0, 128, 255));
-    public static readonly Pen   WindowPen  = FrozenPen(Color.FromArgb(255, 0, 128, 255), 1, dashed: false);
-
-    // --- Marquee: sağdan-sola = Crossing (yeşil) ---
+    public static readonly Pen   WindowPen  = FrozenPen(Color.FromArgb(255, 0, 128, 255), 1, false);
     public static readonly Brush CrossingFill = Frozen(Color.FromArgb(50, 0, 200, 0));
-    public static readonly Pen   CrossingPen  = FrozenPen(Color.FromArgb(255, 0, 200, 0), 1, dashed: true);
-
-    // --- Nesne vurguları ---
-    public static readonly Pen HoverPen    = FrozenPen(Color.FromArgb(255, 0, 255, 255), 2, dashed: false); // cyan
-    public static readonly Pen SelectedPen = FrozenPen(Colors.White, 2, dashed: true);
-
-    // --- Route ---
-    public static readonly Pen   RoutePen        = FrozenPen(Color.FromArgb(140, 160, 32, 240), 5, dashed: false);  // mor, yarı saydam, kalın
+    public static readonly Pen   CrossingPen  = FrozenPen(Color.FromArgb(255, 0, 200, 0), 1, true);
+    public static readonly Pen HoverPen    = FrozenPen(Color.FromArgb(255, 0, 255, 255), 2, false);
+    public static readonly Pen SelectedPen = FrozenPen(Colors.White, 2, true);
+    public static readonly Pen   RoutePen        = FrozenPen(Color.FromArgb(140, 160, 32, 240), 5, false);
     public static readonly Brush RouteArrowBrush = Frozen(Color.FromArgb(220, 160, 32, 240));
-    public static readonly Pen   RoutePreviewPen = FrozenPen(Color.FromArgb(140, 0, 200, 0), 5, dashed: false);     // önizleme yeşil
-    public static readonly Pen   RouteInvalidPen = FrozenPen(Color.FromArgb(160, 220, 40, 40), 3, dashed: false);   // geçersiz aday kırmızı
+    public static readonly Pen   RoutePreviewPen = FrozenPen(Color.FromArgb(140, 0, 200, 0), 5, false);
+    public static readonly Pen   RouteInvalidPen = FrozenPen(Color.FromArgb(160, 220, 40, 40), 3, false);
+    public static readonly Brush SwitchMarkerFill  = Frozen(Color.FromArgb(255, 220, 40, 220));
+    public static readonly Pen   SwitchMarkerPen   = FrozenPen(Color.FromArgb(255, 255, 80, 255), 2, false);
+    public static readonly Brush SwitchNodeFill      = Frozen(Color.FromArgb(80, 255, 200, 0));
+    public static readonly Pen   SwitchNodePen       = FrozenPen(Color.FromArgb(255, 255, 200, 0), 2, false);
+    public static readonly Pen   SwitchMainPen       = FrozenPen(Color.FromArgb(200, 0, 200, 0), 4, false);
+    public static readonly Pen   SwitchDivergingPen  = FrozenPen(Color.FromArgb(200, 255, 128, 0), 4, false);
+    public static readonly Brush RampMarkerFill  = Frozen(Color.FromArgb(255, 255, 140, 0));
+    public static readonly Pen   RampMarkerPen   = FrozenPen(Color.FromArgb(255, 255, 180, 60), 2, false);
+    public static readonly Brush RampNodeFill      = Frozen(Color.FromArgb(80, 255, 180, 60));
+    public static readonly Pen   RampNodePen       = FrozenPen(Color.FromArgb(255, 255, 180, 60), 2, false);
+    public static readonly Pen   RampLinePen       = FrozenPen(Color.FromArgb(200, 255, 140, 0), 4, false);
 
-    // --- Switch / Makas (v3.0.26) ---
-    public static readonly Brush SwitchMarkerFill  = Frozen(Color.FromArgb(255, 220, 40, 220));  // magenta dolgu
-    public static readonly Pen   SwitchMarkerPen   = FrozenPen(Color.FromArgb(255, 255, 80, 255), 2, dashed: false); // magenta kenar
+    // AutoCAD AutoSnap (fixalpha1) — ayrı metot ile FrozenPen çakışması önlenir
+    public static readonly Pen SnapMarkerPen = SnapMarkerPenCreate();
+    private static Pen SnapMarkerPenCreate() { var b = new SolidColorBrush(Color.FromArgb(255, 60, 255, 60)); b.Freeze(); var p = new Pen(b, 2.0); p.Freeze(); return p; }
 
-    // --- Switch Tool Preview (v3.0.26) ---
-    public static readonly Brush SwitchNodeFill      = Frozen(Color.FromArgb(80, 255, 200, 0));                      // yarı-saydam sarı
-    public static readonly Pen   SwitchNodePen       = FrozenPen(Color.FromArgb(255, 255, 200, 0), 2, dashed: false); // sarı kenar
-    public static readonly Pen   SwitchMainPen       = FrozenPen(Color.FromArgb(200, 0, 200, 0), 4, dashed: false);   // yeşil kalın — Main
-    public static readonly Pen   SwitchDivergingPen  = FrozenPen(Color.FromArgb(200, 255, 128, 0), 4, dashed: false); // turuncu kalın — Diverging
-
-    // --- Ramp (v3.0.26-fix) ---
-    public static readonly Brush RampMarkerFill  = Frozen(Color.FromArgb(255, 255, 140, 0));  // turuncu dolgu
-    public static readonly Pen   RampMarkerPen   = FrozenPen(Color.FromArgb(255, 255, 180, 60), 2, dashed: false); // turuncu kenar
-
-    // --- Ramp Tool Preview (v3.0.26-fix) ---
-    public static readonly Brush RampNodeFill      = Frozen(Color.FromArgb(80, 255, 180, 60));                      // yarı-saydam turuncu
-    public static readonly Pen   RampNodePen       = FrozenPen(Color.FromArgb(255, 255, 180, 60), 2, dashed: false); // turuncu kenar
-    public static readonly Pen   RampLinePen       = FrozenPen(Color.FromArgb(200, 255, 140, 0), 4, dashed: false);  // turuncu kalın — ramp hattı
-
-    // --- Yardımcılar ---
-    private static SolidColorBrush Frozen(Color c)
-    {
-        var b = new SolidColorBrush(c);
-        b.Freeze();
-        return b;
-    }
-
-    private static Pen FrozenPen(Color c, double thickness, bool dashed)
-    {
-        var brush = new SolidColorBrush(c);
-        brush.Freeze();
-        var pen = new Pen(brush, thickness);
-        if (dashed)
-        {
-            pen.DashStyle = new DashStyle(new double[] { 4, 3 }, 0);
-            pen.DashCap   = PenLineCap.Flat;
-        }
-        pen.Freeze();
-        return pen;
-    }
+    private static SolidColorBrush Frozen(Color c) { var b = new SolidColorBrush(c); b.Freeze(); return b; }
+    private static Pen FrozenPen(Color c, double t, bool dashed) { var b = new SolidColorBrush(c); b.Freeze(); var p = new Pen(b, t); if(dashed){p.DashStyle=new DashStyle(new[]{4.0,3.0},0);p.DashCap=PenLineCap.Flat;}p.Freeze();return p; }
 }
