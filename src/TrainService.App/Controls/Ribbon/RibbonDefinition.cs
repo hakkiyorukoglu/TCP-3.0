@@ -51,7 +51,7 @@ public static class RibbonDefinitions
             }),
             new RibbonGroup("layer", "", new()
             {
-                // Layer ComboBox + göz/kilit — XAML'de özel kontrol, veri-sürümlü değil
+                new("LayerSelector", "Katman", "", "", "SetActiveLayer", null),
             }),
         }),
         new RibbonTab("draw", "ÇİZİM", new()

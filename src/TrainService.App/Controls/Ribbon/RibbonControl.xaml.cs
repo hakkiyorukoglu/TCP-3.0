@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using TrainService.App.ViewModels;
 using WpfUi = Wpf.Ui.Controls;
 
 namespace TrainService.App.Controls.Ribbon;
@@ -149,6 +150,32 @@ public partial class RibbonControl : UserControl
 
             foreach (var item in group.Items)
             {
+                if (item.Id == "LayerSelector" && _vmCache is EditorViewModel editorVm)
+                {
+                    // Layer ComboBox
+                    var cb = new ComboBox
+                    {
+                        Width = 120,
+                        Margin = new Thickness(4, 4, 4, 4),
+                        ItemsSource = editorVm.Document.Layers,
+                        DisplayMemberPath = "Name",
+                        SelectedValuePath = "Id",
+                        SelectedValue = editorVm.ActiveLayerId,
+                        Background = new SolidColorBrush(Color.FromRgb(0x33, 0x33, 0x33)),
+                        Foreground = new SolidColorBrush(Color.FromRgb(0xCC, 0xCC, 0xCC)),
+                        BorderBrush = new SolidColorBrush(Color.FromRgb(0x55, 0x55, 0x55)),
+                    };
+                    cb.SelectionChanged += (s, e) =>
+                    {
+                        if (cb.SelectedValue is Guid id)
+                        {
+                            editorVm.ActiveLayerId = id;
+                        }
+                    };
+                    stack.Children.Add(cb);
+                    continue;
+                }
+
                 var itemPanel = new StackPanel
                 {
                     Orientation = Orientation.Vertical,

@@ -301,4 +301,14 @@ public partial class EditorViewModel : ObservableObject
         ToggleGridRequested?.Invoke();
         _logBus.Info("Editor", "Izgara değiştirildi");
     }
+
+    [RelayCommand]
+    private void SetActiveLayer(string layerId)
+    {
+        if (Guid.TryParse(layerId, out var id))
+        {
+            ActiveLayerId = id;
+            _logBus.Info("Editor", $"Aktif katman: {ActiveLayerName}");
+        }
+    }
 }
