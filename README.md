@@ -32,8 +32,8 @@ TCP (Train Control Platform) 3.0, trenlerin otonom hareketlerini simüle eden, u
 | Alan | Değer |
 |------|-------|
 | **Son Sürüm** | v3.0.29.18 |
-| **Son Git Commit** | `7ec3463` (pushed to GitHub) |
-| **Son Yapılan** | Sağ Properties Panel (SelectionService senkron) + Hover Highlight + Agent kuralları README güncelleme ADIM 7 eklendi |
+| **Son Git Commit** | `cffd963` (pushed to GitHub) |
+| **Son Yapılan** | Sağ Properties Panel + Hover Highlight + README AI handover (tam oryantasyon) + Agent kuralları güncellemesi |
 | **Sıradaki Sürüm** | v3.0.29.19 — Alt Komut Satırı + Prompt Area + Coordinate Input Fields |
 | **Aktif Faz** | FAZ D3 GRUP 1 — Görsel Temel (v3.0.29.17–19) |
 | **Build Durumu** | ✅ 0 Error, 0 Warning |
@@ -368,4 +368,4 @@ Detaylar `Roadmap.md` FAZ D2 ve D2-DEVAM bölümlerinde.
 
 ---
 
-*Son güncelleme: 2026-07-19 · v3.0.29.18 · Git: 7ec3463 · Aktif Faz: D3 G1*
+*Son güncelleme: 2026-07-19 · v3.0.29.18 · Git: cffd963 · Aktif Faz: D3 G1*
