@@ -189,7 +189,8 @@ public sealed class T330_T335_RibbonTests
         var log = new NullLogBus();
         var store = new NullCadDocumentStore();
 
-        return new EditorViewModel(doc, stack, selSvc, snap, clip, log, store);
+        var terminal = new NullTerminalPanelViewModel();
+        return new EditorViewModel(doc, stack, selSvc, snap, clip, log, terminal, store);
     }
 
     private sealed class NullLogBus : ILogBus
@@ -201,6 +202,11 @@ public sealed class T330_T335_RibbonTests
         public void Warn(string source, string message) { }
         public void Error(string source, string message) { }
         public event Action<LogMessage>? OnMessageReceived { add { } remove { } }
+    }
+
+    private sealed class NullTerminalPanelViewModel : TerminalPanelViewModel
+    {
+        public NullTerminalPanelViewModel() : base(new NullLogBus()) { }
     }
 
     private sealed class NullCadDocumentStore : ICadDocumentStore

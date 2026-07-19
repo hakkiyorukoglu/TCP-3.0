@@ -249,7 +249,8 @@ public sealed class T336_T344_FixTests
         var clip = new TrainService.Cad.Clipboard.ClipboardService();
         var log = new NullLogBus();
 
-        var vm = new EditorViewModel(doc, stack, selSvc, snap, clip, log, store);
+        var terminal = new NullTerminalPanelViewModel();
+        var vm = new EditorViewModel(doc, stack, selSvc, snap, clip, log, terminal, store);
         // ProjectId inject için reflection (şimdilik, constructor sonrası set)
         // v3.0.29.2'de constructor parametresi olacak
 
@@ -271,7 +272,8 @@ public sealed class T336_T344_FixTests
         var log = new NullLogBus();
         var store = new NullCadDocumentStore();
 
-        return new EditorViewModel(doc, stack, selSvc, snap, clip, log, store);
+        var terminal = new NullTerminalPanelViewModel();
+        return new EditorViewModel(doc, stack, selSvc, snap, clip, log, terminal, store);
     }
 
     private sealed class NullLogBus : ILogBus
@@ -283,6 +285,11 @@ public sealed class T336_T344_FixTests
         public void Warn(string source, string message) { }
         public void Error(string source, string message) { }
         public event Action<LogMessage>? OnMessageReceived { add { } remove { } }
+    }
+
+    private sealed class NullTerminalPanelViewModel : TerminalPanelViewModel
+    {
+        public NullTerminalPanelViewModel() : base(new NullLogBus()) { }
     }
 
     private sealed class NullCadDocumentStore : ICadDocumentStore

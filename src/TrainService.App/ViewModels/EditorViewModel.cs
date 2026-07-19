@@ -72,6 +72,8 @@ public partial class EditorViewModel : ObservableObject
     public string ActiveLayerName =>
         ActiveTab?.Document.Layers.FirstOrDefault(l => l.Id == ActiveLayerId)?.Name ?? "Zemin";
 
+    public TerminalPanelViewModel TerminalViewModel { get; }
+
     public Action<string>? ToolChangeRequested;
     public Action? ZoomExtentsRequested;
     public Action? ZoomWindowRequested;
@@ -87,10 +89,12 @@ public partial class EditorViewModel : ObservableObject
         TrainService.Cad.Snapping.SnapEngine snapEngine,
         TrainService.Cad.Clipboard.ClipboardService clipboardService,
         ILogBus logBus,
+        TerminalPanelViewModel terminalViewModel,
         ICadDocumentStore store,
         Guid? projectId = null)
     {
         _projectId = projectId ?? Guid.NewGuid();
+        TerminalViewModel = terminalViewModel;
         Document = document;
         CommandStack = commandStack;
         SelectionService = selectionService;

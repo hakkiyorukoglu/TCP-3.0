@@ -6,6 +6,7 @@
       xmlns:cad="clr-namespace:TrainService.App.Controls.CadCanvas"
       xmlns:ft="clr-namespace:TrainService.App.Controls.FeatureTree"
       xmlns:docTabs="clr-namespace:TrainService.App.Controls.DocumentTabs"
+      xmlns:term="clr-namespace:TrainService.App.Controls"
       Title="Editor">
 
     <Page.InputBindings>
@@ -25,6 +26,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Ribbon -->
@@ -92,5 +94,10 @@
                 </Border>
             </Grid>
         </Grid>
+
+        <!-- Terminal Panel (Alt Dock) -->
+        <term:TerminalPanel Grid.Row="3" 
+            DataContext="{Binding ViewModel.TerminalViewModel}"
+            BorderBrush="#333333" BorderThickness="0,1,0,0"/>
     </Grid>
 </Page>

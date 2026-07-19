@@ -140,8 +140,9 @@ public sealed class T400_T407_RibbonProxyTests
         var snap = new TrainService.Cad.Snapping.SnapEngine(new List<TrainService.Cad.Snapping.ISnapProvider>());
         var clip = new TrainService.Cad.Clipboard.ClipboardService();
         var log = new NullLogBus();
+        var terminal = new NullTerminalPanelViewModel();
         var store = new NullCadDocumentStore();
-        return new EditorViewModel(doc, stack, sel, snap, clip, log, store);
+        return new EditorViewModel(doc, stack, sel, snap, clip, log, terminal, store);
     }
 
     private static EditorTabModel CreateEditorTabModel()
@@ -163,6 +164,11 @@ public sealed class T400_T407_RibbonProxyTests
         public void Warn(string source, string message) { }
         public void Error(string source, string message) { }
         public event Action<TrainService.Core.Abstractions.LogMessage>? OnMessageReceived { add { } remove { } }
+    }
+
+    private sealed class NullTerminalPanelViewModel : TerminalPanelViewModel
+    {
+        public NullTerminalPanelViewModel() : base(new NullLogBus()) { }
     }
 
     private sealed class NullCadDocumentStore : TrainService.Cad.Persistence.ICadDocumentStore
