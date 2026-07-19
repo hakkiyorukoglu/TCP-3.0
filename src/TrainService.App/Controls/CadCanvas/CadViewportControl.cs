@@ -26,6 +26,7 @@ public class CadViewportControl : ContentControl
     private readonly DrawingVisual _gridVisual;
     private readonly DrawingVisual _modelVisual;
     private readonly DrawingVisual _toolVisual;
+    private readonly DrawingVisual _crosshairVisual;
     
     public ToolController? ToolController { get; set; }
     public TrainService.Cad.UndoRedo.CommandStack? CommandStack { get; set; }
@@ -99,6 +100,9 @@ public class CadViewportControl : ContentControl
 
         _toolVisual = new DrawingVisual();
         _toolLayer.AddVisual(_toolVisual);
+
+        _crosshairVisual = new DrawingVisual();
+        _toolLayer.AddVisual(_crosshairVisual);
 
         rootGrid.Children.Add(_gridLayer);
         rootGrid.Children.Add(_modelLayer); // Model, grid'in üstünde
@@ -234,6 +238,7 @@ public class CadViewportControl : ContentControl
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
         Point currentPos = e.GetPosition(this);
+        RenderCrosshair(currentPos);
         
         if (_isPanning)
         {
@@ -284,6 +289,21 @@ public class CadViewportControl : ContentControl
     private void OnMouseLeave(object sender, MouseEventArgs e)
     {
         using var dc = _toolVisual.RenderOpen(); // clear snap marker
+        using var dc2 = _crosshairVisual.RenderOpen(); // clear crosshair
+    }
+
+    private void RenderCrosshair(Point pos)
+    {
+        using var dc = _crosshairVisual.RenderOpen();
+        double size = 20;
+        var pen = new Pen(new SolidColorBrush(Color.FromArgb(180, 255, 255, 255)), 1)
+        {
+            DashStyle = new DashStyle(new[] { 3.0, 3.0 }, 0)
+        };
+        pen.Freeze();
+        dc.DrawLine(pen, new Point(pos.X - size, pos.Y), new Point(pos.X + size, pos.Y));
+        dc.DrawLine(pen, new Point(pos.X, pos.Y - size), new Point(pos.X, pos.Y + size));
+        dc.DrawEllipse(null, pen, pos, 2, 2);
     }
 
     private void CizOk(DrawingContext dc, Point p1, Point p2, TrainService.Core.Enums.TravelDirection dir, double scale)

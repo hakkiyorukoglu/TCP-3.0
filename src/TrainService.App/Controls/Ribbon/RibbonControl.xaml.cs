@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using TrainService.App.ViewModels;
 using WpfUi = Wpf.Ui.Controls;
+using IconPacks = MahApps.Metro.IconPacks;
 
 namespace TrainService.App.Controls.Ribbon;
 
@@ -77,14 +78,13 @@ public partial class RibbonControl : UserControl
             {
                 var saveBtn = CreateRibbonButton(item, isQuickAccess: true);
                 
-                // IsDirty değişiminde buton rengi değişsin
                 vm.PropertyChanged += (s, e) =>
                 {
                     if (e.PropertyName == nameof(EditorViewModel.DocumentStatusText))
                     {
                         saveBtn.Appearance = vm.Document.IsDirty 
-                            ? WpfUi::ControlAppearance.Caution  // Turuncu — kaydedilmemiş
-                            : WpfUi::ControlAppearance.Secondary; // Normal
+                            ? WpfUi::ControlAppearance.Caution
+                            : WpfUi::ControlAppearance.Secondary;
                     }
                 };
                 
@@ -130,7 +130,6 @@ public partial class RibbonControl : UserControl
         if (_selectedTabId == tabId) return;
         _selectedTabId = tabId;
 
-        // Update all toggle states
         for (int i = 0; i < TabHeaderPanel.Children.Count; i++)
         {
             if (TabHeaderPanel.Children[i] is ToggleButton tb && Tabs != null && i < Tabs.Count)
@@ -171,7 +170,6 @@ public partial class RibbonControl : UserControl
             {
                 if (item.Id == "LayerSelector" && _vmCache is EditorViewModel editorVm)
                 {
-                    // Layer ComboBox
                     var cb = new ComboBox
                     {
                         Width = 120,
@@ -230,7 +228,6 @@ public partial class RibbonControl : UserControl
         var btn = new WpfUi::Button
         {
             ToolTip = BuildToolTip(item),
-            Icon = CreateIcon(item.IconSymbol),
             Appearance = isQuickAccess ? WpfUi::ControlAppearance.Secondary : WpfUi::ControlAppearance.Primary,
             IsEnabled = item.IsEnabled,
             Width = isQuickAccess ? 28 : 36,
@@ -240,6 +237,19 @@ public partial class RibbonControl : UserControl
             Cursor = Cursors.Hand,
             Margin = new Thickness(isQuickAccess ? 2 : 0, 0, isQuickAccess ? 2 : 0, 2),
         };
+
+        // IconPacks ikonu oluştur
+        if (!string.IsNullOrEmpty(item.IconKind))
+        {
+            var icon = CreateIconPacks(item.IconKind, item.IconPack);
+            if (icon != null)
+            {
+                icon.Width = isQuickAccess ? 14 : 18;
+                icon.Height = isQuickAccess ? 14 : 18;
+                icon.Foreground = new SolidColorBrush(Color.FromRgb(0xCC, 0xCC, 0xCC));
+                btn.Content = icon;
+            }
+        }
 
         if (!string.IsNullOrEmpty(item.CommandName))
         {
@@ -253,17 +263,28 @@ public partial class RibbonControl : UserControl
         return btn;
     }
 
-    private static WpfUi::IconElement CreateIcon(string symbolName)
+    private static Control? CreateIconPacks(string kind, string pack)
     {
-        if (string.IsNullOrEmpty(symbolName))
-            return new WpfUi::SymbolIcon();
+        if (string.IsNullOrEmpty(kind)) return null;
 
-        if (Enum.TryParse<WpfUi::SymbolRegular>(symbolName, out var symbol))
+        try
         {
-            return new WpfUi::SymbolIcon { Symbol = symbol };
+            return pack switch
+            {
+                "MaterialDesign" => new IconPacks.PackIconMaterialDesign
+                {
+                    Kind = Enum.Parse<IconPacks.PackIconMaterialDesignKind>(kind)
+                },
+                _ => new IconPacks.PackIconMaterialDesign
+                {
+                    Kind = Enum.Parse<IconPacks.PackIconMaterialDesignKind>(kind)
+                }
+            };
         }
-
-        return new WpfUi::SymbolIcon();
+        catch
+        {
+            return null;
+        }
     }
 
     private static string BuildToolTip(RibbonItem item)
@@ -278,8 +299,6 @@ public partial class RibbonControl : UserControl
     {
         if (_vmCache == null) return null;
 
-        // CommunityToolkit.Mvvm generates properties ending with "Command"
-        // e.g., method "SetTool" → property "SetToolCommand"
         var propName = commandName.EndsWith("Command") ? commandName : commandName + "Command";
         var prop = _vmCache.GetType().GetProperty(propName,
             System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
