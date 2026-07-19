@@ -105,6 +105,12 @@ public partial class EditorView : Page
 
             _ = ViewModel.InitializeAsync();
 
+            // Command Line — prompt güncelleme
+            ViewModel.ToolChangeRequested += (toolName) =>
+            {
+                PromptLabel.Text = TrainService.App.Services.ToolPromptService.GetPrompt(toolName);
+            };
+
             // Ribbon → tool mapping
             ViewModel.ToolChangeRequested += (toolName) =>
             {
@@ -220,5 +226,77 @@ public partial class EditorView : Page
         Viewport.Transform.ZoomAt(new Point(Viewport.ActualWidth / 2, Viewport.ActualHeight / 2), 1.25);
         ViewModel.ZoomScale = Viewport.Transform.Scale;
         Viewport.RequestRender();
+    }
+
+    private void OnCommandKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key != System.Windows.Input.Key.Enter) return;
+        var cmd = CommandInput.Text.Trim().ToUpper();
+        CommandInput.Clear();
+
+        switch (cmd)
+        {
+            case "ZOOM" or "Z":
+                ViewModel.ZoomExtentsCommand.Execute(null);
+                break;
+            case "ZOOMW" or "W":
+                ViewModel.ZoomWindowCommand.Execute(null);
+                break;
+            case "LINE" or "L":
+                ViewModel.SetToolCommand.Execute("Track");
+                break;
+            case "SAVE":
+                ViewModel.SaveCommand.Execute(null);
+                break;
+            case "UNDO" or "U":
+                ViewModel.UndoCommand.Execute(null);
+                break;
+            case "REDO":
+                ViewModel.RedoCommand.Execute(null);
+                break;
+            case "SEL":
+                ViewModel.SetToolCommand.Execute("Select");
+                break;
+            case "ROUTE" or "R":
+                ViewModel.SetToolCommand.Execute("Route");
+                break;
+            case "SWITCH":
+                ViewModel.SetToolCommand.Execute("Switch");
+                break;
+            case "HYBRID" or "H":
+                ViewModel.SetToolCommand.Execute("Hybrid");
+                break;
+            case "RAMP":
+                ViewModel.SetToolCommand.Execute("Ramp");
+                break;
+            default:
+                if (!string.IsNullOrEmpty(cmd))
+                {
+                    PromptLabel.Text = $"Bilinmeyen komut: {cmd}";
+                    return;
+                }
+                break;
+        }
+
+        PromptLabel.Text = TrainService.App.Services.ToolPromptService.GetPrompt(ViewModel.ActiveToolName);
+    }
+
+    private void OnCoordKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key != System.Windows.Input.Key.Enter) return;
+
+        try
+        {
+            double x = double.TryParse(CoordX.Text, out var vx) ? vx : 0;
+            double y = double.TryParse(CoordY.Text, out var vy) ? vy : 0;
+            double z = double.TryParse(CoordZ.Text, out var vz) ? vz : 0;
+
+            PromptLabel.Text = $"Koordinat: X={x:F2}, Y={y:F2}, Z={z:F2} mm";
+            CoordX.Clear(); CoordY.Clear(); CoordZ.Clear();
+        }
+        catch
+        {
+            PromptLabel.Text = "Geçersiz koordinat";
+        }
     }
 }
